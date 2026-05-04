@@ -1,0 +1,119 @@
+name: Apply VortexGram Changes
+
+on:
+  workflow_dispatch:
+
+jobs:
+  apply-changes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Apply VortexGram name changes
+        run: |
+          find . -type f \( \
+            -name "*.java" -o -name "*.kt" -o -name "*.xml" \
+            -o -name "*.gradle" -o -name "*.md" -o -name "*.txt" \
+            -o -name "*.yml" -o -name "*.yaml" -o -name "*.py" \
+          \) \
+            ! -path "*/boringssl/*" \
+            ! -path "*/wycheproof*" \
+            ! -path "*/.git/*" \
+            ! -path "*/.github/*" \
+          | while read -r f; do
+            if grep -qE "AyuGram|ExteraGram|exteraGram|ayuGram" "$f" 2>/dev/null; then
+              sed -i \
+                -e 's/AyuGram/VortexGram/g' \
+                -e 's/ExteraGram/VortexGram/g' \
+                -e 's/exteraGram/VortexGram/g' \
+                -e 's/ayuGram/vortexGram/g' \
+                "$f"
+            fi
+          done
+
+          find . -type f -name "*.xml" \
+            ! -path "*/boringssl/*" \
+            ! -path "*/.git/*" \
+          | while read -r f; do
+            if grep -qE ">AyuGram<|>ExteraGram<|>exteraGram<" "$f" 2>/dev/null; then
+              sed -i \
+                -e 's/>AyuGram</>VortexGram</g' \
+                -e 's/>ExteraGram</>VortexGram</g' \
+                -e 's/>exteraGram</>VortexGram</g' \
+                "$f"
+            fi
+          done
+
+          sed -i 's/ayuGram-/vortexGram-/g' TMessagesProj/build.gradle || true
+
+      - name: Set max download speed
+        run: |
+          FILE="TMessagesProj/src/main/java/org/telegram/messenger/FileLoadOperation.java"
+          sed -i \
+            -e 's/private int downloadChunkSize = 1024 \* 32;/private int downloadChunkSize = 1024 * 128;/' \
+            -e 's/private int downloadChunkSizeBig = 1024 \* 128;/private int downloadChunkSizeBig = 1024 * 1024;/' \
+            -e 's/private int maxDownloadRequests = 4;/private int maxDownloadRequests = 16;/' \
+            -e 's/private int maxDownloadRequestsBig = 4;/private int maxDownloadRequestsBig = 16;/' \
+            -e 's/private int bigFileSizeFrom = 10 \* 1024 \* 1024;/private int bigFileSizeFrom = 1024 * 1024;/' \
+            -e 's/private int downloadChunkSizeAnimation = 1024 \* 128;/private int downloadChunkSizeAnimation = 1024 * 1024;/' \
+            -e 's/private int maxDownloadRequestsAnimation = 4;/private int maxDownloadRequestsAnimation = 16;/' \
+            "$FILE"
+
+          python3 - "$FILE" << 'PY'
+          import sys, re
+          path = sys.argv[1]
+          with open(path, 'r', encoding='utf-8') as f:
+              content = f.read()
+          old = re.search(r'private void updateParams\(\) \{.*?\}', content, re.DOTALL)
+          if old:
+              new_method = '''private void updateParams() {
+                  // VortexGram: always maximum download speed
+                  downloadChunkSize = 1024 * 128;
+                  downloadChunkSizeBig = 1024 * 1024;
+                  maxDownloadRequests = 16;
+                  maxDownloadRequestsBig = 16;
+                  downloadChunkSizeAnimation = 1024 * 1024;
+                  maxDownloadRequestsAnimation = 16;
+                  bigFileSizeFrom = 1024 * 1024;
+                  maxCdnParts = (int) (FileLoader.DEFAULT_MAX_FILE_SIZE / downloadChunkSizeBig);
+              }'''
+              content = content[:old.start()] + new_method + content[old.end():]
+              with open(path, 'w', encoding='utf-8') as f:
+                  f.write(content)
+          PY
+
+      - name: Set max upload speed
+        run: |
+          FILE="TMessagesProj/src/main/java/org/telegram/messenger/FileUploadOperation.java"
+          sed -i \
+            -e 's/private static final int minUploadChunkSize = 128;/private static final int minUploadChunkSize = 512;/' \
+            -e 's/private static final int minUploadChunkSlowNetworkSize = 32;/private static final int minUploadChunkSlowNetworkSize = 512;/' \
+            -e 's/private static final int initialRequestsCount = 8;/private static final int initialRequestsCount = 16;/' \
+            -e 's/private static final int initialRequestsSlowNetworkCount = 1;/private static final int initialRequestsSlowNetworkCount = 16;/' \
+            -e 's/private static final int maxUploadingKBytes = 1024 \* 2;/private static final int maxUploadingKBytes = 1024 * 16;/' \
+            -e 's/private static final int maxUploadingSlowNetworkKBytes = 32;/private static final int maxUploadingSlowNetworkKBytes = 1024 * 16;/' \
+            "$FILE"
+          sed -i \
+            -e 's/uploadChunkSize = (int) Math.max(slowNetwork ? minUploadChunkSlowNetworkSize : ExteraConfig.uploadSpeedBoost ? minUploadChunkBoostSize : minUploadChunkSize,/uploadChunkSize = (int) Math.max(minUploadChunkBoostSize,/' \
+            -e 's/maxRequestsCount = Math.max(1, (slowNetwork ? maxUploadingSlowNetworkKBytes : maxUploadingKBytes) \/ uploadChunkSize);/maxRequestsCount = Math.max(1, maxUploadingKBytes \/ uploadChunkSize);/' \
+            "$FILE"
+
+      - name: Lock speed settings in ExteraConfig
+        run: |
+          FILE="TMessagesProj/src/main/java/com/exteragram/messenger/ExteraConfig.java"
+          sed -i \
+            -e 's/downloadSpeedBoost = preferences.getInt("downloadSpeedBoost", 0);/downloadSpeedBoost = 2; \/\/ VortexGram: always max download speed/' \
+            -e 's/uploadSpeedBoost = preferences.getBoolean("uploadSpeedBoost", false);/uploadSpeedBoost = true; \/\/ VortexGram: always max upload speed/' \
+            "$FILE"
+
+      - name: Commit changes
+        run: |
+          git config user.name "VortexGram Bot"
+          git config user.email "vortexgram@noreply.github.com"
+          git add -A
+          git commit -m "Apply VortexGram changes: rename + max speed"
+          git push
