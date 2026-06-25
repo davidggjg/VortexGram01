@@ -634,7 +634,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
                     drawerLayoutContainer.closeDrawer(false);
                 }
 
-                // --- AyuGram hook
+                // --- VortexGram hook
                 if (id == AyuConstants.DRAWER_TOGGLE_GHOST && AyuConfig.showGhostToggleInDrawer) {
                     var msg = AyuConfig.isGhostModeActive()
                             ? LocaleController.getString("GhostModeDisabled", R.string.GhostModeDisabled)
@@ -650,7 +650,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
                 } else if (id == AyuConstants.DRAWER_KILL_APP) {
                     AyuUtils.killApplication(this);
                 }
-                // --- AyuGram hook
+                // --- VortexGram hook
             }
         });
         final ItemTouchHelper sideMenuTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {

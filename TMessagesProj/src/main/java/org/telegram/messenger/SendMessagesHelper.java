@@ -1680,7 +1680,7 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
             return 0;
         }
 
-        // --- AyuGram scheduled hook
+        // --- VortexGram scheduled hook
         if (AyuConfig.useScheduledMessages && !DialogObject.isEncryptedDialog(peer) && scheduleDateOrig == 0) {
             scheduleDateOrig = ConnectionsManager.getInstance(currentAccount).getCurrentTime() + 10; // min t = 10 sec
 
@@ -1699,7 +1699,7 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
                 try {
                     AyuForwarder.forwardMessages(currentAccount, messages, peer, forwardFromMyName, hideCaption, notify, scheduleDate, replyToTopMsg);
                 } catch (Exception e) {
-                    Log.e("AyuGram", "Failed to forward messages", e);
+                    Log.e("VortexGram", "Failed to forward messages", e);
                 }
             }).start();
             return 0;
@@ -1711,13 +1711,13 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
                 try {
                     AyuForwarder.intelligentForward(currentAccount, messages, peer, forwardFromMyName, hideCaption, notify, scheduleDate, replyToTopMsg);
                 } catch (Exception e) {
-                    Log.e("AyuGram", "Failed to forward messages", e);
+                    Log.e("VortexGram", "Failed to forward messages", e);
                 }
             }).start();
             return 0;
         }
 
-        // --- AyuGram hook
+        // --- VortexGram hook
 
         int sendResult = 0;
         long myId = getUserConfig().getClientUserId();
@@ -3386,7 +3386,7 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
             caption = "";
         }
 
-        // --- AyuGram scheduled hook
+        // --- VortexGram scheduled hook
         if (AyuConfig.useScheduledMessages && !DialogObject.isEncryptedDialog(peer) && scheduleDate == 0) {
             scheduleDate = ConnectionsManager.getInstance(currentAccount).getCurrentTime() + 10; // min t = 10 sec
 
@@ -3437,7 +3437,7 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
 
             replyToMsg = null;
         }
-        // --- AyuGram hook
+        // --- VortexGram hook
 
         String originalPath = null;
         if (params != null && params.containsKey("originalPath")) {

@@ -1347,12 +1347,12 @@ public class PushListenerController {
 
         @Override
         public void onRequestPushToken() {
-            // AyuGram: we don't support GCM/FCM
+            // VortexGram: we don't support GCM/FCM
         }
 
         @Override
         public boolean hasServices() {
-            // AyuGram: we don't support GCM/FCM
+            // VortexGram: we don't support GCM/FCM
             return false;
         }
     }

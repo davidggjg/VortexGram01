@@ -1,6 +1,6 @@
 /*
 
- This is the source code of exteraGram for Android.
+ This is the source code of VortexGram for Android.
 
  We do not and cannot prevent the use of our code,
  but be respectful and credit the original author.
@@ -91,7 +91,7 @@ public class MessageDetailsPopupWrapper {
             items.add(new Item(R.drawable.msg_calendar2, LocaleController.getString(R.string.Date), formatTime(messageObject.messageOwner.date, true)));
         }
 
-        // --- AyuGram hook
+        // --- VortexGram hook
 
         if (messageObject.messageOwner.ayuDeleted) {
             var userId = AccountInstance.getInstance(UserConfig.selectedAccount).getUserConfig().clientUserId;
@@ -102,7 +102,7 @@ public class MessageDetailsPopupWrapper {
             }
         }
 
-        // --- AyuGram hook
+        // --- VortexGram hook
 
         if (messageObject.messageOwner.fwd_from != null && messageObject.messageOwner.fwd_from.date > 0 && messageObject.messageOwner.fwd_from.date != messageObject.messageOwner.date) {
             items.add(new Item(R.drawable.msg_recent, LocaleController.getString(R.string.ForwardedDate), formatTime(messageObject.messageOwner.fwd_from.date, true)));

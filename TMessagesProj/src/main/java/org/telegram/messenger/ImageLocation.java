@@ -109,11 +109,11 @@ public class ImageLocation {
             return null;
         }
 
-        // --- AyuGram hook
+        // --- VortexGram hook
         if (photoSize.location instanceof AyuFileLocation) {
             return ImageLocation.getForPath(((AyuFileLocation) photoSize.location).path);
         }
-        // --- AyuGram hook
+        // --- VortexGram hook
 
         int dc_id;
         if (photo.dc_id != 0) {

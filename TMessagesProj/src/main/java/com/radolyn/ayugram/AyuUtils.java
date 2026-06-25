@@ -1,5 +1,5 @@
 /*
- * This is the source code of AyuGram for Android.
+ * This is the source code of VortexGram for Android.
  *
  * We do not and cannot prevent the use of our code,
  * but be respectful and credit the original author.
@@ -41,7 +41,7 @@ public class AyuUtils {
         try {
             success = from.renameTo(to);
         } catch (SecurityException e) {
-            Log.d("AyuGram", e.toString());
+            Log.d("VortexGram", e.toString());
             success = false;
         }
 
@@ -49,7 +49,7 @@ public class AyuUtils {
             try {
                 success = AndroidUtilities.copyFile(from, to);
             } catch (Exception e) {
-                Log.d("AyuGram", e.toString());
+                Log.d("VortexGram", e.toString());
             }
         }
 
@@ -156,7 +156,7 @@ public class AyuUtils {
 
             return new Pair<>(w, h);
         } catch (Exception e) {
-            Log.d("AyuGram", "extractImageSizeFromName fucked", e);
+            Log.d("VortexGram", "extractImageSizeFromName fucked", e);
             return null;
         }
     }
@@ -172,7 +172,7 @@ public class AyuUtils {
 
             return new Pair<>(w, h);
         } catch (Exception e) {
-            Log.d("AyuGram", "extractImageSizeFromFile fucked", e);
+            Log.d("VortexGram", "extractImageSizeFromFile fucked", e);
             return null;
         }
     }

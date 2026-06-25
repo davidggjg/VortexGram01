@@ -231,7 +231,7 @@ public class ApplicationLoader extends Application {
         ChatThemeController.init();
         BillingController.getInstance().startConnection();
 
-        // AyuGram: start sync
+        // VortexGram: start sync
         AyuSyncController.create();
     }
 

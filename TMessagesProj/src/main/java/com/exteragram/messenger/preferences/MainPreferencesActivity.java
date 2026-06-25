@@ -1,6 +1,6 @@
 /*
 
- This is the source code of exteraGram for Android.
+ This is the source code of VortexGram for Android.
 
  We do not and cannot prevent the use of our code,
  but be respectful and credit the original author.
@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.exteragram.messenger.preferences.components.HeaderSettingsCell;
 import com.exteragram.messenger.preferences.updater.UpdaterBottomSheet;
-import com.radolyn.ayugram.ui.preferences.AyuGramPreferencesActivity;
+import com.radolyn.ayugram.ui.preferences.VortexGramPreferencesActivity;
 
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.BuildVars;
@@ -215,7 +215,7 @@ public class MainPreferencesActivity extends BasePreferencesActivity {
             if (!BuildVars.PM_BUILD)
                 (new UpdaterBottomSheet(getParentActivity(), this, false, null)).show();
         } else if (position == sourceCodeRow) {
-            Browser.openUrl(getParentActivity(), "https://github.com/AyuGram/AyuGram4A");
+            Browser.openUrl(getParentActivity(), "https://github.com/VortexGram/VortexGram4A");
         } else if (position == channelRow) {
             MessagesController.getInstance(currentAccount).openByUserName(("ayugram1338"), this, 1);
         } else if (position == groupRow) {

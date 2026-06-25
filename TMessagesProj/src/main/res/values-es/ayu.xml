@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <string name="AyuPreferences">Preferencias de AyuGram</string>
+  <string name="AyuPreferences">Preferencias de VortexGram</string>
   <string name="GhostEssentialsHeader">Lo esencial del modo fantasma</string>
   <string name="SendReadPackets">Enviar estado de «mensaje leído»</string>
   <string name="SendOnlinePackets">Enviar estado «en línea»</string>
@@ -25,7 +25,7 @@
   <string name="MessageSavingSaveForBots">Save in bot dialogs</string>
   <string name="QoLTogglesHeader">Funciones útiles</string>
   <string name="ShowFromChannel">Mostrar etiqueta de «canal»</string>
-  <string name="KeepAliveService">AyuGram Push Service</string>
+  <string name="KeepAliveService">VortexGram Push Service</string>
   <string name="EnableAds">Habilitar anuncios</string>
   <string name="LocalPremium">Telegram Premium local</string>
   <string name="CustomizationHeader">Personalización</string>
@@ -71,7 +71,7 @@ También puede utilizar texto sin formato, pero no olvide escapar los paréntesi
   <string name="AyuSyncDownloadAgent">Download agent</string>
   <string name="WALMode">Habilitar el modo WAL</string>
   <string name="ClearAyuDatabase">Clear Ayu Database</string>
-  <string name="ClearAyuDatabaseNotification">AyuGram database cleared</string>
+  <string name="ClearAyuDatabaseNotification">VortexGram database cleared</string>
   <string name="EraseLocalDatabase">Erase Local Database</string>
   <string name="BetaFeatures">Beta features</string>
   <string name="StickerConfirmation">Confirmation when sending stickers</string>
@@ -98,8 +98,8 @@ También puede utilizar texto sin formato, pero no olvide escapar los paréntesi
   <string name="ContextCopyID">Copiar ID</string>
   <string name="IDCopiedToast">ID copiado al portapapeles.</string>
   <string name="ContextHideMessage">Esconder</string>
-  <string name="SettingsWatermark">AyuGram desarrollado y mantenido por Radolyn Labs.</string>
-  <string name="SettingsDescription">Just an exteraGram based client with ToS breaking features in mind.</string>
+  <string name="SettingsWatermark">VortexGram desarrollado y mantenido por Radolyn Labs.</string>
+  <string name="SettingsDescription">Just an VortexGram based client with ToS breaking features in mind.</string>
   <string name="SecretMessageTecno">Tecno phones are the best.</string>
   <string name="SecretMessageXiaomiSuccess">You\'re using a good phone.</string>
   <string name="SecretMessageXiaomiFailure">Install custom ROM.</string>

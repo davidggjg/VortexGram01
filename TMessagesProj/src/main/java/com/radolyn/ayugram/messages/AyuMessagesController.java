@@ -1,5 +1,5 @@
 /*
- * This is the source code of AyuGram for Android.
+ * This is the source code of VortexGram for Android.
  *
  * We do not and cannot prevent the use of our code,
  * but be respectful and credit the original author.
@@ -71,7 +71,7 @@ public class AyuMessagesController {
         try {
             onMessageEditedInner(prefs, newMessage, false);
         } catch (Exception e) {
-            Log.e("AyuGram", "error onMessageEdited", e);
+            Log.e("VortexGram", "error onMessageEdited", e);
             FileLog.e("onMessageEdited", e);
         }
     }
@@ -80,7 +80,7 @@ public class AyuMessagesController {
         try {
             onMessageEditedInner(prefs, prefs.getMessage(), true);
         } catch (Exception e) {
-            Log.e("AyuGram", "error onMessageEditedForce", e);
+            Log.e("VortexGram", "error onMessageEditedForce", e);
             FileLog.e("onMessageEditedForce", e);
         }
     }
@@ -131,14 +131,14 @@ public class AyuMessagesController {
 
     public void onMessageDeleted(AyuSavePreferences prefs) {
         if (prefs.getMessage() == null) {
-            Log.w("AyuGram", "null msg ?");
+            Log.w("VortexGram", "null msg ?");
             return;
         }
 
         try {
             onMessageDeletedInner(prefs);
         } catch (Exception e) {
-            Log.e("AyuGram", "error onMessageDeleted", e);
+            Log.e("VortexGram", "error onMessageDeleted", e);
             FileLog.e("onMessageDeleted", e);
         }
     }
@@ -160,7 +160,7 @@ public class AyuMessagesController {
 
         var msg = prefs.getMessage();
 
-        Log.d("AyuGram", "saving message " + prefs.getMessageId() + " for " + prefs.getDialogId() + " with topic " + prefs.getTopicId());
+        Log.d("VortexGram", "saving message " + prefs.getMessageId() + " for " + prefs.getDialogId() + " with topic " + prefs.getTopicId());
 
         AyuMessageUtils.map(prefs, deletedMessage);
         AyuMessageUtils.mapMedia(prefs, deletedMessage, true);
@@ -189,7 +189,7 @@ public class AyuMessagesController {
                 deletedReaction.documentId = ((TLRPC.TL_reactionCustomEmoji) reaction.reaction).document_id;
                 deletedReaction.isCustom = true;
             } else {
-                Log.e("AyuGram", "fake news emoji");
+                Log.e("VortexGram", "fake news emoji");
                 continue;
             }
 
@@ -231,7 +231,7 @@ public class AyuMessagesController {
                 try {
                     p.delete();
                 } catch (Exception e) {
-                    Log.e("AyuGram", "failed to delete file " + msg.message.mediaPath, e);
+                    Log.e("VortexGram", "failed to delete file " + msg.message.mediaPath, e);
                 }
             }
         }

@@ -15792,7 +15792,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 }
             }
 
-            // --- AyuGram hook main
+            // --- VortexGram hook main
             var dialogId = getDialogId();
             var topicId = getTopicId();
 
@@ -15862,23 +15862,23 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 if (Math.abs(secretStartId - secretEndId) == 1 || (secretStartId == msg1 && secretEndId == msg2)) { // empty dialog, so load as much as we can
                     startId = minVal;
                     endId = maxVal;
-                    Log.d("AyuGram", "case 1");
+                    Log.d("VortexGram", "case 1");
                 } else if (secretStartId == msg1) { // loaded up to top
                     startId = minVal;
                     endId = msg2;
-                    Log.d("AyuGram", "case 2");
+                    Log.d("VortexGram", "case 2");
                 } else if (secretEndId == msg2) { // loaded up to bottom
                     startId = msg1;
                     endId = maxVal;
-                    Log.d("AyuGram", "case 3");
+                    Log.d("VortexGram", "case 3");
                 } else { // just between some messages
                     startId = msg1;
                     endId = msg2;
-                    Log.d("AyuGram", "case 4");
+                    Log.d("VortexGram", "case 4");
                 }
 
-                Log.d("AyuGram", "omfg " + secretStartId + " " + secretEndId);
-                Log.d("AyuGram", "omfg2 " + msg1 + " " + msg2);
+                Log.d("VortexGram", "omfg " + secretStartId + " " + secretEndId);
+                Log.d("VortexGram", "omfg2 " + msg1 + " " + msg2);
             }
 
             if (startId > endId) {
@@ -15887,7 +15887,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 endId = t;
             }
 
-            Log.d("AyuGram",
+            Log.d("VortexGram",
                     "messArr: " + messArr.size()
                     + " , startId: " + startId
                     + " , endId: " + endId
@@ -15904,7 +15904,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     count = messArr.size();
                 }
             }
-            // --- AyuGram hook
+            // --- VortexGram hook
 
             for (int a = 0; a < messArr.size(); a++) {
                 MessageObject obj = messArr.get(a);
@@ -18625,7 +18625,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             updateTranslateItemVisibility();
         }
 
-        // --- AyuGram hook
+        // --- VortexGram hook
         if (id == AyuConstants.MESSAGES_DELETED_NOTIFICATION) {
             long dialogId = (Long) args[0];
             if (getDialogId() != dialogId && (ChatObject.isChannel(currentChat) || dialogId != 0)) {
@@ -18651,7 +18651,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 startMessageUnselect();
             }
         }
-        // --- AyuGram hook
+        // --- VortexGram hook
     }
 
     private int getScrollingOffsetForView(View v) {
@@ -23575,12 +23575,12 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             groupedMessages = null;
         }
 
-        // --- AyuGram hack
+        // --- VortexGram hack
         boolean isAyuDeleted =
                 message != null &&
                 message.messageOwner != null &&
                 message.messageOwner.ayuDeleted;
-        // --- AyuGram hack
+        // --- VortexGram hack
 
         boolean allowChatActions = true;
         boolean allowPin;
@@ -23625,7 +23625,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             allowChatActions = false;
         }
 
-        // --- AyuGram hack
+        // --- VortexGram hack
 
         // restricts any actions with deleted messages
         // there's a chance Telegram will clean "Saved messages"
@@ -23636,7 +23636,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             allowUnpin = false;
             allowEdit = false;
         }
-        // --- AyuGram hack
+        // --- VortexGram hack
 
         if (single || type < 2 || type == 20) {
             if (getParentActivity() == null) {
@@ -24234,7 +24234,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 }
             }
 
-            /// --- AyuGram menu
+            /// --- VortexGram menu
             if (message != null
                     && message.messageOwner.from_id != null
                     && message.messageOwner.from_id.user_id != getAccountInstance().getUserConfig().getClientUserId()
@@ -24303,7 +24303,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 options.add(AyuConstants.OPTION_READ_UNTIL);
                 icons.add(R.drawable.msg_view_file);
             }
-            // --- AyuGram menu
+            // --- VortexGram menu
 
             if (options.isEmpty() && optionsView == null) {
                 return false;
@@ -28972,7 +28972,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 ArrayList<MessageObject> messages = isFrozen ? frozenMessages : ChatActivity.this.messages;
                 var msg = messages.get(position - messagesStartRow);
 
-                // --- AyuGram hook
+                // --- VortexGram hook
                 if (AyuConfig.regexFiltersEnabled && (AyuConfig.regexFiltersInChats || ChatObject.isChannel(currentChat))) {
                     var group = getGroup(msg.getGroupId());
                     var msgToCheck = group == null ? msg : group.findPrimaryMessageObject();
@@ -28981,7 +28981,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         return -1000;
                     }
                 }
-                // --- AyuGram hook
+                // --- VortexGram hook
 
                 return msg.contentType;
             } else if (position == botInfoRow) {

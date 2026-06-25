@@ -1,5 +1,5 @@
 /*
- * This is the source code of AyuGram for Android.
+ * This is the source code of VortexGram for Android.
  *
  * We do not and cannot prevent the use of our code,
  * but be respectful and credit the original author.
@@ -35,7 +35,7 @@ public abstract class EasyWaiter implements NotificationCenter.NotificationCente
 
     public void subscribe() {
         if (notifications.isEmpty()) {
-            Log.e("AyuGram", "saving some hours of debugging just for you <3");
+            Log.e("VortexGram", "saving some hours of debugging just for you <3");
             throw new IllegalStateException("NO NOTIFICATIONS SPECIFIED");
         }
 

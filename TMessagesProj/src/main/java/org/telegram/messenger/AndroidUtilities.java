@@ -4302,7 +4302,7 @@ public class AndroidUtilities {
     }
 
     public static void setFlagSecure(BaseFragment parentFragment, boolean set) {
-        // AyuGram: removed
+        // VortexGram: removed
     }
 
     public static void openSharing(BaseFragment fragment, String url) {

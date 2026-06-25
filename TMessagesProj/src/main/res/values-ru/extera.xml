@@ -2,7 +2,7 @@
 
 <!--
 
- Это исходный код exteraGram для Android.
+ Это исходный код VortexGram для Android.
 
  Мы не запрещаем и не можем запретить использовать наш код,
  но имейте уважение и указывайте оригинального автора.
@@ -12,7 +12,7 @@
 -->
 
 <resources>
-    <string name="Preferences">Настройки exteraGram</string>
+    <string name="Preferences">Настройки VortexGram</string>
 
     <!-- Main Menu -->
     <string name="Links">Ссылки</string>
@@ -200,7 +200,7 @@
 
     <!-- Other -->
     <string name="RestartRequired">Перезапустите приложение, чтобы изменения вступили в силу.</string>
-    <string name="ResetSettingsBulletin">Настройки **exteraGram** сброшены.</string>
+    <string name="ResetSettingsBulletin">Настройки **VortexGram** сброшены.</string>
     <string name="UserNotFound">Пользователь с этим **ID** не найден.</string>
     <string name="PhotoCopied">Фото скопировано в буфер обмена.</string>
 

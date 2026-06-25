@@ -4334,7 +4334,7 @@ public class MediaDataController extends BaseController {
                     }
                 }
 
-                // --- AyuGram hook
+                // --- VortexGram hook
                 Intent ghostIntent = new Intent(ApplicationLoader.applicationContext, LaunchActivity.class);
                 ghostIntent.setAction("ghost_mode");
                 ArrayList<ShortcutInfoCompat> arrayList2 = new ArrayList<>();
@@ -4356,7 +4356,7 @@ public class MediaDataController extends BaseController {
                     }
                     arrayList2.clear();
                 }
-                // --- AyuGram hook
+                // --- VortexGram hook
 
                 Intent intent = new Intent(ApplicationLoader.applicationContext, LaunchActivity.class);
                 intent.setAction("new_dialog");

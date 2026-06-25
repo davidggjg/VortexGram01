@@ -1,6 +1,6 @@
 /*
 
- This is the source code of exteraGram for Android.
+ This is the source code of VortexGram for Android.
 
  We do not and cannot prevent the use of our code,
  but be respectful and credit the original author.
@@ -118,7 +118,7 @@ public class LocaleUtils {
         try {
             return ApplicationLoader.applicationContext.getString(R.string.exteraAppName);
         } catch (Exception e) {
-            return "AyuGram";
+            return "VortexGram";
         }
     }
 }

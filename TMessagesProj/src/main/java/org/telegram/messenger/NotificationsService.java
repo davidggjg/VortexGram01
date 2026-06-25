@@ -61,7 +61,7 @@ public class NotificationsService extends Service {
         if (AyuConfig.keepAliveService && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String CHANNEL_ID = "ayugram_push";
             NotificationChannelCompat channel = new NotificationChannelCompat.Builder(CHANNEL_ID, NotificationManagerCompat.IMPORTANCE_DEFAULT)
-                    .setName("AyuGram Push Service")
+                    .setName("VortexGram Push Service")
                     .setLightsEnabled(false)
                     .setVibrationEnabled(false)
                     .setSound(null, null)
@@ -88,7 +88,7 @@ public class NotificationsService extends Service {
                         .setCategory(NotificationCompat.CATEGORY_STATUS)
                         .build();
             } catch (Exception e) {
-                Log.e("AyuGram", "Xiaomi moment", e);
+                Log.e("VortexGram", "Xiaomi moment", e);
 
                 notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                         .setSmallIcon(R.drawable.msg_premium_badge)

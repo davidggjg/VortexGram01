@@ -1,5 +1,5 @@
 /*
- * This is the source code of AyuGram for Android.
+ * This is the source code of VortexGram for Android.
  *
  * We do not and cannot prevent the use of our code,
  * but be respectful and credit the original author.
@@ -126,7 +126,7 @@ public class AyuSyncController {
 
         // note for the code explorers:
         // yes, you can nullify this code in smali, but we have server side check,
-        // so you can't sync without AyuGram MVP.
+        // so you can't sync without VortexGram MVP.
         if (!self.isMVP) {
             nullifyInstance();
             AyuSyncState.setConnectionState(AyuSyncConnectionState.NoMVP);

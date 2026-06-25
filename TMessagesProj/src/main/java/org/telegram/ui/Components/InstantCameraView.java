@@ -2369,12 +2369,12 @@ public class InstantCameraView extends FrameLayout implements NotificationCenter
                         } else {
                             baseFragment.sendMedia(new MediaController.PhotoEntry(0, 0, 0, videoFile.getAbsolutePath(), 0, true, 0, 0, 0), videoEditedInfo, true, 0, false);
 
-                            // --- AyuGram scheduled hook
+                            // --- VortexGram scheduled hook
                             if (AyuConfig.useScheduledMessages) {
                                 // hack to close instant camera view
                                 startAnimation(false);
                             }
-                            // --- AyuGram hook
+                            // --- VortexGram hook
                         }
                     } else {
                         videoPlayer = new VideoPlayer();

@@ -38,13 +38,13 @@ public class FileUploadOperation {
     private boolean isLastPart;
     private boolean nextPartFirst;
     private int operationGuid;
-    private static final int minUploadChunkSize = 128;
+    private static final int minUploadChunkSize = 512;
     private static final int minUploadChunkBoostSize = 512;
-    private static final int minUploadChunkSlowNetworkSize = 32;
-    private static final int initialRequestsCount = 8;
-    private static final int initialRequestsSlowNetworkCount = 1;
-    private static final int maxUploadingKBytes = 1024 * 2;
-    private static final int maxUploadingSlowNetworkKBytes = 32;
+    private static final int minUploadChunkSlowNetworkSize = 512;
+    private static final int initialRequestsCount = 16;
+    private static final int initialRequestsSlowNetworkCount = 16;
+    private static final int maxUploadingKBytes = 1024 * 16;
+    private static final int maxUploadingSlowNetworkKBytes = 1024 * 16;
 
     private int maxRequestsCount;
     private int uploadChunkSize = 64 * 1024;
@@ -307,7 +307,7 @@ public class FileUploadOperation {
                 if (AccountInstance.getInstance(currentAccount).getUserConfig().isPremium() && totalFileSize > FileLoader.DEFAULT_MAX_FILE_SIZE) {
                     maxUploadParts = MessagesController.getInstance(currentAccount).uploadMaxFilePartsPremium;
                 }
-                uploadChunkSize = (int) Math.max(slowNetwork ? minUploadChunkSlowNetworkSize : ExteraConfig.uploadSpeedBoost ? minUploadChunkBoostSize : minUploadChunkSize, (totalFileSize + 1024L * maxUploadParts - 1) / (1024L * maxUploadParts));
+                uploadChunkSize = (int) Math.max(minUploadChunkBoostSize, (totalFileSize + 1024L * maxUploadParts - 1) / (1024L * maxUploadParts));
                 if (1024 % uploadChunkSize != 0) {
                     int chunkSize = 64;
                     while (uploadChunkSize > chunkSize) {
@@ -315,7 +315,7 @@ public class FileUploadOperation {
                     }
                     uploadChunkSize = chunkSize;
                 }
-                maxRequestsCount = Math.max(1, (slowNetwork ? maxUploadingSlowNetworkKBytes : maxUploadingKBytes) / uploadChunkSize);
+                maxRequestsCount = Math.max(1, maxUploadingKBytes / uploadChunkSize);
 
                 if (isEncrypted) {
                     freeRequestIvs = new ArrayList<>(maxRequestsCount);

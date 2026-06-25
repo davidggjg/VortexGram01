@@ -1,6 +1,6 @@
 /*
 
- This is the source code of exteraGram for Android.
+ This is the source code of VortexGram for Android.
 
  We do not and cannot prevent the use of our code,
  but be respectful and credit the original author.
@@ -168,8 +168,8 @@ public class ExteraConfig {
             formatTimeWithSeconds = preferences.getBoolean("formatTimeWithSeconds", false);
             tabletMode = preferences.getInt("tabletMode", 0);
 
-            downloadSpeedBoost = preferences.getInt("downloadSpeedBoost", 0);
-            uploadSpeedBoost = preferences.getBoolean("uploadSpeedBoost", false);
+            downloadSpeedBoost = 2; // VortexGram: always max download speed
+            uploadSpeedBoost = true; // VortexGram: always max upload speed
 
             hidePhoneNumber = preferences.getBoolean("hidePhoneNumber", false);
             showIdAndDc = preferences.getInt("showIdAndDc", 2);
