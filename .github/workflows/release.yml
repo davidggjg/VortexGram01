@@ -24,11 +24,21 @@ jobs:
             APP_ID = 6
             APP_HASH = "eb06d4abfb49dc3eeb1aeb98ae0f581e"
             MAPS_V2_API = ${{ secrets.MAPS_KEY }}
-            
-            SIGNING_KEY_PASSWORD = ${{ secrets.CERT_KEY }}
-            SIGNING_KEY_ALIAS = ${{ secrets.CERT_KEY }}
-            SIGNING_KEY_STORE_PASSWORD = ${{ secrets.CERT_KEY }}
+
+            SIGNING_KEY_PASSWORD = vortexgram_ci
+            SIGNING_KEY_ALIAS = vortexgram
+            SIGNING_KEY_STORE_PASSWORD = vortexgram_ci
           write-mode: overwrite
+
+      - name: Generate CI signing keystore
+        run: |
+          keytool -genkey -v \
+            -keystore TMessagesProj/config/extera.jks \
+            -alias vortexgram \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass vortexgram_ci -keypass vortexgram_ci \
+            -dname "CN=VortexGram, OU=CI, O=VortexGram, L=Unknown, S=Unknown, C=US" \
+            -noprompt
 
       - name: Setup Java
         uses: actions/setup-java@v4
