@@ -4,22 +4,46 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
+
+    <!--
+        VortexGram icon — vortex funnel design.
+        Outer group keeps content in the adaptive-icon safe zone (66% of 108dp).
+    -->
     <group
         android:scaleX="0.66"
         android:scaleY="0.66"
         android:translateX="18.36"
         android:translateY="18.36">
+
+        <!-- Vortex rotation ring 1 — wide, near top of funnel (semi-transparent) -->
+        <path
+            android:fillColor="#55FFFFFF"
+            android:pathData="M26,36 Q54,25 82,36 Q54,47 26,36 Z" />
+
+        <!-- Vortex rotation ring 2 — medium, mid-funnel -->
+        <path
+            android:fillColor="#44FFFFFF"
+            android:pathData="M34,54 Q54,44 74,54 Q54,64 34,54 Z" />
+
+        <!-- Vortex rotation ring 3 — narrow, near tip -->
+        <path
+            android:fillColor="#33FFFFFF"
+            android:pathData="M42,70 Q54,62 66,70 Q54,78 42,70 Z" />
+
+        <!-- Left arm of V: smooth bezier crescent, wide at top, narrows to center tip -->
         <path
             android:fillColor="#FFFFFFFF"
-            android:pathData="M60.2252 25.8121C59.5967 24.8103 58.0479 25.4405 58.298 26.5962L67.8802 70.8826C67.9853 71.3685 68.4153 71.7152 68.9126 71.7152H87.1139C87.9443 71.7152 88.4499 70.8016 88.0088 70.0984L60.2252 25.8121Z" />
+            android:pathData="M 16,22 L 30,22 Q 40,52 50,82 L 48,84 Q 33,54 12,22 Z" />
+
+        <!-- Right arm of V: mirror of left arm -->
         <path
             android:fillColor="#FFFFFFFF"
-            android:pathData="M56.1586 81.4187C56.1586 82.4294 57.4425 82.8625 58.0552 82.0584L64.0107 74.2415C64.1978 73.9958 64.268 73.6807 64.2028 73.3789L58.2473 45.8129C57.9801 44.5759 56.1586 44.7703 56.1586 46.0358L56.1586 81.4187Z" />
+            android:pathData="M 92,22 L 78,22 Q 68,52 58,82 L 60,84 Q 75,54 96,22 Z" />
+
+        <!-- Tip dot — fills the V point and ties both arms together -->
         <path
             android:fillColor="#FFFFFFFF"
-            android:pathData="M47.9857 25.8121C48.6142 24.8103 50.163 25.4405 49.913 26.5962L40.3308 70.8826C40.2256 71.3685 39.7957 71.7152 39.2984 71.7152H21.097C20.2667 71.7152 19.761 70.8016 20.2022 70.0984L47.9857 25.8121Z" />
-        <path
-            android:fillColor="#FFFFFFFF"
-            android:pathData="M52.0524 81.4187C52.0524 82.4294 50.7684 82.8625 50.1558 82.0584L44.2003 74.2415C44.0131 73.9958 43.9429 73.6807 44.0081 73.3789L49.9636 45.8129C50.2309 44.5759 52.0524 44.7703 52.0524 46.0358V81.4187Z" />
+            android:pathData="M 54,82 m -4,0 a 4,4,0,1,0,8,0 a 4,4,0,1,0,-8,0" />
+
     </group>
 </vector>
