@@ -11,7 +11,7 @@ jobs:
       CCACHE_MAXSIZE: "10G"
       CCACHE_HARDLINK: "true"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
@@ -30,18 +30,15 @@ jobs:
             SIGNING_KEY_STORE_PASSWORD = ${{ secrets.CERT_KEY }}
           write-mode: overwrite
 
-      - name: Update packages
-        run: sudo apt-get update
-
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
           cache: 'gradle'
 
       - name: Cache Gradle Build
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches/build-cache-*
@@ -57,17 +54,17 @@ jobs:
           restore-keys: ccache
 
       - name: Setup Android SDK Tools
-        uses: android-actions/setup-android@v2
+        uses: android-actions/setup-android@v3
 
       - name: Prepare Environment
         run: |
           echo "Removing large packages"
           sudo apt-get update
-          sudo apt-get remove -y '^llvm-.*'
-          sudo apt-get remove -y 'php.*'
-          sudo apt-get remove -y '^mongodb-.*'
-          sudo apt-get remove -y '^mysql-.*'
-          sudo apt-get remove -y azure-cli firefox mono-devel libgl1-mesa-dri
+          sudo apt-get remove -y '^llvm-.*' || true
+          sudo apt-get remove -y 'php.*' || true
+          sudo apt-get remove -y '^mongodb-.*' || true
+          sudo apt-get remove -y '^mysql-.*' || true
+          sudo apt-get remove -y azure-cli firefox mono-devel libgl1-mesa-dri || true
           sudo apt-get autoremove -y
           sudo apt-get clean
           
@@ -89,7 +86,7 @@ jobs:
         run: ./gradlew assembleAfatRelease
 
       - name: Upload
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Release APK
           path: TMessagesProj/build/outputs/apk/afat/release/*.apk
