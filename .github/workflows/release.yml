@@ -67,6 +67,23 @@ jobs:
       - name: Setup Android SDK Tools
         uses: android-actions/setup-android@v3
 
+      - name: Install CMake 3.22.1
+        run: |
+          SDKM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          for attempt in 1 2 3 4; do
+            echo "Attempt $attempt: installing cmake;3.22.1"
+            echo "y" | "$SDKM" "cmake;3.22.1" && { echo "CMake installed OK"; break; }
+            echo "Download failed, waiting $((attempt * 10))s before retry..."
+            sleep $((attempt * 10))
+          done
+          ls "$ANDROID_HOME/cmake/3.22.1/bin/cmake" || {
+            echo "sdkmanager install failed — falling back to NDK-bundled cmake"
+            NDK_CMAKE="$ANDROID_HOME/ndk/21.4.7075529/prebuilt/linux-x86_64"
+            mkdir -p "$ANDROID_HOME/cmake/3.22.1/bin"
+            ln -sf "$NDK_CMAKE/bin/cmake" "$ANDROID_HOME/cmake/3.22.1/bin/cmake"
+            ln -sf "$NDK_CMAKE/bin/ninja" "$ANDROID_HOME/cmake/3.22.1/bin/ninja" || true
+          }
+
       - name: Prepare Environment
         run: |
           echo "Removing large packages"
