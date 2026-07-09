@@ -25,20 +25,21 @@ import java.util.ArrayList;
 
 public class AyuHistoryHook {
 
-    public static Pair<Integer, Integer> getMinAndMaxIds(ArrayList<TLRPC.Message> messArr) {
+    public static Pair<Integer, Integer> getMinAndMaxIds(ArrayList<MessageObject> messArr) {
         if (messArr.isEmpty()) {
             return Pair.create(0, 0);
         }
         int min = Integer.MAX_VALUE;
         int max = Integer.MIN_VALUE;
-        for (TLRPC.Message msg : messArr) {
-            if (msg.id < min) min = msg.id;
-            if (msg.id > max) max = msg.id;
+        for (MessageObject msg : messArr) {
+            int id = msg.messageOwner.id;
+            if (id < min) min = id;
+            if (id > max) max = id;
         }
         return Pair.create(min, max);
     }
 
-    public static void doHook(int currentAccount, ArrayList<TLRPC.Message> messArr, SparseArray<MessageObject>[] messagesDict, int startId, int endId, long dialogId, int limit, long topicId, boolean isSecretChat) {
+    public static void doHook(int currentAccount, ArrayList<MessageObject> messArr, SparseArray<MessageObject>[] messagesDict, int startId, int endId, long dialogId, int limit, long topicId, boolean isSecretChat) {
         if (isSecretChat) {
             return;
         }
@@ -52,7 +53,7 @@ public class AyuHistoryHook {
                 var dm = full.message;
                 boolean found = false;
                 for (var m : messArr) {
-                    if (m.id == dm.messageId) {
+                    if (m.messageOwner.id == dm.messageId) {
                         found = true;
                         break;
                     }
@@ -60,10 +61,10 @@ public class AyuHistoryHook {
                 if (found) {
                     continue;
                 }
-                var msg = new TLRPC.TL_message();
-                mapFromBase(dm, msg, currentAccount);
-                mapMediaFromBase(dm, msg);
-                messArr.add(msg);
+                var tlMsg = new TLRPC.TL_message();
+                mapFromBase(dm, tlMsg, currentAccount);
+                mapMediaFromBase(dm, tlMsg);
+                messArr.add(new MessageObject(currentAccount, tlMsg, false, true));
             }
         } catch (Exception e) {
             FileLog.e("AyuHistoryHook.doHook", e);
@@ -82,13 +83,9 @@ public class AyuHistoryHook {
 
         if (base.fromId != 0) {
             msg.from_id = peerFromId(base.fromId);
-            msg.flags |= 0x100; // FLAG_HAS_FROM_ID
+            msg.flags |= 0x100;
         }
-        if (base.peerId != 0) {
-            msg.peer_id = peerFromId(base.peerId);
-        } else {
-            msg.peer_id = peerFromId(base.dialogId);
-        }
+        msg.peer_id = peerFromId(base.peerId != 0 ? base.peerId : base.dialogId);
 
         if (base.textEntities != null && base.textEntities.length > 0) {
             try {
@@ -120,7 +117,7 @@ public class AyuHistoryHook {
                 fwd.flags |= 32;
             }
             msg.fwd_from = fwd;
-            msg.flags |= 4; // FLAG_FWD
+            msg.flags |= 4;
         }
 
         if (base.replyMessageId != 0) {
@@ -134,7 +131,7 @@ public class AyuHistoryHook {
                 reply.flags |= 1;
             }
             msg.reply_to = reply;
-            msg.flags |= 8; // FLAG_REPLY
+            msg.flags |= 8;
         }
     }
 
@@ -145,16 +142,14 @@ public class AyuHistoryHook {
         if (base.documentType == AyuConstants.DOCUMENT_TYPE_PHOTO) {
             var photo = new TLRPC.TL_photo();
             photo.sizes = new ArrayList<>();
-            if (!TextUtils.isEmpty(base.mediaPath)) {
-                var size = new TLRPC.TL_photoSizeEmpty();
-                size.type = "s";
-                photo.sizes.add(size);
-            }
+            var size = new TLRPC.TL_photoSizeEmpty();
+            size.type = "s";
+            photo.sizes.add(size);
             var media = new TLRPC.TL_messageMediaPhoto();
             media.photo = photo;
             media.flags |= 1;
             msg.media = media;
-            msg.flags |= 512; // FLAG_HAS_MEDIA
+            msg.flags |= 512;
         } else if (base.documentType == AyuConstants.DOCUMENT_TYPE_STICKER || base.documentType == AyuConstants.DOCUMENT_TYPE_FILE) {
             if (base.documentSerialized != null && base.documentSerialized.length > 0) {
                 try {
