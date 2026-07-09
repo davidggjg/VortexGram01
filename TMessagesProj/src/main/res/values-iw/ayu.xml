@@ -63,6 +63,8 @@
   <string name="AntiKick">אנטי-כיק (הישאר בצ\'אט גם אחרי הסרה)</string>
   <!-- פתח סרטון בנגן חיצוני לבחירתך -->
   <string name="OpenWithExternalApp">פתח באפליקציה חיצונית</string>
+  <!-- פתח סרטון ב-1DM (מנהל הורדות) אם מותקן; אחרת יציג בורר אפליקציות -->
+  <string name="OpenWith1DM">פתח עם 1DM</string>
 
   <!-- כותרת התאמה אישית -->
   <string name="CustomizationHeader">התאמה אישית</string>
