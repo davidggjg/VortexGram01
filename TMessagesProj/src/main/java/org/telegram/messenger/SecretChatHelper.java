@@ -117,7 +117,7 @@ public class SecretChatHelper extends BaseController {
         if (!pendingEncMessagesToDelete.isEmpty()) {
             ArrayList<Long> pendingEncMessagesToDeleteCopy = new ArrayList<>(pendingEncMessagesToDelete);
 
-            // --- AyuGram hook (secret)
+            // --- VortexGram hook (secret)
 
             if (AyuConfig.saveDeletedMessages) {
                 // save before because they will be removed when `runOnUIThread` happens
@@ -157,7 +157,7 @@ public class SecretChatHelper extends BaseController {
                     });
                 }
             }
-            // --- AyuGram hook
+            // --- VortexGram hook
 
             AndroidUtilities.runOnUIThread(() -> {
                 for (int a = 0; a < pendingEncMessagesToDeleteCopy.size(); a++) {

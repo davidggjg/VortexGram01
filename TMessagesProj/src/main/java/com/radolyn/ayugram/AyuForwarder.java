@@ -1,5 +1,5 @@
 /*
- * This is the source code of AyuGram for Android.
+ * This is the source code of VortexGram for Android.
  *
  * We do not and cannot prevent the use of our code,
  * but be respectful and credit the original author.
@@ -174,13 +174,13 @@ public class AyuForwarder {
                         isFinalInGroup
                 );
             } else {
-                Log.w("AyuGram", "Unsupported message type: " + message.messageOwner);
+                Log.w("VortexGram", "Unsupported message type: " + message.messageOwner);
             }
 
-            Log.w("AyuGram", "Message forwarded");
+            Log.w("VortexGram", "Message forwarded");
         }
 
-        Log.w("AyuGram", "All messages forwarded");
+        Log.w("VortexGram", "All messages forwarded");
     }
 
     private static TLRPC.TL_document mapDocument(int currentAccount, TLRPC.Document doc, File messagePath) {

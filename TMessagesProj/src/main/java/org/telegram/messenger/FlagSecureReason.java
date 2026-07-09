@@ -64,7 +64,7 @@ public class FlagSecureReason {
             return;
         }
 
-        // AyuGram: removed
+        // VortexGram: removed
         window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
     }
 

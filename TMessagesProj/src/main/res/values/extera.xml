@@ -2,7 +2,7 @@
 
 <!--
 
- This is the source code of exteraGram for Android.
+ This is the source code of VortexGram for Android.
 
  We do not and cannot prevent the use of our code,
  but be respectful and credit the original author.
@@ -12,8 +12,8 @@
 -->
 
 <resources>
-    <string name="exteraAppName" translatable="false">AyuGram</string>
-    <string name="Preferences">exteraGram Preferences</string>
+    <string name="exteraAppName" translatable="false">VortexGram</string>
+    <string name="Preferences">VortexGram Preferences</string>
 
     <!-- Main Menu -->
     <string name="Links">Links</string>
@@ -156,7 +156,7 @@
     <string name="RememberLastUsedCamera">Remember last used Camera</string>
     <string name="RememberLastUsedCameraInfo">When recording video messages, the last used camera will be selected.</string>
     <string name="PauseOnMinimize">Auto-Pause</string>
-    <string name="PauseOnMinimizeInfo">Pauses a video playback when device is locked or exteraGram is minimized.</string>
+    <string name="PauseOnMinimizeInfo">Pauses a video playback when device is locked or VortexGram is minimized.</string>
     <string name="DisablePlayback">Disable Playback</string>
     <string name="DisablePlaybackInfo">Disables playback when volume button is pressed.</string>
 
@@ -201,7 +201,7 @@
 
     <!-- Other -->
     <string name="RestartRequired">Restart the App to take effect.</string>
-    <string name="ResetSettingsBulletin">**exteraGram** Preferences have been reset.</string>
+    <string name="ResetSettingsBulletin">**VortexGram** Preferences have been reset.</string>
     <string name="UserNotFound">User with this **ID** not found.</string>
     <string name="PhotoCopied">Photo copied to clipboard.</string>
 

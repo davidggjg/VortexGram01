@@ -104,7 +104,7 @@ import com.exteragram.messenger.utils.ChatUtils;
 import com.exteragram.messenger.utils.LocaleUtils;
 import com.radolyn.ayugram.AyuConfig;
 
-import com.radolyn.ayugram.ui.preferences.AyuGramPreferencesActivity;
+import com.radolyn.ayugram.ui.preferences.VortexGramPreferencesActivity;
 import org.telegram.PhoneFormat.PhoneFormat;
 import org.telegram.messenger.AccountInstance;
 import org.telegram.messenger.AndroidUtilities;
@@ -3310,7 +3310,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             } else if (position == exteraRow) {
                 presentFragment(new MainPreferencesActivity());
             } else if (position == ayuRow) {
-                presentFragment(new AyuGramPreferencesActivity());
+                presentFragment(new VortexGramPreferencesActivity());
             } else if (position == notificationRow) {
                 presentFragment(new NotificationsSettingsActivity());
             } else if (position == privacyRow) {
@@ -8995,7 +8995,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     cell.getTextView().setMovementMethod(null);
                     try {
                         PackageInfo info = ApplicationLoader.applicationContext.getPackageManager().getPackageInfo(ApplicationLoader.applicationContext.getPackageName(), 0);
-                        cell.setText(LocaleUtils.getAppName() + " " + BuildVars.BUILD_VERSION_STRING + " (" + BuildVars.AYU_VERSION + ")" + (AppUtils.isAppModified() ? "\nbased on @exteraGram " + info.versionCode : ""));
+                        cell.setText(LocaleUtils.getAppName() + " " + BuildVars.BUILD_VERSION_STRING + " (" + BuildVars.AYU_VERSION + ")" + (AppUtils.isAppModified() ? "\nbased on @VortexGram " + info.versionCode : ""));
                     } catch (PackageManager.NameNotFoundException e) {
                         FileLog.e(e);
                     }

@@ -1,5 +1,5 @@
 /*
- * This is the source code of AyuGram for Android.
+ * This is the source code of VortexGram for Android.
  *
  * We do not and cannot prevent the use of our code,
  * but be respectful and credit the original author.
@@ -44,14 +44,14 @@ public class DummyMessageWaiter extends EasyWaiter {
             }
 
             if (System.currentTimeMillis() - time > 3500) {
-                Log.w("AyuGram", "Failed to get sending message id, possibly sent already");
+                Log.w("VortexGram", "Failed to get sending message id, possibly sent already");
 
                 unsubscribe();
                 break;
             }
         }
 
-        Log.w("AyuGram", "Sending message id: " + sendingId);
+        Log.w("VortexGram", "Sending message id: " + sendingId);
 
         if (sendingId != 0) {
             setSendingId(sendingId);

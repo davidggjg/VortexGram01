@@ -1,6 +1,6 @@
     <!--
 
-     This is the source code of exteraGram for Android.
+     This is the source code of VortexGram for Android.
 
      We do not and cannot prevent the use of our code,
      but be respectful and credit the original author.
@@ -9,7 +9,7 @@
 
      -->
 <resources>
-    <string name="Preferences">параметри exteraGram</string>
+    <string name="Preferences">параметри VortexGram</string>
     <!--  Main Menu  -->
     <string name="Links">Посилання</string>
     <string name="AboutExteraDescription">Експериментальний клієнт Telegram заснований на офіційних джерелах!</string>
@@ -133,7 +133,7 @@ CameraX підтримується тільки на
     <string name="RememberLastUsedCamera">Запам\'ятати останню використану камеру</string>
     <string name="RememberLastUsedCameraInfo">При записі відеоповідомлень, буде вибрано останню використану камеру.</string>
     <string name="PauseOnMinimize">Автопауза</string>
-    <string name="PauseOnMinimizeInfo">Призупиняє відтворення відео, коли пристрій заблоковано або згорнуто exteraGram.</string>
+    <string name="PauseOnMinimizeInfo">Призупиняє відтворення відео, коли пристрій заблоковано або згорнуто VortexGram.</string>
     <string name="DisablePlayback">Вимкнути відтворення</string>
     <string name="DisablePlaybackInfo">Вимикає відтворення при натисканні кнопки гучності.</string>
     <!--  Boost  -->
@@ -172,7 +172,7 @@ CameraX підтримується тільки на
     <string name="Datacenter">Дата-центр</string>
     <!--  Other  -->
     <string name="RestartRequired">Перезапустіть програму, щоб зміни вступили в силу.</string>
-    <string name="ResetSettingsBulletin">**exteraGram** Налаштування були скинуті.</string>
+    <string name="ResetSettingsBulletin">**VortexGram** Налаштування були скинуті.</string>
     <string name="UserNotFound">Користувача з таким **ID** не знайдено.</string>
     <string name="PhotoCopied">Фото скопійовано до буфера обміну.</string>
     <string name="MutualContact">взаємний контакт</string>

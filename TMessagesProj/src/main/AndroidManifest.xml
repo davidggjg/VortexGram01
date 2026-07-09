@@ -115,7 +115,7 @@
 
     <uses-sdk tools:overrideLibrary="androidx.camera.view, androidx.camera.extensions, androidx.camera.lifecycle, androidx.camera.camera2, androidx.camera.core" />
 
-    <!-- AyuGram: remove for release `usesCleartextTraffic` -->
+    <!-- VortexGram: remove for release `usesCleartextTraffic` -->
     <application
         android:name=".ApplicationLoader"
         android:allowAudioPlaybackCapture="true"

@@ -57,14 +57,14 @@ dependencies {
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
 
-    // AyuGram deps
+    // VortexGram deps
 
     // ~ Database deps
     def room_version = "2.5.2"
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
 
-    // ~ AyuGram Sync deps
+    // ~ VortexGram Sync deps
     implementation "dev.gustavoavila:java-android-websocket-client:2.0.2"
     implementation "com.squareup.okhttp3:okhttp:4.10.0"
 
@@ -215,7 +215,7 @@ android {
             def formattedDate = date.format('ddMMyyyy')
             def abi = abis.get(variant.productFlavors.get(0).abiVersionCode)
 
-            outputFileName = "ayuGram-${buildType}${abi}-${formattedDate}.apk"
+            outputFileName = "vortexGram-${buildType}${abi}-${formattedDate}.apk"
             output.versionCodeOverride = defaultConfig.versionCode * (isPmBuild == "true" ? 100 : 10) + variant.productFlavors.get(0).abiVersionCode
         }
     }
@@ -229,7 +229,7 @@ android {
     dependenciesInfo.includeInApk false
 }
 
-// AyuGram: kotlin fix...
+// VortexGram: kotlin fix...
 configurations.implementation {
     exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
 }

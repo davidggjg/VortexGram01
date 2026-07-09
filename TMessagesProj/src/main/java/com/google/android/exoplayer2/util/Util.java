@@ -1637,7 +1637,7 @@ public final class Util {
    * @return A user agent string generated using the applicationName and the library version.
    */
   public static String getUserAgent(Context context, String applicationName) throws AyuPrivacyException {
-    // AyuGram: it's not being called
+    // VortexGram: it's not being called
     throw new AyuPrivacyException();
   }
 

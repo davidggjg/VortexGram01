@@ -304,7 +304,7 @@ public class ConnectionsManager extends BaseController {
             FileLog.d("send request " + object + " with token = " + requestToken);
         }
 
-        // --- AyuGram request hook
+        // --- VortexGram request hook
         {
             // don't send upload & typing status
             if (!AyuConfig.sendUploadProgress &&
@@ -393,7 +393,7 @@ public class ConnectionsManager extends BaseController {
             }
         }
         final var onComplete = onCompleteOrig;
-        // --- AyuGram request hook
+        // --- VortexGram request hook
 
         try {
             NativeByteBuffer buffer = new NativeByteBuffer(object.getObjectSize());

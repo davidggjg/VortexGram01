@@ -1,5 +1,5 @@
 /*
- * This is the source code of AyuGram for Android.
+ * This is the source code of VortexGram for Android.
  *
  * We do not and cannot prevent the use of our code,
  * but be respectful and credit the original author.
@@ -35,13 +35,13 @@ public class DummyFileUploadWaiter extends EasyWaiter {
         if (id == NotificationCenter.fileUploaded) {
             final String location = (String) args[0];
 
-            Log.w("AyuGram", "File uploaded: " + location);
+            Log.w("VortexGram", "File uploaded: " + location);
 
             process(location);
         } else if (id == NotificationCenter.fileUploadFailed) {
             final String location = (String) args[0];
 
-            Log.w("AyuGram", "File upload failed: " + location);
+            Log.w("VortexGram", "File upload failed: " + location);
 
             process(location);
         }

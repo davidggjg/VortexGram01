@@ -6105,7 +6105,7 @@ public class MessagesController extends BaseController implements NotificationCe
             return;
         }
 
-        // --- AyuGram hook
+        // --- VortexGram hook
         if (!scheduled && AyuConfig.saveDeletedMessages) {
             if (DialogObject.isEncryptedDialog(dialogId) && messages != null && !messages.isEmpty()) { // process TTL messages from secrets
                 for (int a = 0; a < messages.size(); a++) {
@@ -6169,7 +6169,7 @@ public class MessagesController extends BaseController implements NotificationCe
                 }
             }
         }
-        // --- AyuGram hook
+        // --- VortexGram hook
 
         ArrayList<Integer> toSend = null;
         long channelId;
@@ -15189,7 +15189,7 @@ public class MessagesController extends BaseController implements NotificationCe
             }
         }
 
-        // --- AyuGram request hook
+        // --- VortexGram request hook
         if (AyuConfig.saveDeletedMessages && deletedMessages != null) {
             var currentTimeS = (int)(currentTime / 1000);
             var messagesStorage = getMessagesStorage();
@@ -15230,7 +15230,7 @@ public class MessagesController extends BaseController implements NotificationCe
                 }
             }
         }
-        // --- AyuGram request hook
+        // --- VortexGram request hook
 
         if (messages != null) {
             for (int a = 0, size = messages.size(); a < size; a++) {
@@ -16265,7 +16265,7 @@ public class MessagesController extends BaseController implements NotificationCe
                     getNotificationCenter().postNotificationName(NotificationCenter.messagesReadContent, key, value);
                 }
             }
-            if (deletedMessagesFinal != null) { // --- AyuGram: don't notify that messages were deleted; already handled by MESSAGES_DELETED_NOTIFICATION
+            if (deletedMessagesFinal != null) { // --- VortexGram: don't notify that messages were deleted; already handled by MESSAGES_DELETED_NOTIFICATION
                 for (int a = 0, size = deletedMessagesFinal.size(); a < size; a++) {
                     long dialogId = deletedMessagesFinal.keyAt(a);
                     ArrayList<Integer> arrayList = deletedMessagesFinal.valueAt(a);

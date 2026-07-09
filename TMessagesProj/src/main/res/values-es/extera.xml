@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 
- This is the source code of exteraGram for Android.
+ This is the source code of VortexGram for Android.
 
  We do not and cannot prevent the use of our code,
  but be respectful and credit the original author.
@@ -10,7 +10,7 @@
 
 -->
 <resources>
-    <string name="Preferences">Preferencias de exteraGram</string>
+    <string name="Preferences">Preferencias de VortexGram</string>
     <!-- Main Menu -->
     <string name="Links">Enlaces</string>
     <string name="AboutExteraDescription">¡Cliente experimental de Telegram basado en la fuente oficial de Telegram!</string>
@@ -130,7 +130,7 @@
     <string name="RememberLastUsedCamera">Recordar última cámara usada</string>
     <string name="RememberLastUsedCameraInfo">Al grabar videomensajes, se seleccionará la última cámara usada.</string>
     <string name="PauseOnMinimize">Pausar automáticamente</string>
-    <string name="PauseOnMinimizeInfo">Pausa la reproducción de video cuando el dispositivo está bloqueado o exteraGram se minimiza.</string>
+    <string name="PauseOnMinimizeInfo">Pausa la reproducción de video cuando el dispositivo está bloqueado o VortexGram se minimiza.</string>
     <string name="DisablePlayback">Desactivar reproducción</string>
     <string name="DisablePlaybackInfo">Deshabilita la reproducción cuando se presiona el botón de volumen.</string>
     <!-- Boost -->
@@ -169,7 +169,7 @@
     <string name="Datacenter">Centro de datos</string>
     <!-- Other -->
     <string name="RestartRequired">Reinicie la app para que tenga efecto.</string>
-    <string name="ResetSettingsBulletin">Las preferencias de **exteraGram** han sido restablecidas.</string>
+    <string name="ResetSettingsBulletin">Las preferencias de **VortexGram** han sido restablecidas.</string>
     <string name="UserNotFound">Usuario con este ** ID ** no encontrado.</string>
     <string name="PhotoCopied">Foto copiada al portapapeles.</string>
     <string name="MutualContact">contacto mutuo</string>

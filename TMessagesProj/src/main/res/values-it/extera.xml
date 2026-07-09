@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 
- This is the source code of exteraGram for Android.
+ This is the source code of VortexGram for Android.
 
  We do not and cannot prevent the use of our code,
  but be respectful and credit the original author.
@@ -10,7 +10,7 @@
 
 -->
 <resources>
-    <string name="Preferences">Preferenze di exteraGram</string>
+    <string name="Preferences">Preferenze di VortexGram</string>
     <!-- Main Menu -->
     <string name="Links">Link</string>
     <string name="AboutExteraDescription">Client sperimentale basato sul codice sorgente ufficiale di Telegram!</string>
@@ -130,7 +130,7 @@
     <string name="RememberLastUsedCamera">Ricorda l\'ultima fotocamera usata</string>
     <string name="RememberLastUsedCameraInfo">Quando registri i videomessaggi, sarà selezionata l\'ultima fotocamera che hai usato.</string>
     <string name="PauseOnMinimize">Sospensione automatica</string>
-    <string name="PauseOnMinimizeInfo">Metti in pausa la riproduzione di un video quando il dispositivo è bloccato o exteraGram è minimizzato.</string>
+    <string name="PauseOnMinimizeInfo">Metti in pausa la riproduzione di un video quando il dispositivo è bloccato o VortexGram è minimizzato.</string>
     <string name="DisablePlayback">Disattiva riproduzione</string>
     <string name="DisablePlaybackInfo">Non riprodurre l\'audio dei video premendo i tasti del volume.</string>
     <!-- Boost -->
@@ -169,7 +169,7 @@
     <string name="Datacenter">Datacenter</string>
     <!-- Other -->
     <string name="RestartRequired">Riavvia l\'app per applicare le modifiche.</string>
-    <string name="ResetSettingsBulletin">Le preferenze di **exteraGram** sono state ripristinate.</string>
+    <string name="ResetSettingsBulletin">Le preferenze di **VortexGram** sono state ripristinate.</string>
     <string name="UserNotFound">Utente con questo **ID** non trovato.</string>
     <string name="PhotoCopied">Foto copiata negli appunti.</string>
     <string name="MutualContact">contatto comune</string>

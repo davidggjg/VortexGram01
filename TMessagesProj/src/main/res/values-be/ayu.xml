@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <string name="AyuPreferences">Налады AyuGram</string>
+  <string name="AyuPreferences">Налады VortexGram</string>
   <string name="GhostEssentialsHeader">Налады рэжыму Прывіду</string>
   <string name="SendReadPackets">Адпраўляць статус "прачытана"</string>
   <string name="SendOnlinePackets">Адпраўляць статус "анлайн"</string>
@@ -25,7 +25,7 @@
   <string name="MessageSavingSaveForBots">Захоўваць паведамленні ботаў</string>
   <string name="QoLTogglesHeader">Карысныя функцыі</string>
   <string name="ShowFromChannel">Паказваць адзнаку «канал»</string>
-  <string name="KeepAliveService">Пуш-сэрвіс AyuGram</string>
+  <string name="KeepAliveService">Пуш-сэрвіс VortexGram</string>
   <string name="EnableAds">Уключыць рэкламу</string>
   <string name="LocalPremium">Лакальны Telegram Premium</string>
   <string name="CustomizationHeader">Наладжваньне</string>
@@ -70,7 +70,7 @@
   <string name="AyuSyncDownloadAgent">Спампаваць кліент</string>
   <string name="WALMode">Уключыць рэжым WAL</string>
   <string name="ClearAyuDatabase">Ачысціць базу дадзеных Ayu</string>
-  <string name="ClearAyuDatabaseNotification">База дадзеных AyuGram ачышчаная</string>
+  <string name="ClearAyuDatabaseNotification">База дадзеных VortexGram ачышчаная</string>
   <string name="EraseLocalDatabase">Сцерці лакальную базу дадзеных</string>
   <string name="BetaFeatures">Бэта-функцыі</string>
   <string name="StickerConfirmation">Пацвярджэнне адпраўкі стыкераў</string>
@@ -97,8 +97,8 @@
   <string name="ContextCopyID">Скапіраваць ID</string>
   <string name="IDCopiedToast">ID скапіраваны ў буфер абмену.</string>
   <string name="ContextHideMessage">Схаваць</string>
-  <string name="SettingsWatermark">AyuGram распрацоўваецца і падтрымліваецца Radolyn Labs.</string>
-  <string name="SettingsDescription">Проста заснаваны на exteraGram кліент з функцыямі, ламаючымі ўмовы карыстання.</string>
+  <string name="SettingsWatermark">VortexGram распрацоўваецца і падтрымліваецца Radolyn Labs.</string>
+  <string name="SettingsDescription">Проста заснаваны на VortexGram кліент з функцыямі, ламаючымі ўмовы карыстання.</string>
   <string name="SecretMessageTecno">Тэлефоны Тэкна найлепшыя.</string>
   <string name="SecretMessageXiaomiSuccess">Ты выкарыстоўваеш добры тэлефон.</string>
   <string name="SecretMessageXiaomiFailure">Прашый ты свой Хлаомі, будзь ласка.</string>

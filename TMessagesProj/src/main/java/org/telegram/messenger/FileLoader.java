@@ -1205,7 +1205,7 @@ public class FileLoader extends BaseController {
             }
         }
 
-        // --- AyuGram hook
+        // --- VortexGram hook
         if (attach instanceof TLRPC.PhotoSize) {
             var obj = (TLRPC.PhotoSize) attach;
             if (obj.location instanceof AyuFileLocation) {
@@ -1220,7 +1220,7 @@ public class FileLoader extends BaseController {
             var obj = (AyuFileLocation) attach;
             return new File(obj.path);
         }
-        // --- AyuGram hook
+        // --- VortexGram hook
 
         if (dir == null) {
             return new File("");

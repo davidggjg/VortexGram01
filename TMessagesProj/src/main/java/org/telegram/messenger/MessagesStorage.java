@@ -4258,13 +4258,13 @@ public class MessagesStorage extends BaseController {
                             if (!addFilesToDelete(message, filesToDelete, idsToDelete, namesToDelete, true)) {
                                 continue;
                             } else {
-                                // --- AyuGram hook
+                                // --- VortexGram hook
                                 if (AyuConfig.saveMessagesHistory) {
                                     var prefs = new AyuSavePreferences(message, currentAccount);
                                     prefs.setDialogId(dialogId);
                                     AyuMessagesController.getInstance().onMessageEditedForce(prefs);
                                 }
-                                // --- AyuGram hook
+                                // --- VortexGram hook
 
                                 if (message.media.document != null) {
                                     message.media.document = new TLRPC.TL_documentEmpty();

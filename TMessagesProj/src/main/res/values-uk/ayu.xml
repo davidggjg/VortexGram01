@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <string name="AyuPreferences">Налаштування AyuGram</string>
+  <string name="AyuPreferences">Налаштування VortexGram</string>
   <string name="GhostEssentialsHeader">Налаштування режиму привида</string>
   <string name="SendReadPackets">Відправляти статус «прочитано»</string>
   <string name="SendOnlinePackets">Відправляти статус «онлайн»</string>
@@ -25,7 +25,7 @@
   <string name="MessageSavingSaveForBots">Зберегти в діалогах з ботами</string>
   <string name="QoLTogglesHeader">Корисні функції</string>
   <string name="ShowFromChannel">Показувати надпис «канал»</string>
-  <string name="KeepAliveService">Push-сервіс AyuGram</string>
+  <string name="KeepAliveService">Push-сервіс VortexGram</string>
   <string name="EnableAds">Увімкнути рекламу</string>
   <string name="LocalPremium">Локальний Telegram Преміум</string>
   <string name="CustomizationHeader">Персоналізація</string>
@@ -70,8 +70,8 @@
   <string name="AyuSyncOpenPreferences">Відкрити налаштування</string>
   <string name="AyuSyncDownloadAgent">Завантажити клієнт</string>
   <string name="WALMode">Увімкнути режим WAL</string>
-  <string name="ClearAyuDatabase">Очистити базу даних AyuGram</string>
-  <string name="ClearAyuDatabaseNotification">Базу даних AyuGram очищено</string>
+  <string name="ClearAyuDatabase">Очистити базу даних VortexGram</string>
+  <string name="ClearAyuDatabaseNotification">Базу даних VortexGram очищено</string>
   <string name="EraseLocalDatabase">Видалити локальну базу даних</string>
   <string name="BetaFeatures">Бета-можливості</string>
   <string name="StickerConfirmation">Підтверджувати надсилання наліпок</string>
@@ -98,8 +98,8 @@
   <string name="ContextCopyID">Скопіювати ID</string>
   <string name="IDCopiedToast">ID скопійовано до буфера обміну.</string>
   <string name="ContextHideMessage">Сховати</string>
-  <string name="SettingsWatermark">AyuGram розроблений і підтримується Radolyn Labs.</string>
-  <string name="SettingsDescription">Просто клієнт на основі exteraGram з функціями, які порушують ToS.</string>
+  <string name="SettingsWatermark">VortexGram розроблений і підтримується Radolyn Labs.</string>
+  <string name="SettingsDescription">Просто клієнт на основі VortexGram з функціями, які порушують ToS.</string>
   <string name="SecretMessageTecno">Телефони Tecno найкращі.</string>
   <string name="SecretMessageXiaomiSuccess">Ви використовуєте гарний телефон.</string>
   <string name="SecretMessageXiaomiFailure">Встановіть кастомну прошивку.</string>
