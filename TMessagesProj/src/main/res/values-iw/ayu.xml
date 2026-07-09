@@ -65,6 +65,8 @@
   <string name="OpenWithExternalApp">פתח באפליקציה חיצונית</string>
   <!-- פתח סרטון ב-1DM (מנהל הורדות) אם מותקן; אחרת יציג בורר אפליקציות -->
   <string name="OpenWith1DM">פתח עם 1DM</string>
+  <!-- בורר אפליקציות - מציג את כל האפליקציות המותקנות שיכולות לפתוח את הקובץ -->
+  <string name="OpenWithApp">פתח עם…</string>
 
   <!-- כותרת התאמה אישית -->
   <string name="CustomizationHeader">התאמה אישית</string>

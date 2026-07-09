@@ -23917,7 +23917,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                                         items.add(LocaleController.getString("ShareFile", R.string.ShareFile));
                                         options.add(OPTION_SHARE);
                                         icons.add(R.drawable.msg_shareout);
-                                        items.add(LocaleController.getString("OpenWith1DM", R.string.OpenWith1DM));
+                                        items.add(LocaleController.getString("OpenWithApp", R.string.OpenWithApp));
                                         options.add(OPTION_OPEN_WITH);
                                         icons.add(R.drawable.msg_shareout);
                                     }
@@ -26182,33 +26182,14 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     File f = new File(path);
                     String mimeType = selectedObject.getDocument() != null ? selectedObject.getDocument().mime_type : null;
                     if (android.text.TextUtils.isEmpty(mimeType)) mimeType = "video/*";
-                    android.net.Uri fileUri;
+                    Intent openWithIntent = new Intent(Intent.ACTION_VIEW);
                     if (Build.VERSION.SDK_INT >= 24) {
-                        fileUri = FileProvider.getUriForFile(getParentActivity(), ApplicationLoader.getApplicationId() + ".provider", f);
+                        openWithIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        openWithIntent.setDataAndType(FileProvider.getUriForFile(getParentActivity(), ApplicationLoader.getApplicationId() + ".provider", f), mimeType);
                     } else {
-                        fileUri = Uri.fromFile(f);
+                        openWithIntent.setDataAndType(Uri.fromFile(f), mimeType);
                     }
-                    // Try to open with 1DM (free or plus variant), fall back to system chooser
-                    String[] idmPackages = {"idm.internet.download.manager", "idm.internet.download.manager.plus"};
-                    boolean launched1dm = false;
-                    android.content.pm.PackageManager pm = getParentActivity().getPackageManager();
-                    for (String pkg : idmPackages) {
-                        Intent idmIntent = new Intent(Intent.ACTION_VIEW);
-                        idmIntent.setDataAndType(fileUri, mimeType);
-                        idmIntent.setPackage(pkg);
-                        idmIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        if (idmIntent.resolveActivity(pm) != null) {
-                            getParentActivity().startActivityForResult(idmIntent, 500);
-                            launched1dm = true;
-                            break;
-                        }
-                    }
-                    if (!launched1dm) {
-                        Intent openWithIntent = new Intent(Intent.ACTION_VIEW);
-                        openWithIntent.setDataAndType(fileUri, mimeType);
-                        openWithIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        getParentActivity().startActivityForResult(Intent.createChooser(openWithIntent, LocaleController.getString("OpenWith1DM", R.string.OpenWith1DM)), 500);
-                    }
+                    getParentActivity().startActivityForResult(Intent.createChooser(openWithIntent, LocaleController.getString("OpenWithApp", R.string.OpenWithApp)), 500);
                 } catch (Exception e) {
                     FileLog.e(e);
                     alertUserOpenError(selectedObject);

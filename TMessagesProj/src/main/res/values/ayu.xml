@@ -31,6 +31,7 @@
   <string name="AntiKick">Anti-kick (stay in chat when removed)</string>
   <string name="OpenWithExternalApp">Open with external app</string>
   <string name="OpenWith1DM">Open with 1DM</string>
+  <string name="OpenWithApp">Open with…</string>
   <string name="CustomizationHeader">Customization</string>
   <string name="DeletedMarkText">Deleted mark</string>
   <string name="EditedMarkText">Edited mark</string>
