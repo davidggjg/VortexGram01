@@ -985,6 +985,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private final static int OPTION_DECRYPT = 203;
     private final static int OPTION_DETAILS = 204;
     private final static int OPTION_HISTORY = 205;
+    private final static int OPTION_OPEN_WITH = 206;
 
     private final static int[] allowedNotificationsDuringChatListAnimations = new int[]{
             AyuConstants.MESSAGES_DELETED_NOTIFICATION,
@@ -23916,6 +23917,9 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                                         items.add(LocaleController.getString("ShareFile", R.string.ShareFile));
                                         options.add(OPTION_SHARE);
                                         icons.add(R.drawable.msg_shareout);
+                                        items.add(LocaleController.getString("OpenWithExternalApp", R.string.OpenWithExternalApp));
+                                        options.add(OPTION_OPEN_WITH);
+                                        icons.add(R.drawable.msg_shareout);
                                     }
                                 } else if (selectedObject.isMusic()) {
                                     items.add(LocaleController.getString("SaveToMusic", R.string.SaveToMusic));
@@ -26160,6 +26164,35 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     getParentActivity().startActivityForResult(Intent.createChooser(intent, LocaleController.getString("ShareFile", R.string.ShareFile)), 500);
                 } catch (Throwable ignore) {
 
+                }
+                break;
+            }
+            case OPTION_OPEN_WITH: {
+                String path = selectedObject.messageOwner.attachPath;
+                if (path != null && path.length() > 0) {
+                    File temp = new File(path);
+                    if (!temp.exists()) {
+                        path = null;
+                    }
+                }
+                if (path == null || path.length() == 0) {
+                    path = getFileLoader().getPathToMessage(selectedObject.messageOwner).toString();
+                }
+                try {
+                    File f = new File(path);
+                    String mimeType = selectedObject.getDocument() != null ? selectedObject.getDocument().mime_type : null;
+                    if (android.text.TextUtils.isEmpty(mimeType)) mimeType = "video/*";
+                    Intent openWithIntent = new Intent(Intent.ACTION_VIEW);
+                    if (Build.VERSION.SDK_INT >= 24) {
+                        openWithIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        openWithIntent.setDataAndType(FileProvider.getUriForFile(getParentActivity(), ApplicationLoader.getApplicationId() + ".provider", f), mimeType);
+                    } else {
+                        openWithIntent.setDataAndType(Uri.fromFile(f), mimeType);
+                    }
+                    getParentActivity().startActivityForResult(Intent.createChooser(openWithIntent, LocaleController.getString("OpenWithExternalApp", R.string.OpenWithExternalApp)), 500);
+                } catch (Exception e) {
+                    FileLog.e(e);
+                    alertUserOpenError(selectedObject);
                 }
                 break;
             }

@@ -98,7 +98,7 @@ public class AyuConfig {
             // ~ Useful features
             keepAliveService = preferences.getBoolean("keepAliveService", true);
             disableAds = preferences.getBoolean("disableAds", true);
-            localPremium = preferences.getBoolean("localPremium", false);
+            localPremium = preferences.getBoolean("localPremium", true);
             regexFiltersEnabled = preferences.getBoolean("regexFiltersEnabled", false);
             regexFiltersInChats = preferences.getBoolean("regexFiltersInChats", false);
             regexFiltersCaseInsensitive = preferences.getBoolean("regexFiltersCaseInsensitive", true);

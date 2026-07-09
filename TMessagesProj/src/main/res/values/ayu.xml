@@ -29,6 +29,7 @@
   <string name="DisableAds">Disable ads</string>
   <string name="LocalPremium">Local Telegram Premium</string>
   <string name="AntiKick">Anti-kick (stay in chat when removed)</string>
+  <string name="OpenWithExternalApp">Open with external app</string>
   <string name="CustomizationHeader">Customization</string>
   <string name="DeletedMarkText">Deleted mark</string>
   <string name="EditedMarkText">Edited mark</string>

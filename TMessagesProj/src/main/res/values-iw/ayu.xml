@@ -1,0 +1,183 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!-- שם מסך ההגדרות הראשי -->
+  <string name="AyuPreferences">הגדרות VortexGram</string>
+
+  <!-- כותרת מצב רוח-רפאים: שליחת מידע מצב שלך לשרת -->
+  <string name="GhostEssentialsHeader">הגדרות רוח-רפאים</string>
+  <!-- מונע מהשרת לדעת שקראת הודעה -->
+  <string name="DontSendReadPackets">אל תסמן הודעות כנקראו</string>
+  <!-- מונע מהשרת לדעת שאתה מחובר -->
+  <string name="DontSendOnlinePackets">אל תשדר מצב מחובר</string>
+  <!-- מונע מהשרת לדעת שאתה מקליד או מעלה קובץ -->
+  <string name="DontSendUploadProgress">אל תראה שאתה מקליד/מעלה</string>
+  <!-- שולח פאקט לא-מחובר מיד אחרי שדווח מחובר, לצמצם חשיפה -->
+  <string name="SendOfflinePacketAfterOnline">התנתק מיידית אחרי חיבור</string>
+  <!-- מסמן הודעות כנקראו לאחר שאתה שולח תגובה -->
+  <string name="MarkReadAfterSend">סמן נקרא לאחר שליחת תגובה</string>
+  <!-- שולח הודעות בזמן מתוזמן בלבד -->
+  <string name="UseScheduledMessages">שלח הודעות מתוזמנות</string>
+
+  <!-- כותרת הגדרות שמירת הודעות שנמחקו/עודכנו -->
+  <string name="SpyEssentialsHeader">שמירת היסטוריה</string>
+  <!-- שומר עותק של הודעות לפני מחיקתן -->
+  <string name="SaveDeletedMessages">שמור הודעות שנמחקו</string>
+  <!-- שומר כל גרסה של הודעה שנערכה -->
+  <string name="SaveMessagesHistory">שמור היסטוריית עריכות</string>
+
+  <!-- כפתור לפתיחת הגדרות שמירת מדיה -->
+  <string name="MessageSavingBtn">העדפות שמירת הודעות</string>
+  <!-- כותרת מדיה -->
+  <string name="MessageSavingMediaHeader">מדיה</string>
+  <!-- שמור קבצי מדיה מצורפים להודעות -->
+  <string name="MessageSavingSaveMedia">שמור מדיה</string>
+  <string name="MessageSavingSaveMediaHint">לחץ לפרטים נוספים</string>
+  <!-- שמור מדיה משיחות פרטיות -->
+  <string name="MessageSavingSaveMediaInPrivateChats">…בצ\'אטים פרטיים</string>
+  <!-- שמור מדיה מערוצים ציבוריים -->
+  <string name="MessageSavingSaveMediaInPublicChannels">…בערוצים ציבוריים</string>
+  <!-- שמור מדיה מערוצים פרטיים -->
+  <string name="MessageSavingSaveMediaInPrivateChannels">…בערוצים פרטיים</string>
+  <!-- שמור מדיה מקבוצות ציבוריות -->
+  <string name="MessageSavingSaveMediaInPublicGroups">…בקבוצות ציבוריות</string>
+  <!-- שמור מדיה מקבוצות פרטיות -->
+  <string name="MessageSavingSaveMediaInPrivateGroups">…בקבוצות פרטיות</string>
+  <!-- כותרת אחר -->
+  <string name="MessageSavingOtherHeader">אחר</string>
+  <!-- שמור את העיצוב (מודגש, נטוי, וכו') של הודעות שנמחקו -->
+  <string name="MessageSavingSaveFormatting">שמור עיצוב טקסט</string>
+  <!-- שמור תגובות אמוג\'י שנוספו להודעות -->
+  <string name="MessageSavingSaveReactions">שמור תגובות</string>
+  <!-- שמור גם הודעות מבוטים -->
+  <string name="MessageSavingSaveForBots">שמור בשיחות עם בוטים</string>
+
+  <!-- כותרת תכונות שימושיות -->
+  <string name="QoLTogglesHeader">תכונות שימושיות</string>
+  <!-- שמור על חיבור רקע של האפליקציה לקבלת הודעות אמינה -->
+  <string name="KeepAliveService">שירות Push של VortexGram</string>
+  <!-- הסתר פרסומות בממשק טלגרם -->
+  <string name="DisableAds">השבת פרסומות</string>
+  <!-- הפעל את כל תכונות Telegram Premium ללא מנוי - כולל סטיקרים, מגבלות גדולות יותר ועוד -->
+  <string name="LocalPremium">פרימיום מקומי (בלי מנוי)</string>
+  <!-- כאשר מוסרים אותך מקבוצה/ערוץ, השיחה נשארת ברשימה עד שתעזוב ידנית -->
+  <string name="AntiKick">אנטי-כיק (הישאר בצ\'אט גם אחרי הסרה)</string>
+  <!-- פתח סרטון בנגן חיצוני לבחירתך -->
+  <string name="OpenWithExternalApp">פתח באפליקציה חיצונית</string>
+
+  <!-- כותרת התאמה אישית -->
+  <string name="CustomizationHeader">התאמה אישית</string>
+  <!-- הטקסט שמופיע ליד הודעה שנמחקה (ברירת מחדל: סמל מחיקה) -->
+  <string name="DeletedMarkText">סימון הודעה שנמחקה</string>
+  <!-- הטקסט שמופיע ליד הודעה שנערכה -->
+  <string name="EditedMarkText">סימון הודעה שנערכה</string>
+  <!-- הצג כפתור הפעלת/כיבוי מצב רוח-רפאים בתפריט הצד -->
+  <string name="ShowGhostToggleInDrawer">הצג מתג רוח-רפאים בתפריט</string>
+  <!-- הצג כפתור לסגירת האפליקציה מיידית בתפריט הצד -->
+  <string name="ShowKllButtonInDrawer">הצג כפתור סגירת אפליקציה</string>
+  <!-- הצג את ה-ID של משתמש/קבוצה/ערוץ בפרופיל -->
+  <string name="SettingsShowID">הצג מזהה (ID)</string>
+  <string name="SettingsShowID_Hide">הסתר</string>
+  <!-- מספר הסטיקרים האחרונים שמוצגים בלוח הסטיקרים -->
+  <string name="SettingsRecentStickersCount">מספר סטיקרים אחרונים</string>
+  <!-- הודעה שמבקשת להפעיל מחדש לאחר שינוי הגדרות התאמה אישית -->
+  <string name="SettingsCustomizationHint">לאחר שינוי הגדרות ה"התאמה אישית" יש להפעיל מחדש את האפליקציה.</string>
+
+  <!-- כותרת פילטרים על הודעות לפי תבנית רג\'קס -->
+  <string name="RegexFilters">פילטרי הודעות</string>
+  <string name="RegexFiltersAmount">פילטרים</string>
+  <string name="RegexFiltersHeader">פילטרים</string>
+  <!-- הפעל פילטרים בתוך חלונות שיחה -->
+  <string name="RegexFiltersEnableInChats">הפעל בשיחות</string>
+  <!-- התאם ביטויים ללא רגישות לאותיות גדולות/קטנות -->
+  <string name="RegexFiltersCaseInsensitive">התעלם מרישיות (A=a)</string>
+  <string name="RegexFiltersAdd">הוסף פילטר</string>
+  <string name="RegexFiltersEdit">ערוך פילטר</string>
+  <string name="RegexFiltersAddDescription">ניתן להשתמש באתר <![CDATA[<a href="https://regex101.com">regex101.com</a>]]> לבדיקת הביטוי.
+    אפשר גם להשתמש בטקסט רגיל, אך יש לבצע escape לסוגריים.</string>
+  <string name="RegexFiltersAddError">שגיאת תחביר בביטוי רגולרי</string>
+
+  <!-- כותרת סנכרון הגדרות ושיחות בין מכשירים דרך שרת AyuSync -->
+  <string name="AyuSyncHeader">AyuSync (סנכרון)</string>
+  <string name="AyuSyncStatusTitle">מצב סנכרון</string>
+  <string name="AyuSyncStatusOk">מחובר</string>
+  <string name="AyuSyncStatusErrorDisconnected">מנותק</string>
+  <string name="AyuSyncStatusErrorNotRegistered">לא רשום</string>
+  <string name="AyuSyncStatusErrorNoToken">אין טוקן</string>
+  <string name="AyuSyncStatusErrorInvalidToken">טוקן לא תקין</string>
+  <string name="AyuSyncStatusErrorNoMVP">אין MVP</string>
+  <!-- כתובת שרת הסנכרון -->
+  <string name="AyuSyncServerURL">כתובת שרת</string>
+  <!-- טוקן גישה לשרת הסנכרון -->
+  <string name="AyuSyncServerToken">טוקן גישה</string>
+  <!-- הפעל סנכרון הודעות בין מכשירים -->
+  <string name="AyuSyncEnable">הפעל סנכרון</string>
+  <string name="AyuSyncVisitProfile">בקר בפרופיל</string>
+  <string name="AyuSyncForceSync">כפה סנכרון למכשירים</string>
+  <!-- מזהה ייחודי של המכשיר הנוכחי -->
+  <string name="AyuSyncDeviceIdentifier">מזהה מכשיר</string>
+  <string name="AyuSyncLastEventSent">אירוע אחרון שנשלח</string>
+  <string name="AyuSyncLastEventReceived">אירוע אחרון שהתקבל</string>
+  <string name="AyuSyncLastEventNever">מעולם</string>
+  <!-- השתמש בחיבור מוצפן HTTPS/WSS לשרת הסנכרון -->
+  <string name="AyuSyncUseSecureConnection">השתמש ב-HTTPS ו-WSS</string>
+  <string name="AyuSyncIdentifierCopied">המזהה הועתק ללוח.</string>
+  <string name="AyuSyncRegisterStatusCode">קוד סטטוס הרשמה</string>
+  <string name="AyuSyncOpenPreferences">פתח הגדרות</string>
+  <string name="AyuSyncDownloadAgent">הורד Agent</string>
+
+  <!-- הפעל WAL (Write-Ahead Logging) למסד הנתונים - משפר ביצועים -->
+  <string name="WALMode">הפעל מצב WAL (מאגר כתיבה)</string>
+  <!-- מחק את כל מסד הנתונים של VortexGram (הודעות שנשמרו) -->
+  <string name="ClearAyuDatabase">נקה מסד נתונים של VortexGram</string>
+  <string name="ClearAyuDatabaseNotification">מסד הנתונים של VortexGram נוקה</string>
+  <!-- מחק לחלוטין את מסד הנתונים המקומי -->
+  <string name="EraseLocalDatabase">מחק מסד נתונים מקומי</string>
+
+  <!-- כותרת תכונות בבדיקה טרומית -->
+  <string name="BetaFeatures">תכונות בטא</string>
+  <!-- בקש אישור לפני שליחת סטיקר -->
+  <string name="StickerConfirmation">אישור לפני שליחת סטיקר</string>
+  <!-- בקש אישור לפני שליחת GIF -->
+  <string name="GIFConfirmation">אישור לפני שליחת GIF</string>
+  <!-- בקש אישור לפני שליחת הקלטת קול -->
+  <string name="VoiceConfirmation">אישור לפני שליחת הודעה קולית</string>
+
+  <!-- כפתורי מצב רוח-רפאים בתפריט הצד -->
+  <string name="EnableGhostMode">הפעל רוח-רפאים</string>
+  <string name="DisableGhostMode">כבה רוח-רפאים</string>
+  <string name="KillApp">סגור אפליקציה</string>
+  <string name="GhostModeToggle">מצב רוח-רפאים</string>
+  <string name="GhostModeEnabled">מצב רוח-רפאים הופעל</string>
+  <string name="GhostModeDisabled">מצב רוח-רפאים כובה</string>
+
+  <!-- היסטוריית גרסאות הודעה (עריכות) -->
+  <string name="EditsHistoryTitle">היסטוריית עריכות</string>
+  <string name="EditsHistoryMenuText">היסטוריה</string>
+  <string name="ReadUntilMenuText">נקרא עד</string>
+  <!-- שמור הודעה שנמחקה רק מקומית (לא ב-Telegram) -->
+  <string name="DeleteKeepLocally">שמור מקומית</string>
+  <string name="BoxActionReset">איפוס</string>
+  <string name="ReadConfirmationBoxQuestion">לסמן את כל ההודעות כנקראו?</string>
+  <string name="ReadConfirmationBoxActionText">סמן כנקרא</string>
+  <!-- הודעה שהעברה של הודעה שנמחקה אינה נתמכת -->
+  <string name="ForwardsRestrictedInfoDeleted">לא ניתן להעביר הודעה שנמחקה.</string>
+  <string name="DeleteDateMenuText">תאריך מחיקה</string>
+  <!-- מצב אופליין שנראה לא ודאי -->
+  <string name="LikelyOfflineStatus">אופליין ?</string>
+  <!-- כניסה לשיחה עם מצב רוח-רפאים מופעל -->
+  <string name="GhostModeShortcut">כנס עם רוח-רפאים</string>
+  <!-- הצג שניות בנוסף לשעה ודקה בהודעות -->
+  <string name="SettingsShowMessageSeconds">הצג שניות בהודעות</string>
+  <!-- העתק את ה-ID של הצ\'אט/משתמש/קבוצה -->
+  <string name="ContextCopyID">העתק ID</string>
+  <string name="IDCopiedToast">ה-ID הועתק ללוח.</string>
+  <!-- הסתר הודעה מרשימת השיחה (ללא מחיקה) -->
+  <string name="ContextHideMessage">הסתר</string>
+
+  <!-- מידע על האפליקציה -->
+  <string name="SettingsWatermark">VortexGram פותח ומתוחזק על ידי Radolyn Labs.</string>
+  <string name="SettingsDescription">לקוח טלגרם מבוסס VortexGram עם תכונות מתקדמות.</string>
+  <string name="SecretMessageTecno">טלפוני Tecno הם הטובים ביותר.</string>
+  <string name="SecretMessageXiaomiSuccess">אתה משתמש בטלפון טוב.</string>
+  <string name="SecretMessageXiaomiFailure">התקן ROM מותאם אישית.</string>
+</resources>
