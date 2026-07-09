@@ -55,6 +55,7 @@ public class VortexGramPreferencesActivity extends BasePreferencesActivity imple
     private int keepAliveServiceRow;
     private int disableAdsRow;
     private int localPremiumRow;
+    private int antiKickRow;
     private int filtersRow;
     private int qolDividerRow;
 
@@ -109,6 +110,7 @@ public class VortexGramPreferencesActivity extends BasePreferencesActivity imple
         keepAliveServiceRow = newRow();
         disableAdsRow = newRow();
         localPremiumRow = newRow();
+        antiKickRow = newRow();
         filtersRow = newRow();
         qolDividerRow = newRow();
 
@@ -259,6 +261,9 @@ public class VortexGramPreferencesActivity extends BasePreferencesActivity imple
             ((TextCheckCell) view).setChecked(AyuConfig.disableAds);
         } else if (position == localPremiumRow) {
             toggleLocalPremium();
+        } else if (position == antiKickRow) {
+            AyuConfig.editor.putBoolean("antiKick", AyuConfig.antiKick ^= true).apply();
+            ((TextCheckCell) view).setChecked(AyuConfig.antiKick);
         } else if (position == filtersRow) {
             NotificationsCheckCell checkCell = (NotificationsCheckCell) view;
             if (LocaleController.isRTL && x <= AndroidUtilities.dp(76) || !LocaleController.isRTL && x >= view.getMeasuredWidth() - AndroidUtilities.dp(76)) {
@@ -417,6 +422,8 @@ public class VortexGramPreferencesActivity extends BasePreferencesActivity imple
                         textCheckCell.setTextAndCheck(LocaleController.getString(R.string.DisableAds), AyuConfig.disableAds, true);
                     } else if (position == localPremiumRow) {
                         textCheckCell.setTextAndCheck(LocaleController.getString(R.string.LocalPremium) + " β", AyuConfig.localPremium, true);
+                    } else if (position == antiKickRow) {
+                        textCheckCell.setTextAndCheck(LocaleController.getString(R.string.AntiKick), AyuConfig.antiKick, true);
                     } else if (position == showGhostToggleInDrawerRow) {
                         textCheckCell.setTextAndCheck(LocaleController.getString(R.string.ShowGhostToggleInDrawer), AyuConfig.showGhostToggleInDrawer, true);
                     } else if (position == showKillButtonInDrawerRow) {

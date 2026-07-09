@@ -53,6 +53,7 @@ public class AyuConfig {
     public static boolean syncEnabled;
     public static boolean useSecureConnection;
     public static boolean WALMode;
+    public static boolean antiKick;
 
     private static boolean configLoaded;
 
@@ -117,6 +118,9 @@ public class AyuConfig {
 
             // ~ Debug
             WALMode = preferences.getBoolean("walMode", true);
+
+            // ~ Anti-kick
+            antiKick = preferences.getBoolean("antiKick", false);
 
             configLoaded = true;
         }
