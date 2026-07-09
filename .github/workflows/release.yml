@@ -32,6 +32,7 @@ jobs:
 
       - name: Generate CI signing keystore
         run: |
+          rm -f TMessagesProj/config/extera.jks
           keytool -genkey -v \
             -keystore TMessagesProj/config/extera.jks \
             -alias vortexgram \
