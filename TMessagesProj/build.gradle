@@ -94,7 +94,10 @@ android {
     buildToolsVersion '35.0.0'
     ndkVersion "27.2.12479018"
 
-    sourceSets.main.jniLibs.srcDirs = ['./jni/']
+    sourceSets.main {
+        jniLibs.srcDirs = ['./jni/']
+        res.srcDirs = ['src/main/res', 'src/main/res-solar', 'src/main/res-tabs']
+    }
 
     externalNativeBuild {
         cmake {
