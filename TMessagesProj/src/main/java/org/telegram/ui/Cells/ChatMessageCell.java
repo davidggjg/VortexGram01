@@ -18382,6 +18382,12 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
         if (currentMessageObject.messageOwner.video_processing_pending) {
             timeString = formatString(R.string.ScheduledTimeApprox, timeString);
         }
+        // VortexGram: show deleted/edited marks
+        if (messageObject.messageOwner.ayuDeleted) {
+            timeString = com.radolyn.ayugram.AyuConfig.getDeletedMark() + " " + timeString;
+        } else if (messageObject.messageOwner.edit_hide) {
+            timeString = com.radolyn.ayugram.AyuConfig.getEditedMark() + " " + timeString;
+        }
         if (signString != null) {
             if (messageObject.messageOwner.via_business_bot_id != 0) {
                 currentTimeString = timeString + ", ";

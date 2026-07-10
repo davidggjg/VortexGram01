@@ -343,6 +343,9 @@ public class ApplicationLoader extends Application {
 
         AndroidUtilities.runOnUIThread(ApplicationLoader::startPushService);
 
+        // VortexGram: start AyuSync
+        com.radolyn.ayugram.sync.AyuSyncController.create();
+
         LauncherIconController.tryFixLauncherIconIfNeeded();
         ProxyRotationController.init();
     }

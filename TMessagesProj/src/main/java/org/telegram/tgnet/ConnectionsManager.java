@@ -369,6 +369,38 @@ public class ConnectionsManager extends BaseController {
     }
 
     private void sendRequestInternal(TLObject object, RequestDelegate onComplete, RequestDelegateTimestamp onCompleteTimestamp, QuickAckDelegate onQuickAck, WriteToSocketDelegate onWriteToSocket, int flags, int datacenterId, int connectionType, boolean immediate, int requestToken) {
+        // VortexGram: Ghost mode intercept
+        if (object instanceof TLRPC.TL_messages_setTyping || object instanceof TLRPC.TL_messages_setEncryptedTyping) {
+            if (!com.radolyn.ayugram.AyuConfig.sendUploadProgress) {
+                if (onComplete != null) onComplete.run(new TLRPC.TL_boolTrue(), null);
+                return;
+            }
+        } else if (object instanceof TLRPC.TL_account_updateStatus) {
+            TLRPC.TL_account_updateStatus req = (TLRPC.TL_account_updateStatus) object;
+            if (!req.offline && !com.radolyn.ayugram.AyuConfig.sendOnlinePackets) {
+                if (com.radolyn.ayugram.AyuConfig.sendOfflinePacketAfterOnline) {
+                    TLRPC.TL_account_updateStatus offlineReq = new TLRPC.TL_account_updateStatus();
+                    offlineReq.offline = true;
+                    sendRequestInternal(offlineReq, null, null, null, null, flags, datacenterId, connectionType, immediate, lastRequestToken.getAndIncrement());
+                }
+                if (onComplete != null) onComplete.run(new TLRPC.TL_boolTrue(), null);
+                return;
+            }
+        } else if (object instanceof TLRPC.TL_messages_readHistory || object instanceof TLRPC.TL_channels_readHistory || object instanceof TLRPC.TL_messages_readDiscussion) {
+            if (!com.radolyn.ayugram.utils.AyuState.getAllowReadPacket()) {
+                if (com.radolyn.ayugram.AyuConfig.syncEnabled) {
+                    long dialogId = com.radolyn.ayugram.utils.AyuGhostUtils.getDialogIdAndMessageIdFromRequest(object) != null
+                            ? com.radolyn.ayugram.utils.AyuGhostUtils.getDialogIdAndMessageIdFromRequest(object)[0] : 0;
+                    if (dialogId != 0) {
+                        com.radolyn.ayugram.sync.AyuSyncController.getInstance().syncRead(dialogId, 0, 0);
+                    }
+                }
+                if (onComplete != null) onComplete.run(new TLRPC.TL_boolTrue(), null);
+                return;
+            }
+        }
+        // VortexGram end ghost mode
+
         if (BuildVars.LOGS_ENABLED) {
             FileLog.d("send request " + object + " with token = " + requestToken);
         }

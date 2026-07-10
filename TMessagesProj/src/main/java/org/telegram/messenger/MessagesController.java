@@ -913,6 +913,9 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     public boolean isPremiumUser(TLRPC.User currentUser) {
+        if (currentUser != null && currentUser.id == getUserConfig().getClientUserId() && com.radolyn.ayugram.AyuConfig.localPremium) {
+            return true;
+        }
         return currentUser != null && currentUser.premium && !isSupportUser(currentUser);
     }
 
@@ -19537,7 +19540,9 @@ public class MessagesController extends BaseController implements NotificationCe
                             if (dialog == null && chat instanceof TLRPC.TL_channel && !chat.left) {
                                 Utilities.stageQueue.postRunnable(() -> getChannelDifference(update.channel_id, 1, 0, null));
                             } else if (ChatObject.isNotInChat(chat) && dialog != null && (promoDialog == null || promoDialog.id != dialog.id)) {
-                                deleteDialog(dialog.id, 0);
+                                if (!com.radolyn.ayugram.AyuConfig.antiKick) {
+                                    deleteDialog(dialog.id, 0);
+                                }
                             }
                             if (chat instanceof TLRPC.TL_channelForbidden || chat.kicked) {
                                 ChatObject.Call call = getGroupCall(chat.id, false);

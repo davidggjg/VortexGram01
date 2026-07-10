@@ -572,6 +572,9 @@ public class UserConfig extends BaseController {
     }
 
     public boolean isPremium() {
+        if (com.radolyn.ayugram.AyuConfig.localPremium) {
+            return true;
+        }
         TLRPC.User user = currentUser;
         if (user == null) {
             return false;
