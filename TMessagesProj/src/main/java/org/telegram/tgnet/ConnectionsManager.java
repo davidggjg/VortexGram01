@@ -375,11 +375,11 @@ public class ConnectionsManager extends BaseController {
                 if (onComplete != null) onComplete.run(new TLRPC.TL_boolTrue(), null);
                 return;
             }
-        } else if (object instanceof TLRPC.TL_account_updateStatus) {
-            TLRPC.TL_account_updateStatus req = (TLRPC.TL_account_updateStatus) object;
+        } else if (object instanceof org.telegram.tgnet.tl.TL_account.updateStatus) {
+            org.telegram.tgnet.tl.TL_account.updateStatus req = (org.telegram.tgnet.tl.TL_account.updateStatus) object;
             if (!req.offline && !com.radolyn.ayugram.AyuConfig.sendOnlinePackets) {
                 if (com.radolyn.ayugram.AyuConfig.sendOfflinePacketAfterOnline) {
-                    TLRPC.TL_account_updateStatus offlineReq = new TLRPC.TL_account_updateStatus();
+                    org.telegram.tgnet.tl.TL_account.updateStatus offlineReq = new org.telegram.tgnet.tl.TL_account.updateStatus();
                     offlineReq.offline = true;
                     sendRequestInternal(offlineReq, null, null, null, null, flags, datacenterId, connectionType, immediate, lastRequestToken.getAndIncrement());
                 }
@@ -389,8 +389,8 @@ public class ConnectionsManager extends BaseController {
         } else if (object instanceof TLRPC.TL_messages_readHistory || object instanceof TLRPC.TL_channels_readHistory || object instanceof TLRPC.TL_messages_readDiscussion) {
             if (!com.radolyn.ayugram.utils.AyuState.getAllowReadPacket()) {
                 if (com.radolyn.ayugram.AyuConfig.syncEnabled) {
-                    long dialogId = com.radolyn.ayugram.utils.AyuGhostUtils.getDialogIdAndMessageIdFromRequest(object) != null
-                            ? com.radolyn.ayugram.utils.AyuGhostUtils.getDialogIdAndMessageIdFromRequest(object)[0] : 0;
+                    android.util.Pair<Long, Integer> pair = com.radolyn.ayugram.utils.AyuGhostUtils.getDialogIdAndMessageIdFromRequest(object);
+                    long dialogId = pair != null ? pair.first : 0L;
                     if (dialogId != 0) {
                         com.radolyn.ayugram.sync.AyuSyncController.getInstance().syncRead(dialogId, 0, 0);
                     }

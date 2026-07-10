@@ -170,7 +170,7 @@ public abstract class BasePreferencesActivity extends BaseFragment {
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-            onBindViewHolder(holder, position, payload.equals(holder.getPayload()));
+            onBindViewHolder(holder, position, false);
         }
 
         @NonNull
