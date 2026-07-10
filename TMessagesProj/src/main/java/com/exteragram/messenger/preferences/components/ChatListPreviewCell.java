@@ -94,7 +94,7 @@ public class ChatListPreviewCell extends FrameLayout {
                 rect.set(stroke, stroke, w - stroke, h - stroke);
                 canvas.drawRoundRect(rect, AndroidUtilities.dp(8), AndroidUtilities.dp(8), outlinePaint);
 
-                Drawable search = ContextCompat.getDrawable(context, R.drawable.ic_ab_search).mutate();
+                Drawable search = ContextCompat.getDrawable(context, R.drawable.outline_header_search).mutate();
                 search.setColorFilter(new PorterDuffColorFilter(Color.argb(204, r, g, b), PorterDuff.Mode.MULTIPLY));
                 search.setBounds((int) w - AndroidUtilities.dp(39), AndroidUtilities.dp(22), (int) w - AndroidUtilities.dp(12), AndroidUtilities.dp(49));
                 search.draw(canvas);

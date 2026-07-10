@@ -43,6 +43,7 @@ import org.telegram.messenger.MediaDataController;
 import org.telegram.messenger.R;
 import org.telegram.messenger.UserConfig;
 import org.telegram.tgnet.TLRPC;
+import org.telegram.tgnet.tl.TL_stars;
 import org.telegram.ui.ActionBar.BaseFragment;
 import org.telegram.ui.ActionBar.Theme;
 import org.telegram.ui.Components.AnimatedEmojiDrawable;
@@ -68,7 +69,7 @@ public class DoubleTapCell extends LinearLayout {
     private static final int[] doubleTapIcons = new int[]{
             R.drawable.msg_block,
             R.drawable.msg_reactions,
-            R.drawable.msg_reply,
+            R.drawable.msg_reply_small,
             R.drawable.msg_copy,
             R.drawable.msg_forward,
             R.drawable.msg_edit,
@@ -98,7 +99,7 @@ public class DoubleTapCell extends LinearLayout {
         outlinePaint.setColor(ColorUtils.setAlphaComponent(Theme.getColor(Theme.key_switchTrack), 0x3F));
         outlinePaint.setStrokeWidth(Math.max(2, AndroidUtilities.dp(1f)));
 
-        doubleTapIcons[1] = ExteraConfig.useSolarIcons ? R.drawable.msg_reactions : R.drawable.msg_saved_14;
+        doubleTapIcons[1] = ExteraConfig.useSolarIcons ? R.drawable.msg_reactions : R.drawable.msg_saved;
 
         preview = new FrameLayout(context) {
             @SuppressLint("DrawAllocation")
@@ -343,7 +344,7 @@ public class DoubleTapCell extends LinearLayout {
             }
             SelectAnimatedEmojiDialog popupLayout = new SelectAnimatedEmojiDialog(fragment, fragment.getContext(), false, xoff, SelectAnimatedEmojiDialog.TYPE_SET_DEFAULT_REACTION, null) {
                 @Override
-                protected void onEmojiSelected(View emojiView, Long documentId, TLRPC.Document document, Integer until) {
+                protected void onEmojiSelected(View emojiView, Long documentId, TLRPC.Document document, TL_stars.TL_starGiftUnique gift, Integer until) {
                     if (documentId == null) {
                         return;
                     }

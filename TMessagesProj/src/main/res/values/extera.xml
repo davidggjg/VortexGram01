@@ -24,6 +24,7 @@
     <string name="Categories">Categories</string>
 
     <!-- Appearance -->
+    <string name="Appearance">Appearance</string>
     <string name="AvatarCorners">Avatar Corners</string>
     <string name="AvatarCornersLeft">Square</string>
     <string name="AvatarCornersRight">Circle</string>

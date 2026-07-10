@@ -40,17 +40,8 @@ public class HeaderSettingsCell extends FrameLayout {
     public HeaderSettingsCell(Context context) {
         super(context);
 
-        Drawable arrow = ContextCompat.getDrawable(context, R.drawable.ic_logo_foreground).mutate();
-        Theme.ThemeInfo theme = Theme.getActiveTheme();
+        Drawable arrow = ContextCompat.getDrawable(context, R.drawable.ic_foreground).mutate();
         int color = ContextCompat.getColor(context, R.color.ic_background);
-
-        if (theme.isMonet() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            color = MonetUtils.getColor(theme.isDark() ? "n1_800" : "a1_100");
-            arrow.setColorFilter(new PorterDuffColorFilter(MonetUtils.getColor(theme.isDark() ? "a1_100" : "n2_700"), PorterDuff.Mode.MULTIPLY));
-        } else {
-            // VortexGram: removed
-            // arrow.setAlpha((int) (70 * 2.55f));
-        }
 
         ImageView logo = new ImageView(context);
         logo.setScaleType(ImageView.ScaleType.CENTER);
@@ -73,7 +64,7 @@ public class HeaderSettingsCell extends FrameLayout {
 
         TextView subtitleTextView = new TextView(context);
         subtitleTextView.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteGrayText));
-        subtitleTextView.setTypeface(AndroidUtilities.getTypeface(AndroidUtilities.TYPEFACE_ROBOTO_REGULAR));
+        // regular weight is the default typeface
         subtitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
         subtitleTextView.setLineSpacing(AndroidUtilities.dp(2), 1f);
         subtitleTextView.setText(LocaleController.getString("SettingsDescription", R.string.SettingsDescription));

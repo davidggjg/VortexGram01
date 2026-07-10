@@ -66,7 +66,7 @@ public class ChatsPreferencesActivity extends BasePreferencesActivity implements
     }, bottomButton = new CharSequence[]{
             LocaleController.getString("Hide", R.string.Hide),
             LocaleUtils.capitalize(LocaleController.getString("ChannelMute", R.string.ChannelMute)),
-            LocaleUtils.capitalize(LocaleController.getString("ChannelDiscuss", R.string.ChannelDiscuss))
+            LocaleUtils.capitalize(LocaleController.getString("ViewDiscussion", R.string.ViewDiscussion))
     }, videoMessagesCamera = new CharSequence[]{
             LocaleController.getString("VideoMessagesCameraFront", R.string.VideoMessagesCameraFront),
             LocaleController.getString("VideoMessagesCameraRear", R.string.VideoMessagesCameraRear),
@@ -80,8 +80,8 @@ public class ChatsPreferencesActivity extends BasePreferencesActivity implements
     };
     private final int[] doubleTapIcons = new int[]{
             R.drawable.msg_block,
-            ExteraConfig.useSolarIcons ? R.drawable.msg_reactions : R.drawable.msg_saved_14,
-            R.drawable.msg_reply,
+            ExteraConfig.useSolarIcons ? R.drawable.msg_reactions : R.drawable.msg_saved,
+            R.drawable.msg_reply_small,
             R.drawable.msg_copy,
             R.drawable.msg_forward,
             R.drawable.msg_edit,
@@ -703,7 +703,6 @@ public class ChatsPreferencesActivity extends BasePreferencesActivity implements
                 case 13:
                     SlideChooseView slide = (SlideChooseView) holder.itemView;
                     if (position == photosQualityChooserRow) {
-                        slide.setNeedDivider(true);
                         slide.setCallback(index -> ExteraConfig.editor.putInt("sendPhotosQuality", ExteraConfig.sendPhotosQuality = index).apply());
                         slide.setOptions(ExteraConfig.sendPhotosQuality, "800px", "1280px", "2560px");
                     }

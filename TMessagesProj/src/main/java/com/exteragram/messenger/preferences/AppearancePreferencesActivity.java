@@ -192,13 +192,13 @@ public class AppearancePreferencesActivity extends BasePreferencesActivity {
         if (position == useSystemFontsRow) {
             ExteraConfig.editor.putBoolean("useSystemFonts", ExteraConfig.useSystemFonts ^= true).apply();
             ((TextCheckCell) view).setChecked(ExteraConfig.useSystemFonts);
-            AndroidUtilities.clearTypefaceCache();
             if (getListView().getLayoutManager() != null)
                 recyclerViewState = getListView().getLayoutManager().onSaveInstanceState();
             parentLayout.rebuildAllFragmentViews(true, true);
             getListView().getLayoutManager().onRestoreInstanceState(recyclerViewState);
         } else if (position == useSystemEmojiRow) {
-            SharedConfig.toggleUseSystemEmoji();
+            SharedConfig.useSystemEmoji = !SharedConfig.useSystemEmoji;
+            SharedConfig.getPreferences().edit().putBoolean("useSystemEmoji", SharedConfig.useSystemEmoji).apply();
             ((TextCheckCell) view).setChecked(SharedConfig.useSystemEmoji);
             parentLayout.rebuildAllFragmentViews(false, false);
         }  else if (position == forceBlurRow) {
@@ -289,7 +289,7 @@ public class AppearancePreferencesActivity extends BasePreferencesActivity {
             }
             PopupUtils.showDialog(events, new int[]{
                     R.drawable.msg_calendar2, R.drawable.msg_block,
-                    R.drawable.msg_settings_ny, R.drawable.msg_saved_14, R.drawable.msg_contacts_hw
+                    R.drawable.msg_settings, R.drawable.msg_saved, R.drawable.msg_contacts
             }, LocaleController.getString("DrawerIconSet", R.string.DrawerIconSet), ExteraConfig.eventType, getContext(), which -> {
                 ExteraConfig.editor.putInt("eventType", ExteraConfig.eventType = which).apply();
                 listAdapter.notifyItemChanged(eventChooserRow, payload);
@@ -384,7 +384,6 @@ public class AppearancePreferencesActivity extends BasePreferencesActivity {
                     solarIconsPreview = new SolarIconsPreview(mContext) {
                         @Override
                         protected void reloadResources() {
-                            ((LaunchActivity) getParentActivity()).reloadIcons();
                             Theme.reloadAllResources(getParentActivity());
                             parentLayout.rebuildAllFragmentViews(false, false);
                         }

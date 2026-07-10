@@ -87,7 +87,6 @@ public class OtherPreferencesActivity extends BasePreferencesActivity {
             getNotificationCenter().postNotificationName(NotificationCenter.mainUserInfoChanged);
             getNotificationCenter().postNotificationName(NotificationCenter.dialogFiltersUpdated);
             LocaleController.getInstance().recreateFormatters();
-            ((LaunchActivity) getParentActivity()).reloadIcons();
             Theme.reloadAllResources(getParentActivity());
             BulletinFactory.of(this).createErrorBulletin(LocaleController.getString("ResetSettingsBulletin", R.string.ResetSettingsBulletin), resourcesProvider).show();
         } else if (position == deleteAccountRow) {

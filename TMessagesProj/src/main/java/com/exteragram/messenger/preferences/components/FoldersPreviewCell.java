@@ -75,7 +75,7 @@ public class FoldersPreviewCell extends FrameLayout {
             {LocaleController.getString("FilterChannels", R.string.FilterChannels), "\uD83D\uDCE2"},
             {LocaleController.getString("FilterNameNonMuted", R.string.FilterNameNonMuted), "\uD83D\uDD14"},
             {LocaleController.getString("FilterContacts", R.string.FilterContacts), "\uD83C\uDFE0"},
-            {LocaleController.getString("FilterUnread", R.string.FilterUnread), "\u2705"},
+            {LocaleController.getString("FilterNameUnread", R.string.FilterNameUnread), "\u2705"},
             {LocaleController.getString("FilterNonContacts", R.string.FilterNonContacts), "\uD83C\uDFAD"},
     };
 

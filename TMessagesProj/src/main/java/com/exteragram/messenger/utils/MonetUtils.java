@@ -133,7 +133,7 @@ public class MonetUtils {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (ACTION_OVERLAY_CHANGED.equals(intent.getAction())) {
-                if (Theme.getActiveTheme().isMonet()) {
+                if (Theme.getActiveTheme().name != null && Theme.getActiveTheme().name.startsWith("monet")) {
                     String themeToReset = "monet_" + (Theme.getActiveTheme().isDark() ? "dark" : "light") + ".attheme";
                     File theme = new File(ApplicationLoader.getFilesDirFixed(), themeToReset);
                     if (theme.exists()) {
