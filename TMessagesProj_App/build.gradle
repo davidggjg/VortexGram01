@@ -198,4 +198,5 @@ android {
     }
 }
 
-apply plugin: 'com.google.gms.google-services'
+// google-services plugin removed: google-services.json is keyed to org.telegram.messenger,
+// not com.radolyn.ayugram, so the plugin would fail. Firebase is not used by VortexGram.
