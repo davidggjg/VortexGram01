@@ -157,7 +157,7 @@ public class MessageDetailsPopupWrapper {
             if (messageObject.isPhoto() || messageObject.isSticker() || messageObject.isVideoSticker() || messageObject.isVideo() || messageObject.isGif()) {
                 try {
                     Dimension resolution = messageObject.isVideo() || messageObject.isVideoSticker() || messageObject.isGif() ? getVideoResolution(filePath) : getPhotoResolution(filePath);
-                    items.add(new Item(R.drawable.msg_photo_crop, LocaleController.getString(R.string.Resolution), resolution.toString()));
+                    items.add(new Item(R.drawable.msg_photos, LocaleController.getString(R.string.Resolution), resolution.toString()));
                 } catch (Exception ignored) {}
             }
             if (messageObject.isMusic() || messageObject.isVoice() || messageObject.isRoundVideo() || messageObject.isVideo() || messageObject.isGif()) {
@@ -277,8 +277,8 @@ public class MessageDetailsPopupWrapper {
             return LocaleController.getString(R.string.SendWhenOnline);
         } else {
             return full ? LocaleController.formatString("formatDateAtTime", R.string.formatDateAtTime,
-                    LocaleController.getInstance().formatterYear.format(new Date(timestamp * 1000L)),
-                    LocaleController.getInstance().formatterDayWithSeconds.format(new Date(timestamp * 1000L))
+                    LocaleController.getInstance().getFormatterYear().format(new Date(timestamp * 1000L)),
+                    LocaleController.getInstance().getFormatterDayWithSeconds().format(new Date(timestamp * 1000L))
             ) : LocaleController.formatDateAudio(timestamp, true);
         }
     }

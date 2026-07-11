@@ -47,7 +47,7 @@ public class AyuSavePreferences {
         }
 
         this.dialogId = msg.dialog_id;
-        this.topicId = MessageObject.getTopicId(msg, false);
+        this.topicId = (msg.reply_to instanceof TLRPC.TL_messageReplyHeader && ((TLRPC.TL_messageReplyHeader) msg.reply_to).forum_topic) ? ((TLRPC.TL_messageReplyHeader) msg.reply_to).reply_to_top_id : 0;
         this.messageId = msg.id;
         this.requestCatchTime = (int) (System.currentTimeMillis() / 1000);
     }

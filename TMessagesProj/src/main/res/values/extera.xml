@@ -235,4 +235,5 @@
     <string name="AppIconOrbit">Orbit</string>
     <string name="AppIconSus">Impostor</string>
     <string name="AppIconWinter">Winter</string>
+    <string name="PeopleNearby">People Nearby</string>
 </resources>

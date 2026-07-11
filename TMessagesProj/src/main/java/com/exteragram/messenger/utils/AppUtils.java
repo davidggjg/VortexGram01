@@ -44,7 +44,7 @@ public class AppUtils {
                         R.drawable.msg_contacts,
                         R.drawable.msg_calls,
                         R.drawable.msg_saved,
-                        R.drawable.msg_nearby
+                        R.drawable.msg_location
                 };
         }
     }

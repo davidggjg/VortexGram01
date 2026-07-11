@@ -41,7 +41,7 @@ public class ChatActivityEnterViewStaticIconView extends FrameLayout {
         super(context);
         for (int a = 0; a < 2; a++) {
             buttonViews[a] = new ImageView(context);
-            buttonViews[a].setColorFilter(new PorterDuffColorFilter(parentActivity.getThemedColor(Theme.key_chat_messagePanelIcons), PorterDuff.Mode.MULTIPLY));
+            buttonViews[a].setColorFilter(new PorterDuffColorFilter(Theme.getColor(Theme.key_chat_messagePanelIcons), PorterDuff.Mode.MULTIPLY));
             buttonViews[a].setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             addView(buttonViews[a], LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT, Gravity.BOTTOM | Gravity.LEFT, 0, 0, 0, 0));
         }

@@ -27,7 +27,7 @@ public class AyuForwarder {
         var dialogId = messages.get(0).getDialogId();
         var chat = MessagesController.getInstance(currentAccount).getChat(Math.abs(dialogId));
 
-        return chat != null && chat.ayuNoforwards;
+        return chat != null && chat.noforwards;
     }
 
     public static boolean isAyuForwardNeeded(ArrayList<MessageObject> messages) {
@@ -41,7 +41,7 @@ public class AyuForwarder {
     }
 
     private static boolean isAyuForwardNeeded(MessageObject message) {
-        return message.messageOwner != null && (message.messageOwner.ayuDeleted || message.messageOwner.ayuNoforwards);
+        return message.messageOwner != null && (message.messageOwner.ayuDeleted || message.messageOwner.noforwards);
     }
 
     public static void intelligentForward(int currentAccount, ArrayList<MessageObject> messages, long peer, boolean forwardFromMyName, boolean hideCaption, boolean notify, int scheduleDate, MessageObject replyToTopMsg) {

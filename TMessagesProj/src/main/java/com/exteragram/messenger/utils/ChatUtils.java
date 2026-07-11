@@ -294,9 +294,9 @@ public class ChatUtils {
             if (messageTextToTranslate == null && selectedObject.isPoll()) {
                 try {
                     TLRPC.Poll poll = ((TLRPC.TL_messageMediaPoll) selectedObject.messageOwner.media).poll;
-                    StringBuilder pollText = new StringBuilder(poll.question).append("\n");
-                    for (TLRPC.TL_pollAnswer answer : poll.answers)
-                        pollText.append("\n\uD83D\uDD18 ").append(answer.text);
+                    StringBuilder pollText = new StringBuilder(poll.question.text).append("\n");
+                    for (TLRPC.PollAnswer answer : poll.answers)
+                        pollText.append("\n\uD83D\uDD18 ").append(answer.text.text);
                     messageTextToTranslate = pollText.toString();
                 } catch (Exception ignored) {
                 }
@@ -315,7 +315,7 @@ public class ChatUtils {
     }
 
     private static CharSequence getMessageCaption(MessageObject messageObject, MessageObject.GroupedMessages group) {
-        String restrictionReason = MessagesController.getRestrictionReason(messageObject.messageOwner.restriction_reason);
+        String restrictionReason = MessagesController.getInstance(UserConfig.selectedAccount).getRestrictionReason(messageObject.messageOwner.restriction_reason);
         if (!TextUtils.isEmpty(restrictionReason)) {
             return restrictionReason;
         }
@@ -343,7 +343,7 @@ public class ChatUtils {
 
     private static CharSequence getMessageContent(MessageObject messageObject) {
         SpannableStringBuilder str = new SpannableStringBuilder();
-        String restrictionReason = MessagesController.getRestrictionReason(messageObject.messageOwner.restriction_reason);
+        String restrictionReason = MessagesController.getInstance(UserConfig.selectedAccount).getRestrictionReason(messageObject.messageOwner.restriction_reason);
         if (!TextUtils.isEmpty(restrictionReason)) {
             str.append(restrictionReason);
         } else if (messageObject.caption != null) {

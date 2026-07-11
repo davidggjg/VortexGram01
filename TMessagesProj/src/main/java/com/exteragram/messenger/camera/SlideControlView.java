@@ -82,8 +82,8 @@ public class SlideControlView extends View {
             minusDrawable = context.getResources().getDrawable(R.drawable.zoom_minus);
             plusDrawable = context.getResources().getDrawable(R.drawable.zoom_plus);
         } else if (mode == SLIDER_MODE_EV) {
-            minusDrawable = context.getResources().getDrawable(R.drawable.ev_minus);
-            plusDrawable = context.getResources().getDrawable(R.drawable.ev_plus);
+            minusDrawable = context.getResources().getDrawable(R.drawable.zoom_minus);
+            plusDrawable = context.getResources().getDrawable(R.drawable.zoom_plus);
         }
 
         progressDrawable = context.getResources().getDrawable(R.drawable.zoom_slide);

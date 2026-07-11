@@ -212,8 +212,7 @@ public class MainPreferencesActivity extends BasePreferencesActivity {
     @Override
     protected void onItemClick(View view, int position, float x, float y) {
         if (position == aboutExteraRow) {
-            if (!BuildVars.PM_BUILD)
-                (new UpdaterBottomSheet(getParentActivity(), this, false, null)).show();
+            (new UpdaterBottomSheet(getParentActivity(), this, false, null)).show();
         } else if (position == sourceCodeRow) {
             Browser.openUrl(getParentActivity(), "https://github.com/VortexGram/VortexGram4A");
         } else if (position == channelRow) {

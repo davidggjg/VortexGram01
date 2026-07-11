@@ -96,7 +96,7 @@ public class UpdaterUtils {
 
     public static void checkUpdates(BaseFragment fragment, boolean manual, OnUpdateNotFound onUpdateNotFound, OnUpdateFound onUpdateFound) {
 
-        if (BuildVars.PM_BUILD || checkingForUpdates || id != 1L || (System.currentTimeMillis() - ExteraConfig.updateScheduleTimestamp < updateCheckInterval && !manual))
+        if (checkingForUpdates || id != 1L || (System.currentTimeMillis() - ExteraConfig.updateScheduleTimestamp < updateCheckInterval && !manual))
             return;
 
         checkingForUpdates = true;
@@ -209,7 +209,7 @@ public class UpdaterUtils {
 
     public static String getOtaDirSize() {
         checkDirs();
-        return AndroidUtilities.formatFileSize(Utilities.getDirSize(otaPath.getAbsolutePath(), 5, true), true);
+        return AndroidUtilities.formatFileSize(Utilities.getDirSize(otaPath.getAbsolutePath(), 5, true));
     }
 
     public static String getInstalledApkType() {

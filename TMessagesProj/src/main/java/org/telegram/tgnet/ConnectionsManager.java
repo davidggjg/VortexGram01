@@ -392,7 +392,7 @@ public class ConnectionsManager extends BaseController {
                     android.util.Pair<Long, Integer> pair = com.radolyn.ayugram.utils.AyuGhostUtils.getDialogIdAndMessageIdFromRequest(object);
                     long dialogId = pair != null ? pair.first : 0L;
                     if (dialogId != 0) {
-                        com.radolyn.ayugram.sync.AyuSyncController.getInstance().syncRead(dialogId, 0, 0);
+                        com.radolyn.ayugram.sync.AyuSyncController.getInstance().syncRead(currentAccount, dialogId, 0);
                     }
                 }
                 if (onComplete != null) onComplete.run(new TLRPC.TL_boolTrue(), null);
