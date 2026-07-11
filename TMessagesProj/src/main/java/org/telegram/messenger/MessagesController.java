@@ -10225,6 +10225,10 @@ public class MessagesController extends BaseController implements NotificationCe
                         }
                     }
                 }
+                // VortexGram: disable sponsored messages on self-profile load
+                if (com.radolyn.ayugram.AyuConfig.disableAds && user.id == getUserConfig().getClientUserId()) {
+                    disableAds(false);
+                }
                 getNotificationCenter().postNotificationName(NotificationCenter.userInfoDidLoad, user.id, info);
             }
             if (pinnedMessages != null) {
@@ -14238,6 +14242,10 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     private void completeReadTask(ReadTask task) {
+        // VortexGram: ghost mode — suppress outbound read receipts
+        if (!com.radolyn.ayugram.utils.AyuState.getAllowReadPacket()) {
+            return;
+        }
         if (task.replyId != 0 && task.monoForumPeerId == 0) {
             TLRPC.TL_messages_readDiscussion req = new TLRPC.TL_messages_readDiscussion();
             req.msg_id = (int) task.replyId;

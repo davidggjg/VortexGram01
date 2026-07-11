@@ -20897,6 +20897,15 @@ public class ChatActivity extends BaseFragment implements
                     continue;
                 }
 
+                // VortexGram: skip regex-filtered messages
+                {
+                    long grpId = obj.getGroupIdForUse();
+                    MessageObject.GroupedMessages grp = grpId != 0 ? groupedMessagesMap.get(grpId) : null;
+                    if (com.radolyn.ayugram.AyuFilter.isFiltered(obj, grp)) {
+                        continue;
+                    }
+                }
+
                 if (needAnimateToMessage != null && needAnimateToMessage.getId() == messageId && messageId < 0 && chatMode != MODE_SCHEDULED && (chatMode != MODE_QUICK_REPLIES || messages.size() + 1 < getMessagesController().quickReplyMessagesLimit)) {
                     obj = needAnimateToMessage;
                     animatingMessageObjects.add(obj);

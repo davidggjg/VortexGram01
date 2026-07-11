@@ -7933,6 +7933,10 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
                             newMsgObj.send_state = MessageObject.MESSAGE_SEND_STATE_SENT;
                             newMsgObj.errorNewPriceStars = 0;
                             newMsgObj.errorAllowedPriceStars = 0;
+                            // VortexGram: mark dialog as read after successful send
+                            if (com.radolyn.ayugram.AyuConfig.markReadAfterSend && !scheduled) {
+                                getMessagesController().markDialogAsRead(newMsgObj.dialog_id, newMsgObj.id, newMsgObj.id, 0, false, 0, 0, true, 0);
+                            }
                             if (scheduled != currentSchedule) {
                                 final boolean finalCurrentSchedule = currentSchedule;
                                 ArrayList<Integer> messageIds = new ArrayList<>();
