@@ -84,7 +84,7 @@ public class AyuForwarder {
         var fullNoforwards = isFullAyuForwardsNeeded(currentAccount, messages);
 
         for (var message : messages) {
-            if (fullNoforwards || message.messageOwner.ayuNoforwards || message.messageOwner.ayuDeleted) {
+            if (fullNoforwards || message.messageOwner.noforwards || message.messageOwner.ayuDeleted) {
                 if (AyuUtils.isMediaDownloadable(message, false)) {
                     toBeDownloaded.add(message);
                 }
