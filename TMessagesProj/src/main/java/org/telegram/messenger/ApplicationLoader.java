@@ -358,6 +358,8 @@ public class ApplicationLoader extends Application {
         } else {
             enabled = MessagesController.getMainSettings(UserConfig.selectedAccount).getBoolean("keepAliveService", false);
         }
+        // VortexGram: respect AyuConfig.keepAliveService
+        enabled = enabled || com.radolyn.ayugram.AyuConfig.keepAliveService;
         if (enabled) {
             try {
                 applicationContext.startService(new Intent(applicationContext, NotificationsService.class));

@@ -13816,6 +13816,42 @@ public class MessagesStorage extends BaseController {
                 ArrayList<TopicsController.TopicUpdate> topicUpdatesInUi = null;
                 ArrayList<TLRPC.Message> deletedMessages = currentUser == dialogId || dialogId == 0 ? new ArrayList<>() : null;
 
+                // VortexGram: save messages to AyuDB before deletion
+                try {
+                    com.radolyn.ayugram.messages.AyuMessagesController ayuCtrl = com.radolyn.ayugram.messages.AyuMessagesController.getInstance();
+                    SQLiteCursor ayuDelCursor;
+                    if (dialogId != 0) {
+                        ayuDelCursor = database.queryFinalized(String.format(Locale.US, "SELECT data FROM messages_v2 WHERE mid IN(%s) AND uid = %d", ids, dialogId));
+                    } else {
+                        ayuDelCursor = database.queryFinalized(String.format(Locale.US, "SELECT uid, data FROM messages_v2 WHERE mid IN(%s) AND is_channel = 0", ids));
+                    }
+                    try {
+                        while (ayuDelCursor.next()) {
+                            NativeByteBuffer ayuData;
+                            long did;
+                            if (dialogId != 0) {
+                                did = dialogId;
+                                ayuData = ayuDelCursor.byteBufferValue(0);
+                            } else {
+                                did = ayuDelCursor.longValue(0);
+                                ayuData = ayuDelCursor.byteBufferValue(1);
+                            }
+                            if (ayuData != null) {
+                                TLRPC.Message ayuMsg = TLRPC.Message.TLdeserialize(ayuData, ayuData.readInt32(false), false);
+                                if (ayuMsg != null) {
+                                    ayuMsg.dialog_id = did;
+                                    ayuCtrl.onMessageDeleted(new com.radolyn.ayugram.messages.AyuSavePreferences(ayuMsg, currentAccount));
+                                }
+                                ayuData.reuse();
+                            }
+                        }
+                    } finally {
+                        ayuDelCursor.dispose();
+                    }
+                } catch (Exception ayuEx) {
+                    FileLog.e("VortexGram delete hook", ayuEx);
+                }
+
                 if (dialogId != 0) {
                     cursor = database.queryFinalized(String.format(Locale.US, "SELECT uid, data, read_state, out, mention, mid FROM messages_v2 WHERE mid IN(%s) AND uid = %d", ids, dialogId));
                 } else {
@@ -15460,6 +15496,16 @@ public class MessagesStorage extends BaseController {
                                     TLRPC.Message oldMessage = TLRPC.Message.TLdeserialize(data, data.readInt32(false), false);
                                     oldMessage.readAttachPath(data, getUserConfig().clientUserId);
                                     data.reuse();
+                                    // VortexGram: save edit revision before overwrite
+                                    try {
+                                        oldMessage.dialog_id = MessageObject.getDialogId(message);
+                                        com.radolyn.ayugram.messages.AyuMessagesController.getInstance().onMessageEdited(
+                                            new com.radolyn.ayugram.messages.AyuSavePreferences(oldMessage, currentAccount),
+                                            message
+                                        );
+                                    } catch (Exception ayuEx) {
+                                        FileLog.e("VortexGram edit hook", ayuEx);
+                                    }
                                     if (reactionUpdates != null) {
                                         reactionUpdates.add(new SavedReactionsUpdate(selfId, oldMessage, message));
                                     }

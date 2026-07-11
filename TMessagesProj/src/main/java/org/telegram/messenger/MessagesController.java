@@ -11806,6 +11806,15 @@ public class MessagesController extends BaseController implements NotificationCe
                 }
             }
         }
+        // VortexGram: inject saved deleted messages into chat history
+        if (mode == ChatActivity.MODE_DEFAULT && !DialogObject.isEncryptedDialog(dialogId) && !objects.isEmpty()) {
+            try {
+                android.util.Pair<Integer, Integer> ayuRange = com.radolyn.ayugram.proprietary.AyuHistoryHook.getMinAndMaxIds(objects);
+                com.radolyn.ayugram.proprietary.AyuHistoryHook.doHook(currentAccount, objects, null, ayuRange.first, ayuRange.second, dialogId, count, threadMessageId, false);
+            } catch (Exception ayuEx) {
+                FileLog.e("VortexGram history hook", ayuEx);
+            }
+        }
         getFileLoader().checkMediaExistance(objects);
         if (MessageObject.canCreateStripedThubms()) {
             for (int i = 0; i < objects.size(); i++) {
