@@ -119,8 +119,8 @@ public class EffectSelector extends LinearLayout {
             GradientDrawable gd = new GradientDrawable(
                     GradientDrawable.Orientation.TOP_BOTTOM,
                     new int[]{
-                            AndroidUtilities.getTransparentColor(colorBackground, 0.4f),
-                            AndroidUtilities.getTransparentColor(colorBackground, 0)
+                            ColorUtils.setAlphaComponent(colorBackground, (int) (0.4f * 255)),
+                            ColorUtils.setAlphaComponent(colorBackground, 0)
                     });
             setBackground(gd);
         } else {
@@ -128,8 +128,8 @@ public class EffectSelector extends LinearLayout {
             GradientDrawable gd = new GradientDrawable(
                     GradientDrawable.Orientation.LEFT_RIGHT,
                     new int[]{
-                            AndroidUtilities.getTransparentColor(colorBackground, 0.4f),
-                            AndroidUtilities.getTransparentColor(colorBackground, 0)
+                            ColorUtils.setAlphaComponent(colorBackground, (int) (0.4f * 255)),
+                            ColorUtils.setAlphaComponent(colorBackground, 0)
                     });
             setBackground(gd);
         }
