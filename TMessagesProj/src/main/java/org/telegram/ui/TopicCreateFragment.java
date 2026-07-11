@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.AnimationNotificationsLocker;
+import org.telegram.messenger.FileLog;
 import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.MediaDataController;
 import org.telegram.messenger.MessageObject;
@@ -265,7 +266,11 @@ public class TopicCreateFragment extends BaseFragment {
 //                            editForumRequest.flags |= 8;
 //                        }
                         ConnectionsManager.getInstance(currentAccount).sendRequest(editForumRequest, (response, error) -> {
-
+                            if (error == null && response instanceof TLRPC.Updates) {
+                                getMessagesController().processUpdates((TLRPC.Updates) response, false);
+                            } else if (error != null) {
+                                FileLog.e("editForumTopic error: " + error.text);
+                            }
                         });
                     }
                     if (checkBoxCell != null && topicForEdit.id == 1 && !checkBoxCell.isChecked() != topicForEdit.hidden) {
@@ -275,7 +280,11 @@ public class TopicCreateFragment extends BaseFragment {
                         editForumRequest.hidden = !checkBoxCell.isChecked();
                         editForumRequest.flags |= 8;
                         ConnectionsManager.getInstance(currentAccount).sendRequest(editForumRequest, (response, error) -> {
-
+                            if (error == null && response instanceof TLRPC.Updates) {
+                                getMessagesController().processUpdates((TLRPC.Updates) response, false);
+                            } else if (error != null) {
+                                FileLog.e("editForumTopic hidden error: " + error.text);
+                            }
                         });
                     }
 

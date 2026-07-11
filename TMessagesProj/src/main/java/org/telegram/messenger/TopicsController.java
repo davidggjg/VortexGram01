@@ -697,8 +697,9 @@ public class TopicsController extends BaseController {
     }
 
     public void onTopicEdited(long dialogId, TLRPC.TL_forumTopic forumTopic) {
-        getMessagesStorage().updateTopicData(dialogId, forumTopic, TOPIC_FLAG_ICON + TOPIC_FLAG_TITLE + TOPIC_FLAG_HIDE);
-        sortTopics(-dialogId);
+        int flags = TOPIC_FLAG_ICON | TOPIC_FLAG_TITLE | TOPIC_FLAG_HIDE;
+        getMessagesStorage().updateTopicData(dialogId, forumTopic, flags);
+        updateTopicInUi(dialogId, forumTopic, flags);
     }
 
     public void deleteTopics(long chatId, ArrayList<Integer> topicIds) {
