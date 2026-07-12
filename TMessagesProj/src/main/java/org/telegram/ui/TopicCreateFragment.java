@@ -262,9 +262,13 @@ public class TopicCreateFragment extends BaseFragment {
                             editForumRequest.title = topicName;
                             editForumRequest.flags |= 1;
                         }
-                        if (topicForEdit.icon_emoji_id != selectedEmojiDocumentId) {
+                        final boolean iconChanging = topicForEdit.icon_emoji_id != selectedEmojiDocumentId;
+                        if (iconChanging) {
                             editForumRequest.icon_emoji_id = selectedEmojiDocumentId;
                             editForumRequest.flags |= 2;
+                            // Guard the optimistic icon against server reloads for up to 60s
+                            getMessagesController().getTopicsController().registerPendingIconEdit(
+                                    dialogId, topicForEdit.id, selectedEmojiDocumentId);
                         }
 //                        if (checkBoxCell != null ) {
 //                            editForumRequest.hidden = !checkBoxCell.isChecked();
@@ -273,10 +277,19 @@ public class TopicCreateFragment extends BaseFragment {
                         ConnectionsManager.getInstance(currentAccount).sendRequest(editForumRequest, (response, error) -> {
                             if (error == null && response instanceof TLRPC.Updates) {
                                 getMessagesController().processUpdates((TLRPC.Updates) response, false);
+                                if (iconChanging) {
+                                    AndroidUtilities.runOnUIThread(() ->
+                                        getMessagesController().getTopicsController()
+                                            .clearPendingIconEdit(dialogId, topicForEdit.id));
+                                }
                             } else if (error != null) {
                                 FileLog.e("editForumTopic error: " + error.text);
                                 // revert optimistic local change so the UI shows the correct (server) state
                                 AndroidUtilities.runOnUIThread(() -> {
+                                    if (iconChanging) {
+                                        getMessagesController().getTopicsController()
+                                            .clearPendingIconEdit(dialogId, topicForEdit.id);
+                                    }
                                     topicForEdit.icon_emoji_id = originalIconEmojiId;
                                     topicForEdit.flags = originalFlags;
                                     topicForEdit.title = originalTitle;

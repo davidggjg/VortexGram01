@@ -52,6 +52,38 @@ public class TopicsController extends BaseController {
     LongSparseIntArray currentOpenTopicsCounter = new LongSparseIntArray();
     LongSparseIntArray openedTopicsByChatId = new LongSparseIntArray();
 
+    // chatId -> (topicId -> [pendingIconEmojiId, timestampMs]) for in-flight optimistic icon edits
+    private final HashMap<Long, HashMap<Long, long[]>> pendingIconEdits = new HashMap<>();
+    private static final long PENDING_ICON_EDIT_TTL_MS = 60_000L;
+
+    public void registerPendingIconEdit(long chatId, long topicId, long iconEmojiId) {
+        HashMap<Long, long[]> chatMap = pendingIconEdits.get(chatId);
+        if (chatMap == null) {
+            chatMap = new HashMap<>();
+            pendingIconEdits.put(chatId, chatMap);
+        }
+        chatMap.put(topicId, new long[]{iconEmojiId, android.os.SystemClock.elapsedRealtime()});
+    }
+
+    public void clearPendingIconEdit(long chatId, long topicId) {
+        HashMap<Long, long[]> chatMap = pendingIconEdits.get(chatId);
+        if (chatMap != null) {
+            chatMap.remove(topicId);
+        }
+    }
+
+    private long getPendingIconEdit(long chatId, long topicId) {
+        HashMap<Long, long[]> chatMap = pendingIconEdits.get(chatId);
+        if (chatMap == null) return Long.MIN_VALUE;
+        long[] entry = chatMap.get(topicId);
+        if (entry == null) return Long.MIN_VALUE;
+        if (android.os.SystemClock.elapsedRealtime() - entry[1] > PENDING_ICON_EDIT_TTL_MS) {
+            chatMap.remove(topicId);
+            return Long.MIN_VALUE;
+        }
+        return entry[0];
+    }
+
     public TopicsController(int num) {
         super(num);
     }
@@ -293,6 +325,11 @@ public class TopicsController extends BaseController {
                         newTopic.topicStartMessage.peer_id = getMessagesController().getPeer(-chatId);
                         newTopic.topicStartMessage.action = new TLRPC.TL_messageActionTopicCreate();
                         newTopic.topicStartMessage.action.title = newTopic.title;
+                    }
+                    // Re-apply any in-flight optimistic icon edit so server reloads don't revert it
+                    long pending = getPendingIconEdit(chatId, newTopic.id);
+                    if (pending != Long.MIN_VALUE) {
+                        newTopic.icon_emoji_id = pending;
                     }
                     topics.add(newTopic);
                     topicsMap.put(newTopic.id, newTopic);
