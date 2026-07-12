@@ -3027,7 +3027,7 @@ public class AndroidUtilities {
             return highQualityPhotoSize;
         } else {
             if (photoSize == null) {
-                photoSize = 1280;
+                photoSize = com.exteragram.messenger.ExteraConfig.getPhotosQuality(); // VortexGram: respect user quality setting (800/1280/2560)
             }
             return photoSize;
         }

@@ -41,7 +41,7 @@ public class FileUploadOperation {
     private static final int minUploadChunkSlowNetworkSize = 32;
     private static final int initialRequestsCount = 8;
     private static final int initialRequestsSlowNetworkCount = 1;
-    private static final int maxUploadingKBytes = 1024 * 2;
+    private static final int maxUploadingKBytes = 1024 * 8; // VortexGram: 8MB in-flight vs stock 2MB → ~4x more parallel upload chunks
     private static final int maxUploadingSlowNetworkKBytes = 32;
 
     private int maxRequestsCount;
@@ -305,10 +305,7 @@ public class FileUploadOperation {
                     isBigFile = true;
                 }
 
-                long maxUploadParts = MessagesController.getInstance(currentAccount).uploadMaxFileParts;
-                if (AccountInstance.getInstance(currentAccount).getUserConfig().isPremium() && totalFileSize > FileLoader.DEFAULT_MAX_FILE_SIZE) {
-                    maxUploadParts = MessagesController.getInstance(currentAccount).uploadMaxFilePartsPremium;
-                }
+                long maxUploadParts = MessagesController.getInstance(currentAccount).uploadMaxFilePartsPremium; // VortexGram: always use premium part count (8000 vs 4000)
                 uploadChunkSize = (int) Math.max(slowNetwork ? minUploadChunkSlowNetworkSize : minUploadChunkSize, (totalFileSize + 1024L * maxUploadParts - 1) / (1024L * maxUploadParts));
                 if (1024 % uploadChunkSize != 0) {
                     int chunkSize = 64;

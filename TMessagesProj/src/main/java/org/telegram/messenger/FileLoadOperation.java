@@ -155,12 +155,12 @@ public class FileLoadOperation {
     private int cdnChunkCheckSize = 1024 * 128;
     private int maxDownloadRequests = 4;
     private int maxDownloadRequestsBig = 4;
-    private int bigFileSizeFrom = 10 * 1024 * 1024;
+    private int bigFileSizeFrom = 1024 * 1024; // VortexGram: use big chunks for files 1MB+ (stock: 10MB+)
     private int maxCdnParts = (int) (FileLoader.DEFAULT_MAX_FILE_SIZE / downloadChunkSizeBig);
 
     //load small parts for stream
-    private int downloadChunkSizeAnimation = 1024 * 128;
-    private int maxDownloadRequestsAnimation = 4;
+    private int downloadChunkSizeAnimation = 1024 * 512; // VortexGram: 512KB vs stock 128KB
+    private int maxDownloadRequestsAnimation = 8; // VortexGram: 8 parallel vs stock 4
 
     private final static int preloadMaxBytes = 2 * 1024 * 1024;
 

@@ -1583,7 +1583,7 @@ public class MessagesController extends BaseController implements NotificationCe
         qrLoginCamera = mainPreferences.getBoolean("qrLoginCamera", true);
         saveGifsWithStickers = mainPreferences.getBoolean("saveGifsWithStickers", false);
         filtersEnabled = mainPreferences.getBoolean("filtersEnabled", false);
-        getfileExperimentalParams = mainPreferences.getBoolean("getfileExperimentalParams", false);
+        getfileExperimentalParams = mainPreferences.getBoolean("getfileExperimentalParams", true); // VortexGram: force 512KB chunks + 8 parallel requests
         smsjobsStickyNotificationEnabled = mainPreferences.getBoolean("smsjobsStickyNotificationEnabled", false);
         showFiltersTooltip = mainPreferences.getBoolean("showFiltersTooltip", false);
         autoarchiveAvailable = mainPreferences.getBoolean("autoarchiveAvailable", false);
@@ -1594,9 +1594,9 @@ public class MessagesController extends BaseController implements NotificationCe
         ringtoneSizeMax = mainPreferences.getInt("ringtoneSizeMax", 1024_00);
         pmReadDateExpirePeriod = mainPreferences.getInt("pmReadDateExpirePeriod", 7 * 86400);
         suggestStickersApiOnly = mainPreferences.getBoolean("suggestStickersApiOnly", false);
-        roundVideoSize = mainPreferences.getInt("roundVideoSize", 384);
-        roundVideoBitrate = mainPreferences.getInt("roundVideoBitrate", 1000);
-        roundAudioBitrate = mainPreferences.getInt("roundAudioBitrate", 64);
+        roundVideoSize = mainPreferences.getInt("roundVideoSize", 512); // VortexGram: 512px vs stock 384px
+        roundVideoBitrate = mainPreferences.getInt("roundVideoBitrate", 2000); // VortexGram: 2000kbps vs stock 1000kbps
+        roundAudioBitrate = mainPreferences.getInt("roundAudioBitrate", 128); // VortexGram: 128kbps vs stock 64kbps
         pendingSuggestions = mainPreferences.getStringSet("pendingSuggestions", null);
         dismissedSuggestions = mainPreferences.getStringSet("dismissedSuggestions", null);
         channelsLimitDefault = mainPreferences.getInt("channelsLimitDefault", 500);
@@ -1646,8 +1646,8 @@ public class MessagesController extends BaseController implements NotificationCe
         giftAttachMenuIcon = mainPreferences.getBoolean("giftAttachMenuIcon", false);
         giftTextFieldIcon = mainPreferences.getBoolean("giftTextFieldIcon", false);
         checkResetLangpack = mainPreferences.getInt("checkResetLangpack", 0);
-        smallQueueMaxActiveOperations = mainPreferences.getInt("smallQueueMaxActiveOperations", 5);
-        largeQueueMaxActiveOperations = mainPreferences.getInt("largeQueueMaxActiveOperations", 2);
+        smallQueueMaxActiveOperations = mainPreferences.getInt("smallQueueMaxActiveOperations", 10); // VortexGram: 10 vs stock 5
+        largeQueueMaxActiveOperations = mainPreferences.getInt("largeQueueMaxActiveOperations", 5); // VortexGram: 5 vs stock 2
         stealthModeFuture = mainPreferences.getInt("stories_stealth_future_period", 25 * 60);
         storiesChangelogUserId = mainPreferences.getLong("stories_changelog_user_id", 777000);
         giveawayAddPeersMax = mainPreferences.getLong("giveaway_add_peers_max", 10);
@@ -5546,7 +5546,7 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     private void resetAppConfig() {
-        getfileExperimentalParams = false;
+        getfileExperimentalParams = true; // VortexGram: keep experimental params enabled even on reset
         channelRevenueWithdrawalEnabled = false;
         collectDeviceStats = false;
         smsjobsStickyNotificationEnabled = false;
@@ -10214,9 +10214,9 @@ public class MessagesController extends BaseController implements NotificationCe
                         }
                     }
                 }
-                // VortexGram: disable sponsored messages on self-profile load
+                // VortexGram: disable sponsored messages on self-profile load (send=true → API call to server)
                 if (com.radolyn.ayugram.AyuConfig.disableAds && user.id == getUserConfig().getClientUserId()) {
-                    disableAds(false);
+                    disableAds(true);
                 }
                 getNotificationCenter().postNotificationName(NotificationCenter.userInfoDidLoad, user.id, info);
             }

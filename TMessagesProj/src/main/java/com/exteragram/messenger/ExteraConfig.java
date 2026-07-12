@@ -164,8 +164,8 @@ public class ExteraConfig {
             useCameraXOptimizedMode = preferences.getBoolean("useCameraXOptimizedMode", SharedConfig.getDevicePerformanceClass() != SharedConfig.PERFORMANCE_CLASS_HIGH);
             cameraResolution = preferences.getInt("cameraResolution", CameraXUtils.getCameraResolution());
 
-            disableNumberRounding = preferences.getBoolean("disableNumberRounding", false);
-            formatTimeWithSeconds = preferences.getBoolean("formatTimeWithSeconds", false);
+            disableNumberRounding = preferences.getBoolean("disableNumberRounding", true); // VortexGram: show exact numbers by default
+            formatTimeWithSeconds = preferences.getBoolean("formatTimeWithSeconds", true); // VortexGram: show seconds in timestamps
             tabletMode = preferences.getInt("tabletMode", 0);
 
             downloadSpeedBoost = 2; // VortexGram: always max download speed
@@ -216,7 +216,7 @@ public class ExteraConfig {
             stickerShape = preferences.getInt("stickerShape", 1);
 
             hideStickerTime = preferences.getBoolean("hideStickerTime", false);
-            unlimitedRecentStickers = preferences.getBoolean("unlimitedRecentStickers", false);
+            unlimitedRecentStickers = preferences.getBoolean("unlimitedRecentStickers", true); // VortexGram: enabled and now wired to MediaDataController
             hideCategories = preferences.getBoolean("hideCategories", true);
 
             doubleTapAction = preferences.getInt("doubleTapAction", 1);
@@ -231,12 +231,12 @@ public class ExteraConfig {
             disableJumpToNextChannel = preferences.getBoolean("disableJumpToNextChannel", false);
             showActionTimestamps = preferences.getBoolean("showActionTimestamps", true);
             hideShareButton = preferences.getBoolean("hideShareButton", true);
-            showDetailsButton = preferences.getBoolean("showDetailsButton", false);
-            showSaveMessageButton = preferences.getBoolean("showSaveMessageButton", false);
+            showDetailsButton = preferences.getBoolean("showDetailsButton", true); // VortexGram: show by default
+            showSaveMessageButton = preferences.getBoolean("showSaveMessageButton", true); // VortexGram: show by default
             showCopyPhotoButton = preferences.getBoolean("showCopyPhotoButton", true);
             showClearButton = preferences.getBoolean("showClearButton", true);
             showReportButton = preferences.getBoolean("showReportButton", true);
-            showHistoryButton = preferences.getBoolean("showHistoryButton", false);
+            showHistoryButton = preferences.getBoolean("showHistoryButton", true); // VortexGram: show by default
 
             addCommaAfterMention = preferences.getBoolean("addCommaAfterMention", true);
 

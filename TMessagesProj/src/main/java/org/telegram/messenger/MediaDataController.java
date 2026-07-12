@@ -1013,7 +1013,9 @@ public class MediaDataController extends BaseController {
                     }
                 });
             }
-            maxCount = getMessagesController().maxRecentStickersCount;
+            maxCount = com.exteragram.messenger.ExteraConfig.unlimitedRecentStickers
+                    ? Integer.MAX_VALUE // VortexGram: unlimited recent stickers
+                    : getMessagesController().maxRecentStickersCount;
         }
         if (recentStickers[type].size() > maxCount || remove) {
             TLRPC.Document old = remove ? document : recentStickers[type].remove(recentStickers[type].size() - 1);

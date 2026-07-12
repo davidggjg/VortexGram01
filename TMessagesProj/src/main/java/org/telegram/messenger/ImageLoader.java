@@ -2060,11 +2060,11 @@ public class ImageLoader {
         int memoryClass = ((ActivityManager) ApplicationLoader.applicationContext.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
         int maxSize;
         if (canForce8888 = memoryClass >= 192) {
-            maxSize = 30;
+            maxSize = 60; // VortexGram: 60MB vs stock 30MB for high-mem devices
         } else {
-            maxSize = 15;
+            maxSize = 30; // VortexGram: 30MB vs stock 15MB
         }
-        int cacheSize = DEBUG_MODE ? 1 : Math.min(maxSize, memoryClass / 7) * 1024 * 1024;
+        int cacheSize = DEBUG_MODE ? 1 : Math.min(maxSize, memoryClass / 5) * 1024 * 1024; // VortexGram: use memoryClass/5 vs /7 for larger cache
 
         int commonCacheSize =  DEBUG_MODE ? 1 : (int) (cacheSize * 0.8f);
         int smallImagesCacheSize =   DEBUG_MODE ? 1 : (int) (cacheSize * 0.2f);

@@ -703,7 +703,10 @@ public class ChatsPreferencesActivity extends BasePreferencesActivity implements
                 case 13:
                     SlideChooseView slide = (SlideChooseView) holder.itemView;
                     if (position == photosQualityChooserRow) {
-                        slide.setCallback(index -> ExteraConfig.editor.putInt("sendPhotosQuality", ExteraConfig.sendPhotosQuality = index).apply());
+                        slide.setCallback(index -> {
+                            ExteraConfig.editor.putInt("sendPhotosQuality", ExteraConfig.sendPhotosQuality = index).apply();
+                            org.telegram.messenger.AndroidUtilities.photoSize = null; // VortexGram: invalidate cache so new quality takes effect immediately
+                        });
                         slide.setOptions(ExteraConfig.sendPhotosQuality, "800px", "1280px", "2560px");
                     }
                     break;

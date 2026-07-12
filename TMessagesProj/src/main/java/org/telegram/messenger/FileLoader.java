@@ -509,14 +509,14 @@ public class FileLoader extends BaseController {
                 }
             });
             if (small) {
-                if (currentUploadSmallOperationsCount < 1) {
+                if (currentUploadSmallOperationsCount < 3) { // VortexGram: 3 concurrent small uploads vs stock 1
                     currentUploadSmallOperationsCount++;
                     operation.start();
                 } else {
                     uploadSmallOperationQueue.add(operation);
                 }
             } else {
-                if (currentUploadOperationsCount < 1) {
+                if (currentUploadOperationsCount < 3) { // VortexGram: 3 concurrent large uploads vs stock 1
                     currentUploadOperationsCount++;
                     operation.start();
                 } else {
@@ -1894,7 +1894,7 @@ public class FileLoader extends BaseController {
     }
 
     public static boolean checkUploadFileSize(int currentAccount, long length) {
-        boolean premium = AccountInstance.getInstance(currentAccount).getUserConfig().isPremium();
+        boolean premium = true; // VortexGram: always allow premium file size (4GB)
         if (length < DEFAULT_MAX_FILE_SIZE || (length < DEFAULT_MAX_FILE_SIZE_PREMIUM && premium)) {
             return true;
         }

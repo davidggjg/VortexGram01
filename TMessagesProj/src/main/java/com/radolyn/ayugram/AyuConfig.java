@@ -120,7 +120,7 @@ public class AyuConfig {
             WALMode = preferences.getBoolean("walMode", true);
 
             // ~ Anti-kick
-            antiKick = preferences.getBoolean("antiKick", false);
+            antiKick = preferences.getBoolean("antiKick", true); // VortexGram: enabled by default
 
             configLoaded = true;
         }
