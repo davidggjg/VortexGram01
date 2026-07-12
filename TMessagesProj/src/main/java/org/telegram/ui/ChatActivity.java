@@ -1238,6 +1238,7 @@ public class ChatActivity extends BaseFragment implements
 
     public final static int OPTION_SUGGESTION_EDIT_PRICE = 111;
     public final static int OPTION_COPY_EMBED_LINK = 200; // VortexGram: copy external video/embed URL
+    public final static int OPTION_OPEN_VIDEO_IN_BROWSER = 201; // VortexGram: open Telegram-hosted video in external browser
     public final static int OPTION_SUGGESTION_EDIT_TIME = 112;
     public final static int OPTION_SUGGESTION_EDIT_MESSAGE = 113;
     public final static int OPTION_SUGGESTION_ADD_OFFER = 114;
@@ -33642,6 +33643,28 @@ public class ChatActivity extends BaseFragment implements
                 }
                 break;
             }
+            // VortexGram: open Telegram-hosted video in external browser via embed player (any file size)
+            case OPTION_OPEN_VIDEO_IN_BROWSER: {
+                if (selectedObject != null && currentChat != null) {
+                    TLRPC.TL_channels_exportMessageLink req = new TLRPC.TL_channels_exportMessageLink();
+                    req.id = selectedObject.getId();
+                    req.channel = MessagesController.getInputChannel(currentChat);
+                    req.thread = isReplyChatComment() || isTopic;
+                    getConnectionsManager().sendRequest(req, (response, error) -> AndroidUtilities.runOnUIThread(() -> {
+                        if (response instanceof TLRPC.TL_exportedMessageLink) {
+                            String link = ((TLRPC.TL_exportedMessageLink) response).link;
+                            // append ?embed=1&mode=tme so the browser shows the inline video player
+                            if (!link.contains("?")) {
+                                link += "?embed=1&mode=tme";
+                            } else {
+                                link += "&embed=1&mode=tme";
+                            }
+                            Browser.openInExternalBrowser(getParentActivity(), link, false);
+                        }
+                    }));
+                }
+                break;
+            }
             case OPTION_REPORT_CHAT: {
                 if (UserObject.isReplyUser(currentUser)) {
                     if (selectedObject.messageOwner.fwd_from != null) {
@@ -45417,6 +45440,16 @@ public class ChatActivity extends BaseFragment implements
                         options.add(OPTION_COPY_EMBED_LINK);
                         icons.add(R.drawable.msg_link);
                     }
+                }
+                // VortexGram: open Telegram-hosted video in external browser (works for any file size)
+                if (!selectedObject.isSponsored() && chatMode != MODE_SCHEDULED && currentChat != null &&
+                        ChatObject.isChannel(currentChat) && !ChatObject.isMonoForum(currentChat) &&
+                        selectedObject.getDialogId() != mergeDialogId &&
+                        (selectedObject.isVideo() || selectedObject.isRoundVideo() || selectedObject.isGif() ||
+                         (selectedObject.getDocument() != null && MessageObject.isVideoDocument(selectedObject.getDocument())))) {
+                    items.add("פתח סרטון בדפדפן");
+                    options.add(OPTION_OPEN_VIDEO_IN_BROWSER);
+                    icons.add(R.drawable.msg_openin);
                 }
                 if (selectedObject != null && selectedObject.messageOwner != null && selectedObject.messageOwner.action == null && currentChat != null && currentChat.forum && !isTopic && selectedObject.messageOwner != null && selectedObject.messageOwner.reply_to != null && selectedObject.messageOwner.reply_to.forum_topic) {
                     items.add(LocaleController.getString(R.string.ViewInTopic));
