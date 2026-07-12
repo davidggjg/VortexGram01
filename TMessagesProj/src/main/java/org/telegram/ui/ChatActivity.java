@@ -14219,9 +14219,17 @@ public class ChatActivity extends BaseFragment implements
                 chatAdapter.checkRemoveBotForumRowsStartThreadRow(true);
             }
         }
-        // VortexGram: use intelligent forward for noforwards/deleted messages
+        // VortexGram: use intelligent forward for noforwards/deleted messages (run on bg thread — uses CountDownLatch)
         if (com.radolyn.ayugram.AyuForwarder.isFullAyuForwardsNeeded(currentAccount, arrayList) || com.radolyn.ayugram.AyuForwarder.isAyuForwardNeeded(arrayList)) {
-            com.radolyn.ayugram.AyuForwarder.intelligentForward(currentAccount, arrayList, dialog_id, fromMyName, hideCaption, notify, scheduleDate, getThreadMessage());
+            final long finalDialogId = dialog_id;
+            final boolean finalFromMyName = fromMyName;
+            final boolean finalHideCaption = hideCaption;
+            final boolean finalNotify = notify;
+            final int finalScheduleDate = scheduleDate;
+            final org.telegram.messenger.MessageObject finalThreadMessage = getThreadMessage();
+            org.telegram.messenger.Utilities.globalQueue.postRunnable(() ->
+                com.radolyn.ayugram.AyuForwarder.intelligentForward(currentAccount, arrayList, finalDialogId, finalFromMyName, finalHideCaption, finalNotify, finalScheduleDate, finalThreadMessage)
+            );
             return;
         }
         int result = getSendMessagesHelper().sendMessage(arrayList, dialog_id, fromMyName, hideCaption, notify, scheduleDate, 0, getThreadMessage(), -1, payStars, getSendMonoForumPeerId(), getSendMessageSuggestionParams());

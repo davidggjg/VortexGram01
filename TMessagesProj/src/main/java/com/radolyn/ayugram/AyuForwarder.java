@@ -119,9 +119,14 @@ public class AyuForwarder {
             }
 
             var messagePath = FileLoader.getInstance(currentAccount).getPathToMessage(message.messageOwner);
-            // todo: if not exists, try to take from cache forcefully
 
             if (TextUtils.isEmpty(text) && !mediaDownloadable) {
+                continue;
+            }
+
+            // skip media messages whose file wasn't downloaded yet
+            if (mediaDownloadable && (messagePath == null || !messagePath.exists())) {
+                Log.w("VortexGram", "skipping message " + message.messageOwner.id + " — file not on disk: " + messagePath);
                 continue;
             }
 

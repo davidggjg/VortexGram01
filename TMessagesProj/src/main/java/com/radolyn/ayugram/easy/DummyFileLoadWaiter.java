@@ -40,8 +40,21 @@ public class DummyFileLoadWaiter extends EasyWaiter {
                 res = true;
             } else if (!TextUtils.isEmpty(docFilename) && docFilename.contains(name)) {
                 res = true;
-            } else if (!TextUtils.isEmpty(name) && name.contains(docFilename)) {
+            } else if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(docFilename) && name.contains(docFilename)) {
+                // guard: docFilename must not be empty so name.contains("") doesn't match everything
                 res = true;
+            } else {
+                // photo messages have no document — match by photo size filename
+                var photo = org.telegram.messenger.MessageObject.getPhoto(message.messageOwner);
+                if (photo != null) {
+                    var photoSize = FileLoader.getClosestPhotoSizeWithSize(photo.sizes, org.telegram.messenger.AndroidUtilities.getPhotoSize());
+                    if (photoSize != null) {
+                        var photoFilename = FileLoader.getAttachFileName(photoSize);
+                        if (!TextUtils.isEmpty(photoFilename) && (photoFilename.equals(name) || name.contains(photoFilename))) {
+                            res = true;
+                        }
+                    }
+                }
             }
 
             if (res) {
