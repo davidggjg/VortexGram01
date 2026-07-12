@@ -1237,6 +1237,7 @@ public class ChatActivity extends BaseFragment implements
     public final static int OPTION_ADD_TO_TODO = 110;
 
     public final static int OPTION_SUGGESTION_EDIT_PRICE = 111;
+    public final static int OPTION_COPY_EMBED_LINK = 200; // VortexGram: copy external video/embed URL
     public final static int OPTION_SUGGESTION_EDIT_TIME = 112;
     public final static int OPTION_SUGGESTION_EDIT_MESSAGE = 113;
     public final static int OPTION_SUGGESTION_ADD_OFFER = 114;
@@ -33619,6 +33620,28 @@ public class ChatActivity extends BaseFragment implements
                 }));
                 break;
             }
+            // VortexGram: copy the external (non-Telegram) URL from a webpage embed preview
+            case OPTION_COPY_EMBED_LINK: {
+                if (selectedObject != null && selectedObject.messageOwner != null &&
+                        selectedObject.messageOwner.media instanceof TLRPC.TL_messageMediaWebPage) {
+                    TLRPC.WebPage wp = selectedObject.messageOwner.media.webpage;
+                    String url = null;
+                    if (wp instanceof TLRPC.TL_webPage) {
+                        // prefer the clean page URL; fall back to embed URL if missing
+                        url = !android.text.TextUtils.isEmpty(wp.url) ? wp.url : wp.embed_url;
+                    }
+                    if (!android.text.TextUtils.isEmpty(url)) {
+                        android.content.ClipboardManager clipboard =
+                                (android.content.ClipboardManager) ApplicationLoader.applicationContext
+                                        .getSystemService(Context.CLIPBOARD_SERVICE);
+                        clipboard.setPrimaryClip(android.content.ClipData.newPlainText("label", url));
+                        if (BulletinFactory.canShowBulletin(ChatActivity.this)) {
+                            BulletinFactory.of(ChatActivity.this).createCopyLinkBulletin(false).show();
+                        }
+                    }
+                }
+                break;
+            }
             case OPTION_REPORT_CHAT: {
                 if (UserObject.isReplyUser(currentUser)) {
                     if (selectedObject.messageOwner.fwd_from != null) {
@@ -45385,6 +45408,15 @@ public class ChatActivity extends BaseFragment implements
                     items.add(LocaleController.getString(R.string.CopyLink));
                     options.add(OPTION_COPY_LINK);
                     icons.add(R.drawable.msg_link);
+                }
+                // VortexGram: copy external embed/video URL from webpage preview
+                if (selectedObject.messageOwner != null && selectedObject.messageOwner.media instanceof TLRPC.TL_messageMediaWebPage) {
+                    TLRPC.WebPage wp = selectedObject.messageOwner.media.webpage;
+                    if (wp instanceof TLRPC.TL_webPage && (!android.text.TextUtils.isEmpty(wp.embed_url) || !android.text.TextUtils.isEmpty(wp.url))) {
+                        items.add("העתק קישור חיצוני");
+                        options.add(OPTION_COPY_EMBED_LINK);
+                        icons.add(R.drawable.msg_link);
+                    }
                 }
                 if (selectedObject != null && selectedObject.messageOwner != null && selectedObject.messageOwner.action == null && currentChat != null && currentChat.forum && !isTopic && selectedObject.messageOwner != null && selectedObject.messageOwner.reply_to != null && selectedObject.messageOwner.reply_to.forum_topic) {
                     items.add(LocaleController.getString(R.string.ViewInTopic));
