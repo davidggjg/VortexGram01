@@ -249,6 +249,11 @@ public class TopicCreateFragment extends BaseFragment {
                         AndroidUtilities.shakeView(editTextBoldCursor);
                         return;
                     }
+                    final long originalIconEmojiId = topicForEdit.icon_emoji_id;
+                    final int originalFlags = topicForEdit.flags;
+                    final String originalTitle = topicForEdit.title;
+                    final boolean originalHidden = topicForEdit.hidden;
+
                     if (!topicForEdit.title.equals(topicName) || topicForEdit.icon_emoji_id != selectedEmojiDocumentId) {
                         TL_forum.TL_messages_editForumTopic editForumRequest = new TL_forum.TL_messages_editForumTopic();
                         editForumRequest.peer = getMessagesController().getInputPeer(dialogId);
@@ -270,6 +275,14 @@ public class TopicCreateFragment extends BaseFragment {
                                 getMessagesController().processUpdates((TLRPC.Updates) response, false);
                             } else if (error != null) {
                                 FileLog.e("editForumTopic error: " + error.text);
+                                // revert optimistic local change so the UI shows the correct (server) state
+                                AndroidUtilities.runOnUIThread(() -> {
+                                    topicForEdit.icon_emoji_id = originalIconEmojiId;
+                                    topicForEdit.flags = originalFlags;
+                                    topicForEdit.title = originalTitle;
+                                    topicForEdit.hidden = originalHidden;
+                                    getMessagesController().getTopicsController().onTopicEdited(dialogId, topicForEdit);
+                                });
                             }
                         });
                     }
@@ -284,6 +297,10 @@ public class TopicCreateFragment extends BaseFragment {
                                 getMessagesController().processUpdates((TLRPC.Updates) response, false);
                             } else if (error != null) {
                                 FileLog.e("editForumTopic hidden error: " + error.text);
+                                AndroidUtilities.runOnUIThread(() -> {
+                                    topicForEdit.hidden = originalHidden;
+                                    getMessagesController().getTopicsController().onTopicEdited(dialogId, topicForEdit);
+                                });
                             }
                         });
                     }
