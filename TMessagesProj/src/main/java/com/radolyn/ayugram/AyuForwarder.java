@@ -45,6 +45,13 @@ public class AyuForwarder {
     }
 
     public static void intelligentForward(int currentAccount, ArrayList<MessageObject> messages, long peer, boolean forwardFromMyName, boolean hideCaption, boolean notify, int scheduleDate, MessageObject replyToTopMsg) {
+        // If the source group has group-level noforwards, ALL messages must go through the
+        // custom path regardless of per-message noforwards flags.
+        if (isFullAyuForwardsNeeded(currentAccount, messages)) {
+            forwardMessages(currentAccount, messages, peer, forwardFromMyName, hideCaption, notify, scheduleDate, replyToTopMsg);
+            return;
+        }
+
         var batches = new ArrayList<ForwardBatch>();
 
         var currentArray = new ArrayList<MessageObject>();
