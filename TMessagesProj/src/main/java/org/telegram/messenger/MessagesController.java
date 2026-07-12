@@ -6667,16 +6667,8 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     public boolean isChatNoForwards(TLRPC.Chat chat) {
-        if (chat == null) {
-            return false;
-        }
-        if (chat.migrated_to != null) {
-            TLRPC.Chat migratedTo = getChat(chat.migrated_to.channel_id);
-            if (migratedTo != null) {
-                return migratedTo.noforwards;
-            }
-        }
-        return chat.noforwards;
+        // VortexGram: bypass content protection — allow copy/forward from protected chats
+        return false;
     }
 
     public boolean isChatNoForwards(long chatId) {
@@ -6692,11 +6684,8 @@ public class MessagesController extends BaseController implements NotificationCe
     }
 
     public boolean isUserNoForwards(TLRPC.UserFull userFull) {
-        if (userFull == null) {
-            return false;
-        }
-
-        return userFull.noforwards_peer_enabled || userFull.noforwards_my_enabled;
+        // VortexGram: bypass content protection — allow copy/forward from protected users
+        return false;
     }
 
     public TLRPC.User getUser(Long id) {
