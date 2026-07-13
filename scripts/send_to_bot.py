@@ -1,61 +1,69 @@
 """
-מעביר הודעות וידאו מקבוצה/ערוץ לבוט בנגלות של 30 כל 30 שניות.
-דרישות: pip install telethon
+מעביר הודעות וידאו מערוץ ציבורי לבוט — דרך טוקן הבוט בלבד.
+דרישות: pip install requests
 
-איך להשיג API_ID ו-API_HASH:
-  1. כנס ל-https://my.telegram.org
-  2. התחבר עם מספר הטלפון שלך
-  3. לחץ על "API development tools"
-  4. צור אפליקציה — תקבל App api_id ו-App api_hash
+צריך רק 3 דברים:
+  BOT_TOKEN   — הטוקן של הבוט שלך (מ-@BotFather)
+  SOURCE      — username הערוץ המקור (למשל ZOVE8)
+  DEST_CHAT   — chat_id שאליו לשלוח (מספר שלילי לקבוצה, או @username)
 """
 
-import asyncio
-from telethon import TelegramClient
-from telethon.tl.types import MessageMediaDocument, MessageMediaPhoto
+import requests
+import time
 
-# ── הגדרות — מלא את 3 השורות האלה ────────────────────────────
-API_ID       = 0          # מספר מ-my.telegram.org
-API_HASH     = ""         # מחרוזת מ-my.telegram.org
-SOURCE_GROUP = ""         # לינק או username של הקבוצה/ערוץ המקור, למשל "@ZOVE8" או "https://t.me/ZOVE8"
-BOT_USERNAME = ""         # הבוט שאליו לשלוח, למשל "@MyBot"
+# ── הגדרות ────────────────────────────────────────────────────
+BOT_TOKEN  = ""        # הטוקן מ-@BotFather, למשל: "123456:ABC-DEF..."
+SOURCE     = "ZOVE8"   # username של הערוץ המקור (בלי @)
+DEST_CHAT  = ""        # לאן לשלוח — chat_id של הבוט/קבוצה, למשל "@MyBot" או "-1001234567"
+
+FROM_MSG_ID = 1        # מאיזה מזהה הודעה להתחיל (1 = מההתחלה)
+TO_MSG_ID   = 2000     # עד איזה מזהה (שנה לפי הצורך)
+
+BATCH_SIZE   = 30      # כמה הודעות בנגלה
+WAIT_SECONDS = 30      # המתנה בין נגלות (שניות)
 # ──────────────────────────────────────────────────────────────
 
-BATCH_SIZE   = 30   # כמה הודעות בכל נגלה
-WAIT_SECONDS = 30   # שניות המתנה בין נגלות
+BASE = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
 
-async def main():
-    async with TelegramClient("zovex_session", API_ID, API_HASH) as client:
-        print(f"מחובר. מושך הודעות מ-{SOURCE_GROUP}...")
+def forward(from_chat, msg_id, to_chat):
+    res = requests.post(f"{BASE}/forwardMessage", json={
+        "chat_id": to_chat,
+        "from_chat_id": f"@{from_chat}",
+        "message_id": msg_id
+    })
+    return res.json().get("ok", False)
 
-        # משיכת כל ההודעות עם מדיה (וידאו/מסמך) מהקבוצה
-        messages = []
-        async for msg in client.iter_messages(SOURCE_GROUP):
-            if msg.media and isinstance(msg.media, (MessageMediaDocument, MessageMediaPhoto)):
-                messages.append(msg)
 
-        messages.reverse()  # מהישן לחדש
-        total = len(messages)
-        print(f"נמצאו {total} הודעות מדיה. מעביר בנגלות של {BATCH_SIZE} כל {WAIT_SECONDS} שניות...")
+def main():
+    msg_ids = list(range(FROM_MSG_ID, TO_MSG_ID + 1))
+    total = len(msg_ids)
+    print(f"מעביר הודעות {FROM_MSG_ID}–{TO_MSG_ID} מ-@{SOURCE} ({total} הודעות)...")
 
-        for batch_num, i in enumerate(range(0, total, BATCH_SIZE), start=1):
-            batch = messages[i:i + BATCH_SIZE]
-            print(f"\nנגלה {batch_num} — מעביר {len(batch)} הודעות...")
+    sent = 0
+    skipped = 0
 
-            for msg in batch:
-                try:
-                    await client.forward_messages(BOT_USERNAME, msg)
-                    await asyncio.sleep(1)  # שנייה בין כל הודעה בתוך הנגלה
-                except Exception as e:
-                    print(f"  שגיאה בהודעה {msg.id}: {e}")
+    for batch_num, i in enumerate(range(0, total, BATCH_SIZE), start=1):
+        batch = msg_ids[i:i + BATCH_SIZE]
+        print(f"\nנגלה {batch_num} — מעביר {len(batch)} הודעות...")
 
-            remaining = total - (i + len(batch))
-            if remaining > 0:
-                print(f"נגלה {batch_num} הושלמה. נשארו {remaining}. מחכה {WAIT_SECONDS} שניות...")
-                await asyncio.sleep(WAIT_SECONDS)
+        for msg_id in batch:
+            ok = forward(SOURCE, msg_id, DEST_CHAT)
+            if ok:
+                sent += 1
+                print(f"  ✓ {msg_id}")
+            else:
+                skipped += 1
+                print(f"  ✗ {msg_id} (לא נמצא / לא וידאו — ממשיך)")
+            time.sleep(0.5)
 
-    print("\nהכל הועבר!")
+        remaining = total - (i + len(batch))
+        if remaining > 0:
+            print(f"נגלה {batch_num} הושלמה. נשארו {remaining}. מחכה {WAIT_SECONDS} שניות...")
+            time.sleep(WAIT_SECONDS)
+
+    print(f"\nסיום! נשלחו: {sent} | דולגו: {skipped}")
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
