@@ -1321,6 +1321,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private final static int open_forum = 61;
 
     private final static int translate = 62;
+    private final static int export_messages = 63;
 
     private final static int permissions = 100;
     private final static int administrators = 101;
@@ -1351,7 +1352,36 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 if (view instanceof ChatMessageCell) {
                     outside = !((ChatMessageCell) view).isInsideBackground(x, y);
                 }
-                processRowSelect(view, outside, x, y);
+                int totalSelected = selectedMessagesIds[0].size() + selectedMessagesIds[1].size();
+                if (totalSelected > 0 && view instanceof ChatMessageCell) {
+                    MessageObject pressedMsg = ((ChatMessageCell) view).getMessageObject();
+                    if (pressedMsg != null && pressedMsg.getId() > 0) {
+                        java.util.ArrayList<Integer> ids = new java.util.ArrayList<>();
+                        for (int a = 1; a >= 0; a--) {
+                            for (int b = 0; b < selectedMessagesIds[a].size(); b++) {
+                                ids.add(selectedMessagesIds[a].keyAt(b));
+                            }
+                        }
+                        java.util.Collections.sort(ids);
+                        int rangeBegin = Math.min(ids.get(0), pressedMsg.getId());
+                        int rangeEnd = Math.max(ids.get(ids.size() - 1), pressedMsg.getId());
+                        for (int i = 0; i < messages.size(); i++) {
+                            MessageObject msg = messages.get(i);
+                            int msgId = msg.getId();
+                            if (msgId >= rangeBegin && msgId <= rangeEnd
+                                    && selectedMessagesIds[0].indexOfKey(msgId) < 0
+                                    && selectedMessagesIds[1].indexOfKey(msgId) < 0) {
+                                addToSelectedMessages(msg, false);
+                            }
+                        }
+                        updateActionModeTitle();
+                        updateVisibleRows();
+                    } else {
+                        processRowSelect(view, outside, x, y);
+                    }
+                } else {
+                    processRowSelect(view, outside, x, y);
+                }
             }
             if (view instanceof ChatMessageCell) {
                 startMultiselect(position);
@@ -3144,6 +3174,8 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     if (!getMessagesController().getTranslateController().toggleTranslatingDialog(getDialogId(), true)) {
                         updateTopPanel(true);
                     }
+                } else if (id == export_messages) {
+                    exportOtherPartyMessages();
                 } else if (id == call || id == video_call) {
                     if (currentUser != null && getParentActivity() != null) {
                         VoIPHelper.startCall(currentUser, id == video_call, userInfo != null && userInfo.video_calls_available, getParentActivity(), getMessagesController().getUserFull(currentUser.id), getAccountInstance());
@@ -3580,6 +3612,9 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             if (ExteraConfig.recentActionsShortcut) {
                 headerItem.lazilyAddSubItem(recent_actions, R.drawable.msg_log, LocaleController.getString("EventLog", R.string.EventLog));
             }
+        }
+        if (headerItem != null && currentUser != null && !UserObject.isUserSelf(currentUser)) {
+            headerItem.lazilyAddSubItem(export_messages, R.drawable.msg_saved, "Export Their Messages");
         }
         menu.setVisibility(inMenuMode ? View.GONE : View.VISIBLE);
 
@@ -14295,13 +14330,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     }
                 }
             } else {
-                if (selectedMessagesIds[0].size() + selectedMessagesIds[1].size() >= 100) {
-                    if (selectedMessagesCountTextView != null) {
-                        selectedMessagesCountTextView.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP, HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING);
-                        AndroidUtilities.shakeView(selectedMessagesCountTextView);
-                    }
-                    return;
-                }
+                // VortexGram: no selection limit
                 selectedMessagesIds[index].put(messageObject.getId(), messageObject);
                 if (reportType < 0) {
                     if ((messageObject.type == MessageObject.TYPE_TEXT || messageObject.isAnimatedEmoji() || messageObject.caption != null) && !(messageObject.messageOwner != null && messageObject.messageOwner.noforwards)) {
@@ -14634,6 +14663,52 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             selected.add(objs.valueAt(i));
         }
         selectionReactionsOverlay.setSelectedMessages(selected);
+    }
+
+    private void exportOtherPartyMessages() {
+        new Thread(() -> {
+            try {
+                java.util.ArrayList<MessageObject> toExport = new java.util.ArrayList<>();
+                for (int i = messages.size() - 1; i >= 0; i--) {
+                    MessageObject msg = messages.get(i);
+                    if (!msg.isOut() && !msg.isDateObject && msg.getId() > 0 && msg.contentType == 0) {
+                        toExport.add(msg);
+                    }
+                }
+                if (toExport.isEmpty()) {
+                    AndroidUtilities.runOnUIThread(() -> Toast.makeText(ApplicationLoader.applicationContext, "No messages to export", Toast.LENGTH_SHORT).show());
+                    return;
+                }
+                String chatName = currentUser != null
+                        ? ContactsController.formatName(currentUser.first_name, currentUser.last_name)
+                        : (currentChat != null ? currentChat.title : "chat");
+                chatName = chatName.replaceAll("[^\\w\\-]", "_");
+                String filename = "export_" + chatName + "_" + System.currentTimeMillis() + ".txt";
+                java.io.File downloadsDir = android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS);
+                if (!downloadsDir.exists()) {
+                    downloadsDir.mkdirs();
+                }
+                java.io.File outFile = new java.io.File(downloadsDir, filename);
+                StringBuilder sb = new StringBuilder();
+                for (MessageObject msg : toExport) {
+                    String text = msg.messageOwner.message;
+                    if (TextUtils.isEmpty(text) && msg.messageOwner.media != null) {
+                        text = msg.messageOwner.media.caption;
+                    }
+                    if (!TextUtils.isEmpty(text)) {
+                        sb.append(text).append("\n");
+                    }
+                }
+                java.io.FileWriter fw = new java.io.FileWriter(outFile);
+                fw.write(sb.toString());
+                fw.close();
+                final int count = toExport.size();
+                final String path = outFile.getAbsolutePath();
+                AndroidUtilities.runOnUIThread(() -> Toast.makeText(ApplicationLoader.applicationContext, count + " messages exported to\n" + path, Toast.LENGTH_LONG).show());
+            } catch (Exception e) {
+                AndroidUtilities.runOnUIThread(() -> Toast.makeText(ApplicationLoader.applicationContext, "Export failed: " + e.getMessage(), Toast.LENGTH_LONG).show());
+            }
+        }).start();
     }
 
     private void processRowSelect(View view, boolean outside, float touchX, float touchY) {
