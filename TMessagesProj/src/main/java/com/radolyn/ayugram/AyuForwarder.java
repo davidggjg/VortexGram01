@@ -9,8 +9,11 @@
 
 package com.radolyn.ayugram;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.LongSparseArray;
+import android.widget.Toast;
 import com.exteragram.messenger.utils.ChatUtils;
 import com.google.android.exoplayer2.util.Log;
 import com.radolyn.ayugram.easy.AyuEasyUtils;
@@ -23,6 +26,52 @@ import java.util.ArrayList;
 // music for coding on jaBBa
 // https://open.spotify.com/track/2qpOzuQGFqTKNn56w7qShx
 public class AyuForwarder {
+    public static final int RATE_LIMIT_BATCH = 30;
+    public static final long RATE_LIMIT_DELAY_MS = 30_000L;
+
+    // שולח הודעות בנגלות של RATE_LIMIT_BATCH עם עצירה של RATE_LIMIT_DELAY_MS בין נגלה לנגלה.
+    // מציג Toast עם התקדמות לאורך כל הדרך.
+    public static void batchForward(int currentAccount, ArrayList<MessageObject> messages, long peer,
+            boolean forwardFromMyName, boolean hideCaption, boolean notify, int scheduleDate,
+            MessageObject replyToTopMsg) {
+        int total = messages.size();
+        int totalBatches = (int) Math.ceil(total / (double) RATE_LIMIT_BATCH);
+        Handler handler = new Handler(Looper.getMainLooper());
+
+        String initMsg = totalBatches == 1
+                ? "שולח " + total + " הודעות..."
+                : "שולח " + total + " הודעות | " + totalBatches + " נגלות, 30 שניות בין כל נגלה";
+        handler.post(() -> Toast.makeText(ApplicationLoader.applicationContext, initMsg, Toast.LENGTH_LONG).show());
+
+        for (int i = 0; i < total; i += RATE_LIMIT_BATCH) {
+            final int batchNum = (i / RATE_LIMIT_BATCH) + 1;
+            final ArrayList<MessageObject> batch = new ArrayList<>(
+                    messages.subList(i, Math.min(i + RATE_LIMIT_BATCH, total)));
+            final int sentAfter = Math.min(i + RATE_LIMIT_BATCH, total);
+            final long delayMs = (long) (batchNum - 1) * RATE_LIMIT_DELAY_MS;
+
+            handler.postDelayed(() -> {
+                handler.post(() -> {
+                    String progress = "נגלה " + batchNum + "/" + totalBatches + " — שולח " + batch.size() + " הודעות";
+                    Toast.makeText(ApplicationLoader.applicationContext, progress, Toast.LENGTH_SHORT).show();
+                });
+
+                new Thread(() -> {
+                    try {
+                        intelligentForward(currentAccount, batch, peer, forwardFromMyName,
+                                hideCaption, notify, scheduleDate, replyToTopMsg);
+
+                        String done = batchNum == totalBatches
+                                ? "הכל נשלח ✓  " + total + "/" + total
+                                : "נגלה " + batchNum + "/" + totalBatches + " הושלמה — " + sentAfter + "/" + total;
+                        handler.post(() -> Toast.makeText(ApplicationLoader.applicationContext, done, Toast.LENGTH_LONG).show());
+                    } catch (Exception e) {
+                        Log.e("VortexGram", "batchForward: נגלה " + batchNum + " נכשלה", e);
+                    }
+                }).start();
+            }, delayMs);
+        }
+    }
     public static boolean isFullAyuForwardsNeeded(int currentAccount, ArrayList<MessageObject> messages) {
         var dialogId = messages.get(0).getDialogId();
         var chat = MessagesController.getInstance(currentAccount).getChat(Math.abs(dialogId));

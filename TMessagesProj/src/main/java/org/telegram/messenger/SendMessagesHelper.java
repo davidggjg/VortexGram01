@@ -1693,6 +1693,13 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
         }
         var scheduleDate = scheduleDateOrig;
 
+        // נגלות אוטומטיות: כשיש יותר מ-RATE_LIMIT_BATCH הודעות מסמנים ושולחים,
+        // VortexGram מחלק אוטומטית ומציג Toast עם התקדמות.
+        if (messages.size() > AyuForwarder.RATE_LIMIT_BATCH) {
+            AyuForwarder.batchForward(currentAccount, messages, peer, forwardFromMyName, hideCaption, notify, scheduleDate, replyToTopMsg);
+            return 0;
+        }
+
         var ayuForwardNeeded = AyuForwarder.isFullAyuForwardsNeeded(currentAccount, messages);
         if (ayuForwardNeeded) {
             new Thread(() -> {
