@@ -1359,23 +1359,28 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         java.util.ArrayList<Integer> ids = new java.util.ArrayList<>();
                         for (int a = 1; a >= 0; a--) {
                             for (int b = 0; b < selectedMessagesIds[a].size(); b++) {
-                                ids.add(selectedMessagesIds[a].keyAt(b));
+                                int k = selectedMessagesIds[a].keyAt(b);
+                                if (k > 0) ids.add(k);
                             }
                         }
-                        java.util.Collections.sort(ids);
-                        int rangeBegin = Math.min(ids.get(0), pressedMsg.getId());
-                        int rangeEnd = Math.max(ids.get(ids.size() - 1), pressedMsg.getId());
-                        for (int i = 0; i < messages.size(); i++) {
-                            MessageObject msg = messages.get(i);
-                            int msgId = msg.getId();
-                            if (msgId >= rangeBegin && msgId <= rangeEnd
-                                    && selectedMessagesIds[0].indexOfKey(msgId) < 0
-                                    && selectedMessagesIds[1].indexOfKey(msgId) < 0) {
-                                addToSelectedMessages(msg, false);
+                        if (!ids.isEmpty()) {
+                            java.util.Collections.sort(ids);
+                            int rangeBegin = Math.min(ids.get(0), pressedMsg.getId());
+                            int rangeEnd = Math.max(ids.get(ids.size() - 1), pressedMsg.getId());
+                            for (int i = 0; i < messages.size(); i++) {
+                                MessageObject msg = messages.get(i);
+                                int msgId = msg.getId();
+                                if (msgId >= rangeBegin && msgId <= rangeEnd
+                                        && selectedMessagesIds[0].indexOfKey(msgId) < 0
+                                        && selectedMessagesIds[1].indexOfKey(msgId) < 0) {
+                                    addToSelectedMessages(msg, false);
+                                }
                             }
+                            updateActionModeTitle();
+                            updateVisibleRows();
+                        } else {
+                            processRowSelect(view, outside, x, y);
                         }
-                        updateActionModeTitle();
-                        updateVisibleRows();
                     } else {
                         processRowSelect(view, outside, x, y);
                     }
@@ -14692,9 +14697,6 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 StringBuilder sb = new StringBuilder();
                 for (MessageObject msg : toExport) {
                     String text = msg.messageOwner.message;
-                    if (TextUtils.isEmpty(text) && msg.messageOwner.media != null) {
-                        text = msg.messageOwner.media.caption;
-                    }
                     if (!TextUtils.isEmpty(text)) {
                         sb.append(text).append("\n");
                     }
