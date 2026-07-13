@@ -1,58 +1,60 @@
 """
-שולח קבצים לבוט בנגלות של 30 כל 30 שניות.
+מעביר הודעות וידאו מקבוצה/ערוץ לבוט בנגלות של 30 כל 30 שניות.
 דרישות: pip install telethon
+
+איך להשיג API_ID ו-API_HASH:
+  1. כנס ל-https://my.telegram.org
+  2. התחבר עם מספר הטלפון שלך
+  3. לחץ על "API development tools"
+  4. צור אפליקציה — תקבל App api_id ו-App api_hash
 """
 
 import asyncio
-import os
-from pathlib import Path
 from telethon import TelegramClient
+from telethon.tl.types import MessageMediaDocument, MessageMediaPhoto
 
-# ── הגדרות ────────────────────────────────────────────────────
-API_ID    = 0          # מ-my.telegram.org → App configuration
-API_HASH  = ""         # מ-my.telegram.org → App configuration
-BOT_USERNAME = "@YourBotUsername"  # שם הבוט שלך
-
-FILES_DIR    = "./videos"   # תיקיית הקבצים לשליחה
-BATCH_SIZE   = 30           # כמה קבצים בכל נגלה
-WAIT_SECONDS = 30           # המתנה בין נגלות (שניות)
-
-# סיומות נתמכות — שנה לפי הצורך
-EXTENSIONS = {".mp4", ".mkv", ".avi", ".mov", ".ts", ".m2ts"}
+# ── הגדרות — מלא את 3 השורות האלה ────────────────────────────
+API_ID       = 0          # מספר מ-my.telegram.org
+API_HASH     = ""         # מחרוזת מ-my.telegram.org
+SOURCE_GROUP = ""         # לינק או username של הקבוצה/ערוץ המקור, למשל "@ZOVE8" או "https://t.me/ZOVE8"
+BOT_USERNAME = ""         # הבוט שאליו לשלוח, למשל "@MyBot"
 # ──────────────────────────────────────────────────────────────
+
+BATCH_SIZE   = 30   # כמה הודעות בכל נגלה
+WAIT_SECONDS = 30   # שניות המתנה בין נגלות
 
 
 async def main():
-    files = sorted(
-        p for p in Path(FILES_DIR).iterdir()
-        if p.is_file() and p.suffix.lower() in EXTENSIONS
-    )
-
-    if not files:
-        print(f"לא נמצאו קבצים ב-{FILES_DIR}")
-        return
-
-    print(f"נמצאו {len(files)} קבצים. נשלחים בנגלות של {BATCH_SIZE} כל {WAIT_SECONDS} שניות.")
-
     async with TelegramClient("zovex_session", API_ID, API_HASH) as client:
-        for batch_num, i in enumerate(range(0, len(files), BATCH_SIZE), start=1):
-            batch = files[i:i + BATCH_SIZE]
-            print(f"\nנגלה {batch_num} — שולח {len(batch)} קבצים...")
+        print(f"מחובר. מושך הודעות מ-{SOURCE_GROUP}...")
 
-            for file in batch:
+        # משיכת כל ההודעות עם מדיה (וידאו/מסמך) מהקבוצה
+        messages = []
+        async for msg in client.iter_messages(SOURCE_GROUP):
+            if msg.media and isinstance(msg.media, (MessageMediaDocument, MessageMediaPhoto)):
+                messages.append(msg)
+
+        messages.reverse()  # מהישן לחדש
+        total = len(messages)
+        print(f"נמצאו {total} הודעות מדיה. מעביר בנגלות של {BATCH_SIZE} כל {WAIT_SECONDS} שניות...")
+
+        for batch_num, i in enumerate(range(0, total, BATCH_SIZE), start=1):
+            batch = messages[i:i + BATCH_SIZE]
+            print(f"\nנגלה {batch_num} — מעביר {len(batch)} הודעות...")
+
+            for msg in batch:
                 try:
-                    print(f"  שולח: {file.name}")
-                    await client.send_file(BOT_USERNAME, str(file), caption=file.name)
-                    await asyncio.sleep(1)  # השהיה קטנה בין כל קובץ בתוך הנגלה
+                    await client.forward_messages(BOT_USERNAME, msg)
+                    await asyncio.sleep(1)  # שנייה בין כל הודעה בתוך הנגלה
                 except Exception as e:
-                    print(f"  שגיאה בקובץ {file.name}: {e}")
+                    print(f"  שגיאה בהודעה {msg.id}: {e}")
 
-            remaining = len(files) - (i + len(batch))
+            remaining = total - (i + len(batch))
             if remaining > 0:
-                print(f"נגלה {batch_num} הושלמה. נשארו {remaining} קבצים. מחכה {WAIT_SECONDS} שניות...")
+                print(f"נגלה {batch_num} הושלמה. נשארו {remaining}. מחכה {WAIT_SECONDS} שניות...")
                 await asyncio.sleep(WAIT_SECONDS)
 
-    print("\nהכל נשלח!")
+    print("\nהכל הועבר!")
 
 
 if __name__ == "__main__":
