@@ -1396,7 +1396,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         return;
                     }
                     if (messageObject.contentType == 0) {
-                        limitReached = selected && selectedMessagesIds[0].size() + selectedMessagesIds[1].size() >= 100;
+                        limitReached = false; // VortexGram: no selection limit
                         RecyclerView.ViewHolder holder = chatListView.findViewHolderForAdapterPosition(position);
                         if (holder != null && holder.itemView instanceof ChatMessageCell) {
                             processRowSelect(holder.itemView, false, x, y);
