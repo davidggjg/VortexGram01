@@ -43,6 +43,7 @@ public class AyuConstants {
     public static final int AYUSYNC_LAST_SENT_CHANGED = 6971;
     public static final int AYUSYNC_LAST_RECEIVED_CHANGED = 6972;
     public static final int AYUSYNC_REGISTER_STATUS_CODE_CHANGED = 6973;
+    public static final int ARCHIVED_DIALOGS_CHANGED = 6974;
 
     public static String DEFAULT_DELETED_MARK = "🧹";
     public static String DEFAULT_AYUSYNC_SERVER = BuildVars.isBetaApp() ? "ayusync-dev.radolyn.com:5000" : "ayusync.cloud";

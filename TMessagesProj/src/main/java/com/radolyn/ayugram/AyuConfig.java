@@ -30,6 +30,7 @@ public class AyuConfig {
     public static boolean useScheduledMessages;
     public static boolean saveDeletedMessages;
     public static boolean saveMessagesHistory;
+    public static boolean archiveLeftChats;
 
     public static boolean saveMedia;
     public static boolean saveMediaInPrivateChats;
@@ -81,6 +82,9 @@ public class AyuConfig {
             // ~ Message edits & deletion history
             saveDeletedMessages = preferences.getBoolean("saveDeletedMessages", true);
             saveMessagesHistory = preferences.getBoolean("saveMessagesHistory", true);
+
+            // ~ Archived chats (groups/channels you left or were removed from)
+            archiveLeftChats = preferences.getBoolean("archiveLeftChats", true);
 
             // ~ Message saving preferences
             saveMedia = preferences.getBoolean("saveMedia", true);
