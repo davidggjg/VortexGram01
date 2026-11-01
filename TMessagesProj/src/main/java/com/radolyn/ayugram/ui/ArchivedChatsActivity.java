@@ -146,7 +146,7 @@ public class ArchivedChatsActivity extends BaseFragment implements NotificationC
         builder.setNegativeButton(LocaleController.getString(R.string.Cancel), null);
         AlertDialog alertDialog = builder.create();
         showDialog(alertDialog);
-        View button = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        View button = alertDialog.getButton(android.content.DialogInterface.BUTTON_POSITIVE);
         if (button instanceof android.widget.TextView) {
             ((android.widget.TextView) button).setTextColor(Theme.getColor(Theme.key_dialogTextRed2));
         }
