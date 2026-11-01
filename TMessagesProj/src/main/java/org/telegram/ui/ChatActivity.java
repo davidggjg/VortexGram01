@@ -18860,6 +18860,15 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private int sponsoredMessagesPostsBetween;
     private boolean sponsoredMessagesAdded;
     private void addSponsoredMessages(boolean animated) {
+        // VortexGram: when ads are disabled, never even ask the server for them.
+        if (AyuConfig.disableAds) {
+            sponsoredMessagesAdded = true;
+            sponsoredMessagesPostsBetween = 0;
+            if (notPushedSponsoredMessages != null) {
+                notPushedSponsoredMessages.clear();
+            }
+            return;
+        }
         if (sponsoredMessagesAdded || chatMode != 0 || !ChatObject.isChannel(currentChat) || !forwardEndReached[0] || getUserConfig().isPremium()) {
             return;
         }

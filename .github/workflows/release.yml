@@ -1,6 +1,9 @@
 name: Build release APK
+
+# Manual only. Work-in-progress pushes are checked by compile.yml instead,
+# so an installable APK is produced only when one is deliberately requested.
 on:
-  push:
+  workflow_dispatch:
 
 jobs:
   build:

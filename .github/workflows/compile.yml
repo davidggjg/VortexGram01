@@ -1,0 +1,45 @@
+name: Compile check
+
+# Fast feedback on every push: compiles all Java sources for the real
+# release variant. Deliberately does NOT build the NDK code or an APK,
+# so pushing work-in-progress never produces an installable build.
+on:
+  push:
+    branches:
+      - 'claude/**'
+  workflow_dispatch:
+
+concurrency:
+  group: compile-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Write API_KEYS placeholder
+        run: |
+          cat > API_KEYS <<'EOF'
+          APP_ID = 32144116
+          APP_HASH = "c904cd8020adaa7ff2cb6e76c6aeda0b"
+          MAPS_V2_API = "placeholder"
+          SIGNING_KEY_PASSWORD = placeholder
+          SIGNING_KEY_ALIAS = placeholder
+          SIGNING_KEY_STORE_PASSWORD = placeholder
+          EOF
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Install SDK packages
+        run: sdkmanager "platforms;android-33" "build-tools;33.0.1"
+
+      - name: Compile Java (no NDK, no APK)
+        run: ./gradlew :TMessagesProj:compileAfatReleaseJavaWithJavac --no-daemon --stacktrace
