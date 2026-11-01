@@ -375,7 +375,7 @@ public class VortexGramPreferencesActivity extends BasePreferencesActivity imple
                     if (position == archivedChatsBtnRow) {
                         var archivedCount = com.radolyn.ayugram.messages.AyuArchiveController.getInstance()
                                 .getDialogsCount(currentAccount);
-                        textCell.setTextAndValueAndIcon(LocaleController.getString(R.string.ArchivedChats),
+                        textCell.setTextAndValueAndIcon(LocaleController.getString(R.string.VortexArchivedChats),
                                 String.valueOf(archivedCount), R.drawable.msg_archive, false);
                     } else if (position == messageSavingBtnRow) {
                         textCell.setText(LocaleController.getString(R.string.MessageSavingBtn), false);
@@ -426,7 +426,7 @@ public class VortexGramPreferencesActivity extends BasePreferencesActivity imple
                     } else if (position == saveMessagesHistoryRow) {
                         textCheckCell.setTextAndCheck(LocaleController.getString(R.string.SaveMessagesHistory), AyuConfig.saveMessagesHistory, true);
                     } else if (position == archiveLeftChatsRow) {
-                        textCheckCell.setTextAndCheck(LocaleController.getString(R.string.ArchiveLeftChats), AyuConfig.archiveLeftChats, true);
+                        textCheckCell.setTextAndCheck(LocaleController.getString(R.string.VortexArchiveLeftChats), AyuConfig.archiveLeftChats, true);
                     } else if (position == keepAliveServiceRow) {
                         textCheckCell.setTextAndCheck(LocaleController.getString(R.string.KeepAliveService), AyuConfig.keepAliveService, true);
                     } else if (position == disableAdsRow) {

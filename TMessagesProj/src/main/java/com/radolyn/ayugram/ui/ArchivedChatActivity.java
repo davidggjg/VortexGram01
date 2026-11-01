@@ -87,10 +87,10 @@ public class ArchivedChatActivity extends BaseFragment {
     public View createView(Context context) {
         actionBar.setBackButtonImage(R.drawable.ic_ab_back);
         actionBar.setTitle(TextUtils.isEmpty(chatTitle)
-                ? LocaleController.getString(R.string.ArchivedChats)
+                ? LocaleController.getString(R.string.VortexArchivedChats)
                 : chatTitle);
         actionBar.setSubtitle(LocaleController.formatString(
-                "ArchivedChatMessagesCount", R.string.ArchivedChatMessagesCount, messages.size()));
+                "VortexArchivedChatMessagesCount", R.string.VortexArchivedChatMessagesCount, messages.size()));
         actionBar.setAllowOverlayTitle(false);
         actionBar.setOccupyStatusBar(!AndroidUtilities.isTablet());
         actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
@@ -131,7 +131,7 @@ public class ArchivedChatActivity extends BaseFragment {
         if (TextUtils.isEmpty(message.mediaPath)) {
             if (message.documentType != AyuConstants.DOCUMENT_TYPE_NONE) {
                 BulletinFactory.of(this)
-                        .createErrorBulletin(LocaleController.getString(R.string.ArchivedChatMediaMissing))
+                        .createErrorBulletin(LocaleController.getString(R.string.VortexArchivedChatMediaMissing))
                         .show();
             }
             return;
@@ -139,7 +139,7 @@ public class ArchivedChatActivity extends BaseFragment {
         File file = new File(message.mediaPath);
         if (!file.exists()) {
             BulletinFactory.of(this)
-                    .createErrorBulletin(LocaleController.getString(R.string.ArchivedChatMediaMissing))
+                    .createErrorBulletin(LocaleController.getString(R.string.VortexArchivedChatMediaMissing))
                     .show();
             return;
         }
@@ -199,10 +199,10 @@ public class ArchivedChatActivity extends BaseFragment {
             return null;
         }
         if (TextUtils.isEmpty(message.mediaPath)) {
-            return LocaleController.getString(R.string.ArchivedChatMediaMissing);
+            return LocaleController.getString(R.string.VortexArchivedChatMediaMissing);
         }
         return new File(message.mediaPath).getName()
-                + "  ·  " + LocaleController.getString(R.string.ArchivedChatOpenMedia);
+                + "  ·  " + LocaleController.getString(R.string.VortexArchivedChatOpenMedia);
     }
 
     /** One archived message: who sent it, when, its text, and its media, if kept. */
@@ -303,7 +303,7 @@ public class ArchivedChatActivity extends BaseFragment {
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if (holder.getItemViewType() == VIEW_TYPE_EMPTY) {
                 ((TextInfoPrivacyCell) holder.itemView)
-                        .setText(LocaleController.getString(R.string.ArchivedChatEmptyMessages));
+                        .setText(LocaleController.getString(R.string.VortexArchivedChatEmptyMessages));
             } else {
                 ((MessageCell) holder.itemView).bind(messages.get(position));
             }

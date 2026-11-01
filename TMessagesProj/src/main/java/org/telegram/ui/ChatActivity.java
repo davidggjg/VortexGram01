@@ -3066,7 +3066,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                             com.radolyn.ayugram.database.entities.ArchivedDialog.REASON_LEFT);
                     BulletinFactory.of(ChatActivity.this)
                             .createSimpleBulletin(R.raw.chats_archive,
-                                    LocaleController.getString(R.string.ArchiveThisChatDone))
+                                    LocaleController.getString(R.string.VortexArchiveThisChatDone))
                             .show();
                 } else if (id == add_shortcut) {
                     try {
@@ -3500,7 +3500,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             headerItem.lazilyAddSubItem(to_beginning, R.drawable.msg_to_beginning, LocaleController.getString("ToBeginning", R.string.ToBeginning));
             if (currentChat != null && com.radolyn.ayugram.AyuConfig.archiveLeftChats) {
                 // VortexGram: capture the history now, so it survives being removed later.
-                headerItem.lazilyAddSubItem(vortex_archive_chat, R.drawable.msg_archive, LocaleController.getString(R.string.ArchiveThisChat));
+                headerItem.lazilyAddSubItem(vortex_archive_chat, R.drawable.msg_archive, LocaleController.getString(R.string.VortexArchiveThisChat));
             }
             if (currentChat != null && (ChatObject.canUserDoAction(currentChat, ChatObject.ACTION_PIN) || ChatObject.isChannel(currentChat)) || currentEncryptedChat == null && currentUser != null) {
                 headerItem.lazilyAddSubItem(show_pinned, R.drawable.msg_pin, LocaleController.getString("PinnedMessage", R.string.PinnedMessage));

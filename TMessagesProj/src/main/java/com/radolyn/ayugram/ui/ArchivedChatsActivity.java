@@ -81,7 +81,7 @@ public class ArchivedChatsActivity extends BaseFragment implements NotificationC
     @Override
     public View createView(Context context) {
         actionBar.setBackButtonImage(R.drawable.ic_ab_back);
-        actionBar.setTitle(LocaleController.getString(R.string.ArchivedChats));
+        actionBar.setTitle(LocaleController.getString(R.string.VortexArchivedChats));
         actionBar.setAllowOverlayTitle(true);
         actionBar.setOccupyStatusBar(!AndroidUtilities.isTablet());
         actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
@@ -132,9 +132,9 @@ public class ArchivedChatsActivity extends BaseFragment implements NotificationC
     @SuppressLint("NotifyDataSetChanged")
     private void confirmDelete(ArchivedDialog dialog) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
-        builder.setTitle(LocaleController.getString(R.string.ArchivedChatDelete));
+        builder.setTitle(LocaleController.getString(R.string.VortexArchivedChatDelete));
         builder.setMessage(LocaleController.formatString(
-                "ArchivedChatDeleteConfirm", R.string.ArchivedChatDeleteConfirm,
+                "VortexArchivedChatDeleteConfirm", R.string.VortexArchivedChatDeleteConfirm,
                 dialog.title == null ? "" : dialog.title));
         builder.setPositiveButton(LocaleController.getString(R.string.Delete), (d, which) -> {
             AyuArchiveController.getInstance().deleteDialog(currentAccount, dialog.dialogId);
@@ -155,14 +155,14 @@ public class ArchivedChatsActivity extends BaseFragment implements NotificationC
     private String describe(ArchivedDialog dialog) {
         String reason;
         if (dialog.reason == ArchivedDialog.REASON_REMOVED) {
-            reason = LocaleController.getString(R.string.ArchivedChatReasonRemoved);
+            reason = LocaleController.getString(R.string.VortexArchivedChatReasonRemoved);
         } else if (dialog.reason == ArchivedDialog.REASON_DELETED) {
-            reason = LocaleController.getString(R.string.ArchivedChatReasonDeleted);
+            reason = LocaleController.getString(R.string.VortexArchivedChatReasonDeleted);
         } else {
-            reason = LocaleController.getString(R.string.ArchivedChatReasonLeft);
+            reason = LocaleController.getString(R.string.VortexArchivedChatReasonLeft);
         }
         String count = LocaleController.formatString(
-                "ArchivedChatMessagesCount", R.string.ArchivedChatMessagesCount, dialog.messagesCount);
+                "VortexArchivedChatMessagesCount", R.string.VortexArchivedChatMessagesCount, dialog.messagesCount);
         String date = LocaleController.getInstance().formatterYear.format(new java.util.Date(dialog.archivedDate * 1000L));
         return reason + " · " + date + " · " + count;
     }
@@ -227,15 +227,15 @@ public class ArchivedChatsActivity extends BaseFragment implements NotificationC
             switch (holder.getItemViewType()) {
                 case VIEW_TYPE_HEADER: {
                     ((HeaderCell) holder.itemView).setText(dialogs.isEmpty()
-                            ? LocaleController.getString(R.string.ArchivedChatsEmpty)
-                            : LocaleController.getString(R.string.ArchivedChatsHeader));
+                            ? LocaleController.getString(R.string.VortexArchivedChatsEmpty)
+                            : LocaleController.getString(R.string.VortexArchivedChatsHeader));
                     break;
                 }
                 case VIEW_TYPE_INFO: {
                     TextInfoPrivacyCell cell = (TextInfoPrivacyCell) holder.itemView;
                     cell.setText(dialogs.isEmpty()
-                            ? LocaleController.getString(R.string.ArchivedChatsEmptyInfo)
-                            : LocaleController.getString(R.string.ArchivedChatsInfo));
+                            ? LocaleController.getString(R.string.VortexArchivedChatsEmptyInfo)
+                            : LocaleController.getString(R.string.VortexArchivedChatsInfo));
                     break;
                 }
                 default: {
