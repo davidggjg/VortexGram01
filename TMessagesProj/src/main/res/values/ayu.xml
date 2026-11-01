@@ -103,4 +103,23 @@
   <string name="SecretMessageTecno">Tecno phones are the best.</string>
   <string name="SecretMessageXiaomiSuccess">You\'re using a good phone.</string>
   <string name="SecretMessageXiaomiFailure">Install custom ROM.</string>
+  <!-- Archived chats -->
+  <string name="ArchivedChats">Archived chats</string>
+  <string name="ArchivedChatsInfo">Groups and channels you left, or were removed from. Their history stays here after Telegram drops it.</string>
+  <string name="ArchivedChatsEmpty">Nothing archived yet</string>
+  <string name="ArchivedChatsEmptyInfo">When you leave a group or channel, or one removes you, its history is kept here automatically.</string>
+  <string name="ArchivedChatsHeader">Kept history</string>
+  <string name="ArchiveLeftChats">Keep history of chats I leave</string>
+  <string name="ArchiveLeftChatsInfo">Saves a group or channel\'s history before Telegram deletes it, so you can still read it after leaving or being removed.</string>
+  <string name="ArchiveThisChat">Keep history in archive</string>
+  <string name="ArchiveThisChatDone">History is being archived</string>
+  <string name="ArchivedChatReasonLeft">You left</string>
+  <string name="ArchivedChatReasonRemoved">You were removed</string>
+  <string name="ArchivedChatReasonDeleted">Chat deleted</string>
+  <string name="ArchivedChatMessagesCount">%1$d messages</string>
+  <string name="ArchivedChatMediaMissing">Media was never downloaded, so it could not be kept</string>
+  <string name="ArchivedChatOpenMedia">Open</string>
+  <string name="ArchivedChatDelete">Remove from archive</string>
+  <string name="ArchivedChatDeleteConfirm">Delete the kept history of %1$s? This cannot be undone.</string>
+  <string name="ArchivedChatEmptyMessages">No messages were kept for this chat</string>
 </resources>

@@ -47,6 +47,8 @@ public class VortexGramPreferencesActivity extends BasePreferencesActivity imple
     private int spyHeaderRow;
     private int saveDeletedMessagesRow;
     private int saveMessagesHistoryRow;
+    private int archiveLeftChatsRow;
+    private int archivedChatsBtnRow;
     private int spyDivider1Row;
     private int messageSavingBtnRow;
     private int spyDivider2Row;
@@ -101,6 +103,8 @@ public class VortexGramPreferencesActivity extends BasePreferencesActivity imple
         spyHeaderRow = newRow();
         saveDeletedMessagesRow = newRow();
         saveMessagesHistoryRow = newRow();
+        archiveLeftChatsRow = newRow();
+        archivedChatsBtnRow = newRow();
         spyDivider1Row = newRow();
         messageSavingBtnRow = newRow();
         spyDivider2Row = newRow();
@@ -249,6 +253,11 @@ public class VortexGramPreferencesActivity extends BasePreferencesActivity imple
         } else if (position == saveMessagesHistoryRow) {
             AyuConfig.editor.putBoolean("saveMessagesHistory", AyuConfig.saveMessagesHistory ^= true).apply();
             ((TextCheckCell) view).setChecked(AyuConfig.saveMessagesHistory);
+        } else if (position == archiveLeftChatsRow) {
+            AyuConfig.editor.putBoolean("archiveLeftChats", AyuConfig.archiveLeftChats ^= true).apply();
+            ((TextCheckCell) view).setChecked(AyuConfig.archiveLeftChats);
+        } else if (position == archivedChatsBtnRow) {
+            presentFragment(new com.radolyn.ayugram.ui.ArchivedChatsActivity());
         } else if (position == messageSavingBtnRow) {
             presentFragment(new MessageSavingPreferencesActivity());
         } else if (position == keepAliveServiceRow) {
@@ -363,7 +372,12 @@ public class VortexGramPreferencesActivity extends BasePreferencesActivity imple
                 case 2:
                     TextCell textCell = (TextCell) holder.itemView;
                     textCell.setTextColor(Theme.getColor(Theme.key_windowBackgroundWhiteBlackText));
-                    if (position == messageSavingBtnRow) {
+                    if (position == archivedChatsBtnRow) {
+                        var archivedCount = com.radolyn.ayugram.messages.AyuArchiveController.getInstance()
+                                .getDialogsCount(currentAccount);
+                        textCell.setTextAndValueAndIcon(LocaleController.getString(R.string.ArchivedChats),
+                                String.valueOf(archivedCount), R.drawable.msg_archive, false);
+                    } else if (position == messageSavingBtnRow) {
                         textCell.setText(LocaleController.getString(R.string.MessageSavingBtn), false);
                     } else if (position == deletedMarkTextRow) {
                         textCell.setTextAndValue(LocaleController.getString(R.string.DeletedMarkText), AyuConfig.getDeletedMark(), true);
@@ -410,7 +424,9 @@ public class VortexGramPreferencesActivity extends BasePreferencesActivity imple
                     } else if (position == saveDeletedMessagesRow) {
                         textCheckCell.setTextAndCheck(LocaleController.getString(R.string.SaveDeletedMessages), AyuConfig.saveDeletedMessages, true);
                     } else if (position == saveMessagesHistoryRow) {
-                        textCheckCell.setTextAndCheck(LocaleController.getString(R.string.SaveMessagesHistory), AyuConfig.saveMessagesHistory, false);
+                        textCheckCell.setTextAndCheck(LocaleController.getString(R.string.SaveMessagesHistory), AyuConfig.saveMessagesHistory, true);
+                    } else if (position == archiveLeftChatsRow) {
+                        textCheckCell.setTextAndCheck(LocaleController.getString(R.string.ArchiveLeftChats), AyuConfig.archiveLeftChats, true);
                     } else if (position == keepAliveServiceRow) {
                         textCheckCell.setTextAndCheck(LocaleController.getString(R.string.KeepAliveService), AyuConfig.keepAliveService, true);
                     } else if (position == disableAdsRow) {
@@ -486,7 +502,8 @@ public class VortexGramPreferencesActivity extends BasePreferencesActivity imple
             ) {
                 return 1;
             } else if (
-                    position == messageSavingBtnRow ||
+                    position == archivedChatsBtnRow ||
+                            position == messageSavingBtnRow ||
                             position == deletedMarkTextRow ||
                             position == editedMarkTextRow ||
                             position == ayuSyncStatusBtnRow ||
