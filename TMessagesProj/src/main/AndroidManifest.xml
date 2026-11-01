@@ -40,6 +40,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -669,6 +670,12 @@
             android:name=".VideoEncodingService"
             android:enabled="true"
             android:exported="false" />
+        <!-- VortexGram: keeps downloads and uploads alive in the background -->
+        <service
+            android:name="com.radolyn.ayugram.services.VortexTransferService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
         <service
             android:name=".ImportingService"
             android:enabled="true"

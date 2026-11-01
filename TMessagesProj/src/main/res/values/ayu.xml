@@ -122,4 +122,10 @@
   <string name="VortexArchivedChatDelete">Remove from archive</string>
   <string name="VortexArchivedChatDeleteConfirm">Delete the kept history of %1$s? This cannot be undone.</string>
   <string name="VortexArchivedChatEmptyMessages">No messages were kept for this chat</string>
+  <!-- Background transfers -->
+  <string name="VortexBackgroundTransfers">Keep transfers running in background</string>
+  <string name="VortexBackgroundTransfersInfo">Holds a notification while a download or upload is in progress, so Android does not freeze it when you leave the app. Large files no longer fail when you switch away.</string>
+  <string name="VortexTransferDownloading">Downloading %1$d file(s)</string>
+  <string name="VortexTransferUploading">Uploading %1$d file(s)</string>
+  <string name="VortexTransferBoth">Downloading %1$d, uploading %2$d file(s)</string>
 </resources>

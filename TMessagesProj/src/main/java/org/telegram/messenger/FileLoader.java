@@ -388,9 +388,15 @@ public class FileLoader extends BaseController {
             if (forceSmallFile) {
                 operation.setForceSmallFile();
             }
+            // VortexGram: hold a foreground service for the transfer, so leaving
+            // the app does not freeze the process and fail the upload.
+            if (com.radolyn.ayugram.AyuConfig.backgroundTransfers) {
+                com.radolyn.ayugram.services.VortexTransferService.onUploadStarted(location);
+            }
             operation.setDelegate(new FileUploadOperation.FileUploadOperationDelegate() {
                 @Override
                 public void didFinishUploadingFile(final FileUploadOperation operation, final TLRPC.InputFile inputFile, final TLRPC.InputEncryptedFile inputEncryptedFile, final byte[] key, final byte[] iv) {
+                    com.radolyn.ayugram.services.VortexTransferService.onUploadFinished(location);
                     fileLoaderQueue.postRunnable(() -> {
                         if (encrypted) {
                             uploadOperationPathsEnc.remove(location);
@@ -424,6 +430,7 @@ public class FileLoader extends BaseController {
 
                 @Override
                 public void didFailedUploadingFile(final FileUploadOperation operation) {
+                    com.radolyn.ayugram.services.VortexTransferService.onUploadFinished(location);
                     fileLoaderQueue.postRunnable(() -> {
                         if (encrypted) {
                             uploadOperationPathsEnc.remove(location);
@@ -565,6 +572,7 @@ public class FileLoader extends BaseController {
         }
         fileLoaderQueue.postRunnable(() -> {
             FileLoadOperation operation = loadOperationPaths.remove(fileName);
+            com.radolyn.ayugram.services.VortexTransferService.onDownloadFinished(fileName);
             if (operation != null) {
                 FileLoaderPriorityQueue queue = operation.getQueue();
                 queue.cancel(operation);
@@ -873,6 +881,11 @@ public class FileLoader extends BaseController {
         operation.setDelegate(fileLoadOperationDelegate);
 
         loadOperationPaths.put(finalFileName, operation);
+        // VortexGram: hold a foreground service for the transfer, so leaving the
+        // app does not freeze the process and fail the download.
+        if (com.radolyn.ayugram.AyuConfig.backgroundTransfers) {
+            com.radolyn.ayugram.services.VortexTransferService.onDownloadStarted(finalFileName);
+        }
         operation.setPriority(priority);
         if (stream != null) {
             operation.setStream(stream, streamPriority, streamOffset);
@@ -997,6 +1010,7 @@ public class FileLoader extends BaseController {
         fileLoaderQueue.postRunnable(() -> {
             if (queue.remove(operation)) {
                 loadOperationPaths.remove(operation.getFileName());
+                com.radolyn.ayugram.services.VortexTransferService.onDownloadFinished(operation.getFileName());
                 queue.checkLoadingOperations();
             }
         }, delay);

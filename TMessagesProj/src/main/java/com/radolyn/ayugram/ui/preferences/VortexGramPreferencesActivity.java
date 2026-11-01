@@ -55,6 +55,7 @@ public class VortexGramPreferencesActivity extends BasePreferencesActivity imple
 
     private int qolHeaderRow;
     private int keepAliveServiceRow;
+    private int backgroundTransfersRow;
     private int disableAdsRow;
     private int localPremiumRow;
     private int filtersRow;
@@ -111,6 +112,7 @@ public class VortexGramPreferencesActivity extends BasePreferencesActivity imple
 
         qolHeaderRow = newRow();
         keepAliveServiceRow = newRow();
+        backgroundTransfersRow = newRow();
         disableAdsRow = newRow();
         localPremiumRow = newRow();
         filtersRow = newRow();
@@ -263,6 +265,9 @@ public class VortexGramPreferencesActivity extends BasePreferencesActivity imple
         } else if (position == keepAliveServiceRow) {
             AyuConfig.editor.putBoolean("keepAliveService", AyuConfig.keepAliveService ^= true).apply();
             ((TextCheckCell) view).setChecked(AyuConfig.keepAliveService);
+        } else if (position == backgroundTransfersRow) {
+            AyuConfig.editor.putBoolean("backgroundTransfers", AyuConfig.backgroundTransfers ^= true).apply();
+            ((TextCheckCell) view).setChecked(AyuConfig.backgroundTransfers);
         } else if (position == disableAdsRow) {
             AyuConfig.editor.putBoolean("disableAds", AyuConfig.disableAds ^= true).apply();
             ((TextCheckCell) view).setChecked(AyuConfig.disableAds);
@@ -429,6 +434,8 @@ public class VortexGramPreferencesActivity extends BasePreferencesActivity imple
                         textCheckCell.setTextAndCheck(LocaleController.getString(R.string.VortexArchiveLeftChats), AyuConfig.archiveLeftChats, true);
                     } else if (position == keepAliveServiceRow) {
                         textCheckCell.setTextAndCheck(LocaleController.getString(R.string.KeepAliveService), AyuConfig.keepAliveService, true);
+                    } else if (position == backgroundTransfersRow) {
+                        textCheckCell.setTextAndCheck(LocaleController.getString(R.string.VortexBackgroundTransfers), AyuConfig.backgroundTransfers, true);
                     } else if (position == disableAdsRow) {
                         textCheckCell.setTextAndCheck(LocaleController.getString(R.string.DisableAds), AyuConfig.disableAds, true);
                     } else if (position == localPremiumRow) {
