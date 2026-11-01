@@ -36,10 +36,15 @@ jobs:
           java-version: '17'
           cache: gradle
 
-      - uses: android-actions/setup-android@v3
-
+      # android-actions/setup-android fails on current runners: it tries to
+      # install the long-obsolete 'tools' package. The runner image already
+      # ships an Android SDK, so use it directly.
       - name: Install SDK packages
-        run: sdkmanager "platforms;android-33" "build-tools;33.0.1"
+        run: |
+          echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
+          yes | "$ANDROID_SDK_ROOT"/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null || true
+          "$ANDROID_SDK_ROOT"/cmdline-tools/latest/bin/sdkmanager \
+            "platforms;android-33" "build-tools;33.0.1"
 
       - name: Compile Java (no NDK, no APK)
         run: ./gradlew :TMessagesProj:compileAfatReleaseJavaWithJavac --no-daemon --stacktrace
