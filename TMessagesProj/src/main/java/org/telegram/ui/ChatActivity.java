@@ -1327,6 +1327,8 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private final static int recent_actions = 103;
     private final static int encryption_key = 104;
     private final static int show_pinned = 105;
+    // VortexGram: archive this chat's history while still a member
+    private final static int vortex_archive_chat = 106;
 
     private final static int id_chat_compose_panel = 1000;
 
@@ -3058,6 +3060,14 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     }
                 } else if (id == mute) {
                     toggleMute(false);
+                } else if (id == vortex_archive_chat) {
+                    com.radolyn.ayugram.messages.AyuArchiveController.getInstance().archiveDialog(
+                            currentAccount, dialog_id,
+                            com.radolyn.ayugram.database.entities.ArchivedDialog.REASON_LEFT);
+                    BulletinFactory.of(ChatActivity.this)
+                            .createSimpleBulletin(R.raw.chats_archive,
+                                    LocaleController.getString(R.string.ArchiveThisChatDone))
+                            .show();
                 } else if (id == add_shortcut) {
                     try {
                         getMediaDataController().installShortcut(currentUser.id);
@@ -3488,6 +3498,10 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 headerItem.lazilyAddSubItem(report, R.drawable.msg_report, LocaleController.getString("ReportChat", R.string.ReportChat));
             }
             headerItem.lazilyAddSubItem(to_beginning, R.drawable.msg_to_beginning, LocaleController.getString("ToBeginning", R.string.ToBeginning));
+            if (currentChat != null && com.radolyn.ayugram.AyuConfig.archiveLeftChats) {
+                // VortexGram: capture the history now, so it survives being removed later.
+                headerItem.lazilyAddSubItem(vortex_archive_chat, R.drawable.msg_archive, LocaleController.getString(R.string.ArchiveThisChat));
+            }
             if (currentChat != null && (ChatObject.canUserDoAction(currentChat, ChatObject.ACTION_PIN) || ChatObject.isChannel(currentChat)) || currentEncryptedChat == null && currentUser != null) {
                 headerItem.lazilyAddSubItem(show_pinned, R.drawable.msg_pin, LocaleController.getString("PinnedMessage", R.string.PinnedMessage));
             }

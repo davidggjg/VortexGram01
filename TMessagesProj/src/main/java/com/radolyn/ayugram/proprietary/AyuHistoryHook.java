@@ -16,7 +16,9 @@ import com.radolyn.ayugram.AyuConstants;
 import com.radolyn.ayugram.database.entities.AyuMessageBase;
 import com.radolyn.ayugram.messages.AyuMessagesController;
 import org.telegram.messenger.FileLog;
+import org.telegram.messenger.ChatObject;
 import org.telegram.messenger.MessageObject;
+import org.telegram.messenger.MessagesController;
 import org.telegram.messenger.UserConfig;
 import org.telegram.tgnet.SerializedData;
 import org.telegram.tgnet.TLRPC;
@@ -64,7 +66,14 @@ public class AyuHistoryHook {
                 var tlMsg = new TLRPC.TL_message();
                 mapFromBase(dm, tlMsg, currentAccount);
                 mapMediaFromBase(dm, tlMsg);
-                messArr.add(new MessageObject(currentAccount, tlMsg, false, true));
+                var messageObject = new MessageObject(currentAccount, tlMsg, false, true);
+                messArr.add(messageObject);
+                if (messagesDict != null) {
+                    int index = messageObject.getDialogId() == dialogId ? 0 : 1;
+                    if (index < messagesDict.length && messagesDict[index] != null) {
+                        messagesDict[index].put(messageObject.getId(), messageObject);
+                    }
+                }
             }
         } catch (Exception e) {
             FileLog.e("AyuHistoryHook.doHook", e);
@@ -82,10 +91,10 @@ public class AyuHistoryHook {
         msg.dialog_id = base.dialogId;
 
         if (base.fromId != 0) {
-            msg.from_id = peerFromId(base.fromId);
+            msg.from_id = peerFromId(base.fromId, currentAccount);
             msg.flags |= 0x100;
         }
-        msg.peer_id = peerFromId(base.peerId != 0 ? base.peerId : base.dialogId);
+        msg.peer_id = peerFromId(base.peerId != 0 ? base.peerId : base.dialogId, currentAccount);
 
         if (base.textEntities != null && base.textEntities.length > 0) {
             try {
@@ -109,7 +118,7 @@ public class AyuHistoryHook {
             fwd.date = base.fwdDate;
             fwd.post_author = base.fwdPostAuthor;
             if (base.fwdFromId != 0) {
-                fwd.from_id = peerFromId(base.fwdFromId);
+                fwd.from_id = peerFromId(base.fwdFromId, currentAccount);
                 fwd.flags |= 1;
             }
             if (!TextUtils.isEmpty(base.fwdName)) {
@@ -127,7 +136,7 @@ public class AyuHistoryHook {
             reply.reply_to_top_id = base.replyTopId;
             reply.forum_topic = base.replyForumTopic;
             if (base.replyPeerId != 0) {
-                reply.reply_to_peer_id = peerFromId(base.replyPeerId);
+                reply.reply_to_peer_id = peerFromId(base.replyPeerId, currentAccount);
                 reply.flags |= 1;
             }
             msg.reply_to = reply;
@@ -167,15 +176,26 @@ public class AyuHistoryHook {
         }
     }
 
-    private static TLRPC.Peer peerFromId(long id) {
+    /**
+     * A channel or supergroup peer has to be TL_peerChannel. Using TL_peerChat
+     * gives the same dialog id but makes everything that branches on the peer
+     * type - sender name, avatar, channel-post layout - treat the message as a
+     * basic group message instead.
+     */
+    private static TLRPC.Peer peerFromId(long id, int currentAccount) {
         if (id > 0) {
             var p = new TLRPC.TL_peerUser();
             p.user_id = id;
             return p;
-        } else {
-            var p = new TLRPC.TL_peerChat();
-            p.chat_id = -id;
+        }
+        var chat = MessagesController.getInstance(currentAccount).getChat(-id);
+        if (chat != null && ChatObject.isChannel(chat)) {
+            var p = new TLRPC.TL_peerChannel();
+            p.channel_id = -id;
             return p;
         }
+        var p = new TLRPC.TL_peerChat();
+        p.chat_id = -id;
+        return p;
     }
 }
