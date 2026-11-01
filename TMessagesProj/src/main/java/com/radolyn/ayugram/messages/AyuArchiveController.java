@@ -26,6 +26,7 @@ import org.telegram.messenger.MessagesController;
 import org.telegram.messenger.MessagesStorage;
 import org.telegram.messenger.NotificationCenter;
 import org.telegram.messenger.UserConfig;
+import org.telegram.messenger.Utilities;
 import org.telegram.tgnet.NativeByteBuffer;
 import org.telegram.tgnet.TLRPC;
 
@@ -45,7 +46,7 @@ import java.util.List;
  */
 public class AyuArchiveController {
     /** Upper bound on messages captured per dialog, to keep a snapshot bounded. */
-    public static final int MAX_MESSAGES_PER_DIALOG = 20000;
+    public static final int MAX_MESSAGES_PER_DIALOG = 5000;
 
     private static AyuArchiveController instance;
 
@@ -79,13 +80,25 @@ public class AyuArchiveController {
             return;
         }
         try {
-            archiveDialogInner(accountId, dialogId, reason);
+            // The messages must be read out before Telegram deletes them, so that
+            // part is synchronous. Mapping them and copying media is slow enough to
+            // stall the interface, so it is handed to a background thread.
+            List<TLRPC.Message> cached = readCachedMessages(accountId,
+                    UserConfig.getInstance(accountId).getClientUserId(), dialogId);
+            registerDialog(accountId, dialogId, reason);
+            Utilities.globalQueue.postRunnable(() -> {
+                try {
+                    storeMessages(accountId, dialogId, cached);
+                } catch (Exception e) {
+                    FileLog.e("AyuArchiveController.storeMessages", e);
+                }
+            });
         } catch (Exception e) {
             FileLog.e("AyuArchiveController.archiveDialog", e);
         }
     }
 
-    private void archiveDialogInner(int accountId, long dialogId, int reason) {
+    private void registerDialog(int accountId, long dialogId, int reason) {
         long userId = UserConfig.getInstance(accountId).getClientUserId();
         TLRPC.Chat chat = MessagesController.getInstance(accountId).getChat(-dialogId);
 
@@ -106,26 +119,17 @@ public class AyuArchiveController {
         archived.archivedDate = (int) (System.currentTimeMillis() / 1000);
         archived.reason = reason;
         dialogDao.insert(archived);
-
-        int captured = captureMessages(accountId, userId, dialogId);
-        dialogDao.updateMessagesCount(userId, dialogId, messageDao.count(userId, dialogId));
-
-        FileLog.d("VortexGram: archived dialog " + dialogId + ", captured " + captured + " new messages");
-
-        AndroidUtilities.runOnUIThread(() -> NotificationCenter.getInstance(accountId)
-                .postNotificationName(AyuConstants.ARCHIVED_DIALOGS_CHANGED));
     }
 
     /**
-     * Reads the dialog's messages straight out of Telegram's own message cache
-     * and copies them, plus any media already on disk, into the archive.
-     *
-     * @return how many messages were newly stored
+     * Maps the captured messages and copies any media already on disk into the
+     * archive. Runs off the main thread.
      */
-    private int captureMessages(int accountId, long userId, long dialogId) {
-        List<TLRPC.Message> messages = readCachedMessages(accountId, userId, dialogId);
+    private void storeMessages(int accountId, long dialogId, List<TLRPC.Message> messages) {
+        long userId = UserConfig.getInstance(accountId).getClientUserId();
         if (messages.isEmpty()) {
-            return 0;
+            notifyChanged(accountId);
+            return;
         }
 
         ArrayList<ArchivedMessage> batch = new ArrayList<>();
@@ -137,7 +141,15 @@ public class AyuArchiveController {
         }
         // IGNORE on conflict, so re-archiving never duplicates or overwrites.
         messageDao.insertAll(batch);
-        return batch.size();
+        dialogDao.updateMessagesCount(userId, dialogId, messageDao.count(userId, dialogId));
+
+        FileLog.d("VortexGram: archived dialog " + dialogId + ", stored " + batch.size() + " messages");
+        notifyChanged(accountId);
+    }
+
+    private void notifyChanged(int accountId) {
+        AndroidUtilities.runOnUIThread(() -> NotificationCenter.getInstance(accountId)
+                .postNotificationName(AyuConstants.ARCHIVED_DIALOGS_CHANGED));
     }
 
     private ArchivedMessage toArchivedMessage(int accountId, TLRPC.Message msg, long dialogId) {
@@ -225,7 +237,7 @@ public class AyuArchiveController {
         if (!AyuConfig.archiveLeftChats || msg == null) {
             return;
         }
-        long dialogId = msg.dialog_id;
+        long dialogId = org.telegram.messenger.MessageObject.getDialogId(msg);
         if (dialogId >= 0) {
             return;
         }

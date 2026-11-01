@@ -11539,6 +11539,12 @@ public class MessagesController extends BaseController implements NotificationCe
         if (user == null && chat == null) {
             return;
         }
+        if (UserObject.isUserSelf(user)) {
+            // VortexGram: snapshot the history before it is dropped on leaving.
+            com.radolyn.ayugram.messages.AyuArchiveController.getInstance()
+                    .archiveDialog(currentAccount, -chatId,
+                            com.radolyn.ayugram.database.entities.ArchivedDialog.REASON_LEFT);
+        }
         TLRPC.InputPeer inputPeer;
         if (user != null) {
             inputPeer = getInputPeer(user);
@@ -15606,6 +15612,12 @@ public class MessagesController extends BaseController implements NotificationCe
                             if (dialog == null && chat instanceof TLRPC.TL_channel && !chat.left) {
                                 Utilities.stageQueue.postRunnable(() -> getChannelDifference(update.channel_id, 1, 0, null));
                             } else if (ChatObject.isNotInChat(chat) && dialog != null && (promoDialog == null || promoDialog.id != dialog.id)) {
+                                // VortexGram: we have been removed - keep the history first.
+                                com.radolyn.ayugram.messages.AyuArchiveController.getInstance()
+                                        .archiveDialog(currentAccount, dialog.id,
+                                                chat.kicked
+                                                        ? com.radolyn.ayugram.database.entities.ArchivedDialog.REASON_REMOVED
+                                                        : com.radolyn.ayugram.database.entities.ArchivedDialog.REASON_LEFT);
                                 deleteDialog(dialog.id, 0);
                             }
                             if (chat instanceof TLRPC.TL_channelForbidden || chat.kicked) {
