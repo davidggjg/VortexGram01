@@ -20,6 +20,10 @@ public interface ArchivedDialogDao {
     @Query("SELECT * FROM archiveddialog WHERE userId = :userId ORDER BY archivedDate DESC")
     List<ArchivedDialog> getAll(long userId);
 
+    /** Every account's archived dialogs, used to prime the in-memory id set. */
+    @Query("SELECT * FROM archiveddialog")
+    List<ArchivedDialog> getAllIds();
+
     @Query("SELECT * FROM archiveddialog WHERE userId = :userId AND dialogId = :dialogId")
     ArchivedDialog get(long userId, long dialogId);
 

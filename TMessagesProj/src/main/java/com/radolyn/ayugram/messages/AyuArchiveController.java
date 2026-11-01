@@ -53,9 +53,28 @@ public class AyuArchiveController {
     private final ArchivedDialogDao dialogDao;
     private final ArchivedMessageDao messageDao;
 
+    /**
+     * Which dialogs are archived, held in memory. onMessageReceived() runs for
+     * every incoming message, so it must not hit the database to find out.
+     */
+    private final java.util.Set<Long> archivedDialogIds =
+            java.util.Collections.newSetFromMap(new java.util.concurrent.ConcurrentHashMap<>());
+
     private AyuArchiveController() {
         dialogDao = AyuArchiveData.getArchivedDialogDao();
         messageDao = AyuArchiveData.getArchivedMessageDao();
+        refreshArchivedIds();
+    }
+
+    private void refreshArchivedIds() {
+        try {
+            archivedDialogIds.clear();
+            for (ArchivedDialog dialog : dialogDao.getAllIds()) {
+                archivedDialogIds.add(dialog.dialogId);
+            }
+        } catch (Exception e) {
+            FileLog.e("AyuArchiveController.refreshArchivedIds", e);
+        }
     }
 
     public static AyuArchiveController getInstance() {
@@ -119,6 +138,7 @@ public class AyuArchiveController {
         archived.archivedDate = (int) (System.currentTimeMillis() / 1000);
         archived.reason = reason;
         dialogDao.insert(archived);
+        archivedDialogIds.add(dialogId);
     }
 
     /**
@@ -242,9 +262,9 @@ public class AyuArchiveController {
             return;
         }
         try {
-            long userId = UserConfig.getInstance(accountId).getClientUserId();
-            // Only chats already being archived are topped up, so this stays cheap.
-            if (!dialogDao.exists(userId, dialogId)) {
+            // Only chats already being archived are topped up, and the check is
+            // an in-memory lookup so it stays cheap on the message path.
+            if (!archivedDialogIds.contains(dialogId)) {
                 return;
             }
             ArchivedMessage entity = toArchivedMessage(accountId, msg, dialogId);
@@ -306,6 +326,7 @@ public class AyuArchiveController {
             }
             messageDao.deleteDialog(userId, dialogId);
             dialogDao.delete(userId, dialogId);
+            archivedDialogIds.remove(dialogId);
             AndroidUtilities.runOnUIThread(() -> NotificationCenter.getInstance(accountId)
                     .postNotificationName(AyuConstants.ARCHIVED_DIALOGS_CHANGED));
         } catch (Exception e) {
