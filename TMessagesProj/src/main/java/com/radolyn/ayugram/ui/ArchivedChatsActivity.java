@@ -148,7 +148,7 @@ public class ArchivedChatsActivity extends BaseFragment implements NotificationC
         showDialog(alertDialog);
         View button = alertDialog.getButton(android.content.DialogInterface.BUTTON_POSITIVE);
         if (button instanceof android.widget.TextView) {
-            ((android.widget.TextView) button).setTextColor(Theme.getColor(Theme.key_dialogTextRed2));
+            ((android.widget.TextView) button).setTextColor(Theme.getColor(Theme.key_text_RedBold));
         }
     }
 
