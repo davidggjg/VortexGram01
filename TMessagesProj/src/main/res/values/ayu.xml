@@ -114,6 +114,7 @@
   <string name="VortexArchiveThisChat">Keep history in archive</string>
   <string name="VortexArchiveThisChatDone">History is being archived</string>
   <string name="VortexArchivedChatReasonLeft">You left</string>
+  <string name="VortexArchivedChatReasonSaved">Kept by you</string>
   <string name="VortexArchivedChatReasonRemoved">You were removed</string>
   <string name="VortexArchivedChatReasonDeleted">Chat deleted</string>
   <string name="VortexArchivedChatMessagesCount">%1$d messages</string>
@@ -130,7 +131,7 @@
   <string name="VortexTransferBoth">Downloading %1$d, uploading %2$d file(s)</string>
   <!-- Bulk media download -->
   <string name="VortexDownloadAllMedia">Download all photos and videos</string>
-  <string name="VortexDownloadAllScanning">Looking for media…</string>
+  <string name="VortexDownloadAllScanning">Grabbing all media…</string>
   <string name="VortexDownloadAllNothing">No photos or videos found here</string>
   <string name="VortexDownloadAllConfirmTitle">Download all media</string>
   <string name="VortexDownloadAllConfirm">%1$d files, about %2$s. They will be downloaded and kept in the archive, so they stay available even if you lose access to this chat.</string>

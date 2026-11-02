@@ -14,6 +14,8 @@ public class ArchivedDialog {
     public static final int REASON_LEFT = 0;
     public static final int REASON_REMOVED = 1;
     public static final int REASON_DELETED = 2;
+    /** Kept on purpose while still a member. */
+    public static final int REASON_SAVED = 3;
 
     public long userId;
     public long dialogId;

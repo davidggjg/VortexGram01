@@ -1,8 +1,14 @@
 /*
  * This is the source code of VortexGram for Android.
  *
- * Downloads every photo and video in a chat in one go, so the media is on the
- * device - and therefore keepable - before access to the chat can be lost.
+ * Grabs a chat's photos and videos as fast as the server will serve them.
+ *
+ * Some groups remove you within seconds, so this is built for speed: nothing
+ * blocks on a confirmation, the local cache is kept before a single request
+ * goes out, and the media index is fetched in parallel rather than page by
+ * page. Every page that comes back is queued for download and archived the
+ * moment it arrives, so whatever the server does hand over is already kept
+ * even if access is cut off mid-run.
  */
 
 package com.radolyn.ayugram.messages;
@@ -20,29 +26,27 @@ import org.telegram.tgnet.ConnectionsManager;
 import org.telegram.tgnet.TLRPC;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class AyuBulkDownloader {
 
-    /** Hard cap on how many media messages one run will collect. */
+    /** Hard cap on how many media messages one run will take. */
     public static final int MAX_MEDIA = 5000;
     private static final int PAGE_SIZE = 100;
-    /** How long to keep waiting for the queued downloads before archiving. */
+    /** Index requests kept in flight at once. More than this invites a flood wait. */
+    private static final int MAX_PARALLEL_PAGES = 16;
+    /** How long to keep waiting for queued downloads before the final sweep. */
     private static final long WAIT_TIMEOUT_MS = 6L * 60 * 60 * 1000;
 
     private static volatile boolean running;
 
-    public interface ScanCallback {
-        /** @param totalSize sum of the media sizes in bytes, as reported by the server */
-        void onScanned(List<TLRPC.Message> messages, long totalSize);
+    public interface Listener {
+        /** Media found so far; called as each page lands. */
+        void onFound(int totalQueued);
 
-        void onError(String reason);
-    }
-
-    public interface ProgressCallback {
-        void onProgress(int done, int total);
-
-        void onFinished(int stored);
+        void onFailed(String reason);
     }
 
     public static boolean isRunning() {
@@ -50,165 +54,191 @@ public class AyuBulkDownloader {
     }
 
     /**
-     * Asks the server for every photo and video in the chat. Paged, because a
-     * single search call returns at most a hundred results.
+     * Starts immediately: no scan-then-confirm round trip, because in a chat
+     * that removes you after ten seconds that round trip is the whole budget.
      */
-    public static void scan(int accountId, long dialogId, ScanCallback callback) {
-        ArrayList<TLRPC.Message> collected = new ArrayList<>();
-        scanPage(accountId, dialogId, 0, collected, callback);
+    public static void start(int accountId, long dialogId, Listener listener) {
+        if (running) {
+            return;
+        }
+        running = true;
+
+        // Before any network call: keep whatever is already on the device. If
+        // access is lost one second from now, this much is still saved.
+        try {
+            AyuArchiveController.getInstance()
+                    .archiveDialog(accountId, dialogId, ArchivedDialog.REASON_SAVED);
+        } catch (Exception e) {
+            FileLog.e("AyuBulkDownloader.start archive", e);
+        }
+
+        final List<String> queuedFiles = Collections.synchronizedList(new ArrayList<>());
+        final List<TLRPC.Message> allMessages = Collections.synchronizedList(new ArrayList<>());
+
+        requestPage(accountId, dialogId, 0, 0, firstPage -> {
+            if (firstPage == null) {
+                running = false;
+                if (listener != null) {
+                    listener.onFailed(null);
+                }
+                return;
+            }
+
+            handlePage(accountId, dialogId, firstPage, queuedFiles, allMessages, listener);
+
+            int total = firstPage instanceof TLRPC.TL_messages_channelMessages
+                    ? ((TLRPC.TL_messages_channelMessages) firstPage).count
+                    : (firstPage instanceof TLRPC.TL_messages_messagesSlice
+                    ? ((TLRPC.TL_messages_messagesSlice) firstPage).count
+                    : firstPage.messages.size());
+            total = Math.min(total, MAX_MEDIA);
+
+            int remainingPages = (total - firstPage.messages.size() + PAGE_SIZE - 1) / PAGE_SIZE;
+            if (remainingPages <= 0) {
+                finish(accountId, dialogId, queuedFiles, allMessages);
+                return;
+            }
+
+            // The server reports the total up front, so the rest of the index can
+            // be asked for all at once with add_offset instead of walking the
+            // pages one after another.
+            final AtomicInteger outstanding = new AtomicInteger(remainingPages);
+            for (int page = 1; page <= remainingPages; page++) {
+                final int addOffset = page * PAGE_SIZE;
+                Runnable fire = () -> requestPage(accountId, dialogId, 0, addOffset, res -> {
+                    if (res != null) {
+                        handlePage(accountId, dialogId, res, queuedFiles, allMessages, listener);
+                    }
+                    if (outstanding.decrementAndGet() <= 0) {
+                        finish(accountId, dialogId, queuedFiles, allMessages);
+                    }
+                });
+                if (page <= MAX_PARALLEL_PAGES) {
+                    fire.run();
+                } else {
+                    // Stagger the tail so a long history does not trip a flood wait.
+                    Utilities.globalQueue.postRunnable(fire, 150L * (page - MAX_PARALLEL_PAGES));
+                }
+            }
+        });
     }
 
-    private static void scanPage(int accountId, long dialogId, int offsetId,
-                                 ArrayList<TLRPC.Message> collected, ScanCallback callback) {
+    private interface PageCallback {
+        void onPage(TLRPC.messages_Messages result);
+    }
+
+    private static void requestPage(int accountId, long dialogId, int offsetId, int addOffset,
+                                    PageCallback callback) {
         TLRPC.TL_messages_search req = new TLRPC.TL_messages_search();
         req.peer = MessagesController.getInstance(accountId).getInputPeer(dialogId);
         req.q = "";
         req.filter = new TLRPC.TL_inputMessagesFilterPhotoVideo();
         req.limit = PAGE_SIZE;
         req.offset_id = offsetId;
+        req.add_offset = addOffset;
 
         ConnectionsManager.getInstance(accountId).sendRequest(req, (response, error) -> {
-            if (error != null) {
-                callback.onError(error.text);
+            if (error != null || !(response instanceof TLRPC.messages_Messages)) {
+                callback.onPage(null);
                 return;
             }
-            if (!(response instanceof TLRPC.messages_Messages)) {
-                callback.onError(null);
-                return;
-            }
-            TLRPC.messages_Messages res = (TLRPC.messages_Messages) response;
-            if (res.messages.isEmpty()) {
-                finishScan(collected, callback);
-                return;
-            }
-
-            int lastId = offsetId;
-            for (int a = 0; a < res.messages.size(); a++) {
-                TLRPC.Message message = res.messages.get(a);
-                message.dialog_id = dialogId;
-                collected.add(message);
-                lastId = message.id;
-            }
-
-            if (collected.size() >= MAX_MEDIA || res.messages.size() < PAGE_SIZE) {
-                finishScan(collected, callback);
-                return;
-            }
-            scanPage(accountId, dialogId, lastId, collected, callback);
+            callback.onPage((TLRPC.messages_Messages) response);
         });
     }
 
-    private static void finishScan(ArrayList<TLRPC.Message> collected, ScanCallback callback) {
-        long total = 0;
-        for (TLRPC.Message message : collected) {
-            total += estimateSize(message);
+    /** Queues a page's files and archives its metadata straight away. */
+    private static void handlePage(int accountId, long dialogId, TLRPC.messages_Messages page,
+                                   List<String> queuedFiles, List<TLRPC.Message> allMessages,
+                                   Listener listener) {
+        ArrayList<TLRPC.Message> pageMessages = new ArrayList<>();
+        for (int a = 0; a < page.messages.size(); a++) {
+            TLRPC.Message message = page.messages.get(a);
+            message.dialog_id = dialogId;
+            pageMessages.add(message);
         }
-        callback.onScanned(collected, total);
-    }
-
-    private static long estimateSize(TLRPC.Message message) {
-        TLRPC.Document document = MessageObject.getDocument(message);
-        if (document != null) {
-            return document.size;
-        }
-        TLRPC.Photo photo = MessageObject.getMedia(message) != null
-                ? MessageObject.getMedia(message).photo
-                : null;
-        if (photo != null) {
-            TLRPC.PhotoSize size = FileLoader.getClosestPhotoSizeWithSize(photo.sizes, Integer.MAX_VALUE);
-            if (size != null) {
-                return size.size;
-            }
-        }
-        return 0;
-    }
-
-    /**
-     * Queues every collected file for download at high priority, then keeps the
-     * chat's history - now with the media on disk - in the archive.
-     */
-    public static void download(int accountId, long dialogId, List<TLRPC.Message> messages,
-                                ProgressCallback callback) {
-        if (running) {
+        if (pageMessages.isEmpty()) {
             return;
         }
-        running = true;
+        allMessages.addAll(pageMessages);
 
-        ArrayList<String> fileNames = new ArrayList<>();
-        FileLoader fileLoader = FileLoader.getInstance(accountId);
-
-        for (TLRPC.Message message : messages) {
-            try {
-                String fileName = FileLoader.getAttachFileName(MessageObject.getMedia(message));
-                TLRPC.Document document = MessageObject.getDocument(message);
-                if (document != null) {
-                    fileLoader.loadFile(document, message, FileLoader.PRIORITY_NORMAL, 0);
-                } else {
-                    TLRPC.Photo photo = MessageObject.getMedia(message) != null
-                            ? MessageObject.getMedia(message).photo
-                            : null;
-                    if (photo == null) {
-                        continue;
-                    }
-                    TLRPC.PhotoSize size =
-                            FileLoader.getClosestPhotoSizeWithSize(photo.sizes, Integer.MAX_VALUE);
-                    if (size == null) {
-                        continue;
-                    }
-                    fileName = FileLoader.getAttachFileName(size);
-                    fileLoader.loadFile(ImageLocation.getForPhoto(size, photo), message,
-                            "jpg", FileLoader.PRIORITY_NORMAL, 0);
-                }
-                if (fileName != null) {
-                    fileNames.add(fileName);
-                }
-            } catch (Exception e) {
-                FileLog.e("AyuBulkDownloader.download", e);
+        for (TLRPC.Message message : pageMessages) {
+            String fileName = queueDownload(accountId, message);
+            if (fileName != null) {
+                queuedFiles.add(fileName);
             }
         }
 
-        // Show the chat in the archive straight away, so it is obvious the run
-        // started even before any file has landed.
-        AyuArchiveController.getInstance()
-                .archiveDialog(accountId, dialogId, ArchivedDialog.REASON_LEFT);
+        // Archive the text and sender now. Media paths get filled in by the
+        // final sweep, once the files have actually landed.
+        try {
+            AyuArchiveController.getInstance().archiveMessages(accountId, dialogId, pageMessages);
+        } catch (Exception e) {
+            FileLog.e("AyuBulkDownloader.handlePage archive", e);
+        }
 
-        waitAndArchive(accountId, dialogId, messages, fileNames, callback);
+        if (listener != null) {
+            listener.onFound(queuedFiles.size());
+        }
+    }
+
+    /** @return the loader's name for the queued file, or null if there is nothing to fetch */
+    private static String queueDownload(int accountId, TLRPC.Message message) {
+        try {
+            FileLoader fileLoader = FileLoader.getInstance(accountId);
+            TLRPC.Document document = MessageObject.getDocument(message);
+            if (document != null) {
+                fileLoader.loadFile(document, message, FileLoader.PRIORITY_HIGH, 0);
+                return FileLoader.getAttachFileName(document);
+            }
+            TLRPC.MessageMedia media = MessageObject.getMedia(message);
+            TLRPC.Photo photo = media != null ? media.photo : null;
+            if (photo == null) {
+                return null;
+            }
+            TLRPC.PhotoSize size = FileLoader.getClosestPhotoSizeWithSize(photo.sizes, Integer.MAX_VALUE);
+            if (size == null) {
+                return null;
+            }
+            fileLoader.loadFile(ImageLocation.getForPhoto(size, photo), message,
+                    "jpg", FileLoader.PRIORITY_HIGH, 0);
+            return FileLoader.getAttachFileName(size);
+        } catch (Exception e) {
+            FileLog.e("AyuBulkDownloader.queueDownload", e);
+            return null;
+        }
     }
 
     /**
-     * The media has to be on disk before it can be copied into the archive, so
-     * this waits for the queue to drain and then takes the snapshot. Downloads
-     * are driven by FileLoader, which reports no completion callback we can
-     * attach to from here, hence the poll.
+     * Waits for the download queue to drain, then archives the whole set again
+     * so the entries point at the files that have since landed on disk.
      */
-    private static void waitAndArchive(int accountId, long dialogId, List<TLRPC.Message> messages,
-                                       List<String> fileNames, ProgressCallback callback) {
+    private static void finish(int accountId, long dialogId, List<String> queuedFiles,
+                               List<TLRPC.Message> allMessages) {
         final long startedAt = System.currentTimeMillis();
         Utilities.globalQueue.postRunnable(new Runnable() {
             @Override
             public void run() {
-                int remaining = 0;
-                for (String fileName : fileNames) {
-                    if (VortexTransferService.isDownloading(fileName)) {
-                        remaining++;
+                boolean stillGoing = false;
+                synchronized (queuedFiles) {
+                    for (String fileName : queuedFiles) {
+                        if (VortexTransferService.isDownloading(fileName)) {
+                            stillGoing = true;
+                            break;
+                        }
                     }
                 }
-                int done = fileNames.size() - remaining;
-                if (callback != null) {
-                    callback.onProgress(done, fileNames.size());
-                }
-                if (remaining > 0 && System.currentTimeMillis() - startedAt < WAIT_TIMEOUT_MS) {
+                if (stillGoing && System.currentTimeMillis() - startedAt < WAIT_TIMEOUT_MS) {
                     Utilities.globalQueue.postRunnable(this, 2000);
                     return;
                 }
                 try {
-                    int stored = AyuArchiveController.getInstance()
-                            .archiveMessages(accountId, dialogId, messages);
-                    if (callback != null) {
-                        callback.onFinished(stored);
+                    ArrayList<TLRPC.Message> snapshot;
+                    synchronized (allMessages) {
+                        snapshot = new ArrayList<>(allMessages);
                     }
+                    AyuArchiveController.getInstance().archiveMessages(accountId, dialogId, snapshot);
                 } catch (Exception e) {
-                    FileLog.e("AyuBulkDownloader.waitAndArchive", e);
+                    FileLog.e("AyuBulkDownloader.finish", e);
                 } finally {
                     running = false;
                 }

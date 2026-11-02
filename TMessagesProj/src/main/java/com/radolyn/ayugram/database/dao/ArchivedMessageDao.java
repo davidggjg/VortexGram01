@@ -32,10 +32,13 @@ public interface ArchivedMessageDao {
     @Query("SELECT COUNT(*) FROM archivedmessage WHERE userId = :userId AND dialogId = :dialogId")
     int count(long userId, long dialogId);
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    // REPLACE, not IGNORE: a message is archived once when it is found and
+    // again once its media has finished downloading, and the second pass has to
+    // be able to fill in the media path.
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(ArchivedMessage message);
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<ArchivedMessage> messages);
 
     @Query("SELECT mediaPath FROM archivedmessage WHERE userId = :userId AND dialogId = :dialogId AND mediaPath IS NOT NULL")

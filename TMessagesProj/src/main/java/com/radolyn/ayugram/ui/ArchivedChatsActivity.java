@@ -154,7 +154,9 @@ public class ArchivedChatsActivity extends BaseFragment implements NotificationC
 
     private String describe(ArchivedDialog dialog) {
         String reason;
-        if (dialog.reason == ArchivedDialog.REASON_REMOVED) {
+        if (dialog.reason == ArchivedDialog.REASON_SAVED) {
+            reason = LocaleController.getString(R.string.VortexArchivedChatReasonSaved);
+        } else if (dialog.reason == ArchivedDialog.REASON_REMOVED) {
             reason = LocaleController.getString(R.string.VortexArchivedChatReasonRemoved);
         } else if (dialog.reason == ArchivedDialog.REASON_DELETED) {
             reason = LocaleController.getString(R.string.VortexArchivedChatReasonDeleted);

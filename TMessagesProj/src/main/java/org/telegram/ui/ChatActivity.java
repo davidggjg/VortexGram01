@@ -3066,7 +3066,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 } else if (id == vortex_archive_chat) {
                     com.radolyn.ayugram.messages.AyuArchiveController.getInstance().archiveDialog(
                             currentAccount, dialog_id,
-                            com.radolyn.ayugram.database.entities.ArchivedDialog.REASON_LEFT);
+                            com.radolyn.ayugram.database.entities.ArchivedDialog.REASON_SAVED);
                     BulletinFactory.of(ChatActivity.this)
                             .createSimpleBulletin(R.raw.chats_archive,
                                     LocaleController.getString(R.string.VortexArchiveThisChatDone))
@@ -18876,8 +18876,12 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     }
 
     /**
-     * VortexGram: downloads every photo and video in this chat, then keeps them
-     * in the archive, so the media survives losing access to the chat.
+     * VortexGram: grabs every photo and video in this chat and keeps them in
+     * the archive.
+     *
+     * Deliberately starts on the first tap with no confirmation step: in a chat
+     * that removes you after a few seconds, a confirmation dialog costs more
+     * time than the whole run has.
      */
     private void startBulkMediaDownload() {
         if (getParentActivity() == null || currentChat == null) {
@@ -18894,42 +18898,30 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         LocaleController.getString(R.string.VortexDownloadAllScanning))
                 .show();
 
-        final long bulkDialogId = dialog_id;
-        com.radolyn.ayugram.messages.AyuBulkDownloader.scan(currentAccount, bulkDialogId,
-                new com.radolyn.ayugram.messages.AyuBulkDownloader.ScanCallback() {
+        com.radolyn.ayugram.messages.AyuBulkDownloader.start(currentAccount, dialog_id,
+                new com.radolyn.ayugram.messages.AyuBulkDownloader.Listener() {
+                    private boolean announced;
+
                     @Override
-                    public void onScanned(java.util.List<TLRPC.Message> messages, long totalSize) {
+                    public void onFound(int totalQueued) {
+                        if (announced) {
+                            return;
+                        }
+                        announced = true;
                         AndroidUtilities.runOnUIThread(() -> {
                             if (getParentActivity() == null) {
                                 return;
                             }
-                            if (messages.isEmpty()) {
-                                BulletinFactory.of(ChatActivity.this)
-                                        .createErrorBulletin(LocaleController.getString(R.string.VortexDownloadAllNothing))
-                                        .show();
-                                return;
-                            }
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
-                            builder.setTitle(LocaleController.getString(R.string.VortexDownloadAllConfirmTitle));
-                            builder.setMessage(LocaleController.formatString(
-                                    "VortexDownloadAllConfirm", R.string.VortexDownloadAllConfirm,
-                                    messages.size(), AndroidUtilities.formatFileSize(totalSize)));
-                            builder.setPositiveButton(LocaleController.getString(R.string.VortexDownloadNow), (d, which) -> {
-                                com.radolyn.ayugram.messages.AyuBulkDownloader.download(
-                                        currentAccount, bulkDialogId, messages, null);
-                                BulletinFactory.of(ChatActivity.this)
-                                        .createSimpleBulletin(R.raw.chats_archive,
-                                                LocaleController.formatString("VortexDownloadAllStarted",
-                                                        R.string.VortexDownloadAllStarted, messages.size()))
-                                        .show();
-                            });
-                            builder.setNegativeButton(LocaleController.getString(R.string.Cancel), null);
-                            showDialog(builder.create());
+                            BulletinFactory.of(ChatActivity.this)
+                                    .createSimpleBulletin(R.raw.chats_archive,
+                                            LocaleController.formatString("VortexDownloadAllStarted",
+                                                    R.string.VortexDownloadAllStarted, totalQueued))
+                                    .show();
                         });
                     }
 
                     @Override
-                    public void onError(String reason) {
+                    public void onFailed(String reason) {
                         AndroidUtilities.runOnUIThread(() -> {
                             if (getParentActivity() == null) {
                                 return;
