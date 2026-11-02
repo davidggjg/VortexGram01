@@ -1329,6 +1329,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private final static int show_pinned = 105;
     // VortexGram: archive this chat's history while still a member
     private final static int vortex_archive_chat = 106;
+    private final static int vortex_download_all_media = 107;
 
     private final static int id_chat_compose_panel = 1000;
 
@@ -3060,6 +3061,8 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     }
                 } else if (id == mute) {
                     toggleMute(false);
+                } else if (id == vortex_download_all_media) {
+                    startBulkMediaDownload();
                 } else if (id == vortex_archive_chat) {
                     com.radolyn.ayugram.messages.AyuArchiveController.getInstance().archiveDialog(
                             currentAccount, dialog_id,
@@ -3501,6 +3504,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             if (currentChat != null && com.radolyn.ayugram.AyuConfig.archiveLeftChats) {
                 // VortexGram: capture the history now, so it survives being removed later.
                 headerItem.lazilyAddSubItem(vortex_archive_chat, R.drawable.msg_archive, LocaleController.getString(R.string.VortexArchiveThisChat));
+                headerItem.lazilyAddSubItem(vortex_download_all_media, R.drawable.msg_download, LocaleController.getString(R.string.VortexDownloadAllMedia));
             }
             if (currentChat != null && (ChatObject.canUserDoAction(currentChat, ChatObject.ACTION_PIN) || ChatObject.isChannel(currentChat)) || currentEncryptedChat == null && currentUser != null) {
                 headerItem.lazilyAddSubItem(show_pinned, R.drawable.msg_pin, LocaleController.getString("PinnedMessage", R.string.PinnedMessage));
@@ -18869,6 +18873,73 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         if (sendAsPeersObj != null) {
             chatActivityEnterView.updateSendAsButton(animatedUpdate);
         }
+    }
+
+    /**
+     * VortexGram: downloads every photo and video in this chat, then keeps them
+     * in the archive, so the media survives losing access to the chat.
+     */
+    private void startBulkMediaDownload() {
+        if (getParentActivity() == null || currentChat == null) {
+            return;
+        }
+        if (com.radolyn.ayugram.messages.AyuBulkDownloader.isRunning()) {
+            BulletinFactory.of(ChatActivity.this)
+                    .createErrorBulletin(LocaleController.getString(R.string.VortexDownloadAllRunning))
+                    .show();
+            return;
+        }
+        BulletinFactory.of(ChatActivity.this)
+                .createSimpleBulletin(R.raw.chats_archive,
+                        LocaleController.getString(R.string.VortexDownloadAllScanning))
+                .show();
+
+        final long bulkDialogId = dialog_id;
+        com.radolyn.ayugram.messages.AyuBulkDownloader.scan(currentAccount, bulkDialogId,
+                new com.radolyn.ayugram.messages.AyuBulkDownloader.ScanCallback() {
+                    @Override
+                    public void onScanned(java.util.List<TLRPC.Message> messages, long totalSize) {
+                        AndroidUtilities.runOnUIThread(() -> {
+                            if (getParentActivity() == null) {
+                                return;
+                            }
+                            if (messages.isEmpty()) {
+                                BulletinFactory.of(ChatActivity.this)
+                                        .createErrorBulletin(LocaleController.getString(R.string.VortexDownloadAllNothing))
+                                        .show();
+                                return;
+                            }
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
+                            builder.setTitle(LocaleController.getString(R.string.VortexDownloadAllConfirmTitle));
+                            builder.setMessage(LocaleController.formatString(
+                                    "VortexDownloadAllConfirm", R.string.VortexDownloadAllConfirm,
+                                    messages.size(), AndroidUtilities.formatFileSize(totalSize)));
+                            builder.setPositiveButton(LocaleController.getString(R.string.VortexDownloadNow), (d, which) -> {
+                                com.radolyn.ayugram.messages.AyuBulkDownloader.download(
+                                        currentAccount, bulkDialogId, messages, null);
+                                BulletinFactory.of(ChatActivity.this)
+                                        .createSimpleBulletin(R.raw.chats_archive,
+                                                LocaleController.formatString("VortexDownloadAllStarted",
+                                                        R.string.VortexDownloadAllStarted, messages.size()))
+                                        .show();
+                            });
+                            builder.setNegativeButton(LocaleController.getString(R.string.Cancel), null);
+                            showDialog(builder.create());
+                        });
+                    }
+
+                    @Override
+                    public void onError(String reason) {
+                        AndroidUtilities.runOnUIThread(() -> {
+                            if (getParentActivity() == null) {
+                                return;
+                            }
+                            BulletinFactory.of(ChatActivity.this)
+                                    .createErrorBulletin(LocaleController.getString(R.string.VortexDownloadAllFailed))
+                                    .show();
+                        });
+                    }
+                });
     }
 
     private int sponsoredMessagesPostsBetween;

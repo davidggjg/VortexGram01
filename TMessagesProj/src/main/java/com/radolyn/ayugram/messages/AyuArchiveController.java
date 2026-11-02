@@ -252,6 +252,21 @@ public class AyuArchiveController {
         return result;
     }
 
+    /**
+     * Archives an explicit list of messages, rather than whatever happens to be
+     * in Telegram's cache. Used after a bulk media download, once the files are
+     * on disk and can be copied into the archive.
+     *
+     * @return how many messages were handed to the database
+     */
+    public int archiveMessages(int accountId, long dialogId, List<TLRPC.Message> messages) {
+        if (messages == null || messages.isEmpty()) {
+            return 0;
+        }
+        storeMessages(accountId, dialogId, messages);
+        return messages.size();
+    }
+
     /** Stores a single message as it arrives, for chats being kept topped up. */
     public void onMessageReceived(int accountId, TLRPC.Message msg) {
         if (!AyuConfig.archiveLeftChats || msg == null) {

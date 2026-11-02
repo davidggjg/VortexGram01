@@ -66,6 +66,11 @@ public class VortexTransferService extends Service {
         sync();
     }
 
+    /** Whether this file is still in the download queue. */
+    public static boolean isDownloading(String fileName) {
+        return fileName != null && activeDownloads.contains(fileName);
+    }
+
     public static void onUploadStarted(String fileName) {
         if (fileName == null) {
             return;

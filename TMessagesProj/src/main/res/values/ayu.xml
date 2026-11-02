@@ -128,4 +128,15 @@
   <string name="VortexTransferDownloading">Downloading %1$d file(s)</string>
   <string name="VortexTransferUploading">Uploading %1$d file(s)</string>
   <string name="VortexTransferBoth">Downloading %1$d, uploading %2$d file(s)</string>
+  <!-- Bulk media download -->
+  <string name="VortexDownloadAllMedia">Download all photos and videos</string>
+  <string name="VortexDownloadAllScanning">Looking for media…</string>
+  <string name="VortexDownloadAllNothing">No photos or videos found here</string>
+  <string name="VortexDownloadAllConfirmTitle">Download all media</string>
+  <string name="VortexDownloadAllConfirm">%1$d files, about %2$s. They will be downloaded and kept in the archive, so they stay available even if you lose access to this chat.</string>
+  <string name="VortexDownloadAllStarted">Downloading %1$d files</string>
+  <string name="VortexDownloadAllRunning">A bulk download is already running</string>
+  <string name="VortexDownloadAllDone">Archived %1$d files</string>
+  <string name="VortexDownloadAllFailed">Could not list the media in this chat</string>
+  <string name="VortexDownloadNow">Download</string>
 </resources>
